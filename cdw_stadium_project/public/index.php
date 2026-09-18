@@ -1,5 +1,4 @@
 <?php
-echo "CDW_STADIUM_NHOMH";
 
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;

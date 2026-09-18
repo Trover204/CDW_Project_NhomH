@@ -1,6 +1,6 @@
 CDW Stadium Project
 │
-├── Cách 1: Docker ⭐ Khuyến nghị
+├── Cách 1: Docker 
 │   ├── docker compose up -d
 │   ├── composer install
 │   ├── php artisan key:generate
