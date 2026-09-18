@@ -1,0 +1,73 @@
+<h2 class="sr-only">Phác thảo giao diện màu Trang chủ website Sân Nhóm H</h2>
+<div style="font-family:Arial,Helvetica,sans-serif;border:0.5px solid #E1E8E3;border-radius:12px;overflow:hidden;background:#FFFFFF;">
+    <div style="display:flex;align-items:center;gap:6px;padding:8px 12px;border-bottom:0.5px solid #E1E8E3;background:#F7FAF8;">
+        <div style="width:8px;height:8px;border-radius:50%;background:#D8E2D9;"></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:#D8E2D9;"></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:#D8E2D9;"></div>
+        <div style="flex:1;margin-left:8px;height:18px;border-radius:6px;background:#FFFFFF;border:0.5px solid #E1E8E3;font-size:11px;color:#6B7A70;display:flex;align-items:center;padding:0 8px;">sannhomh.vn</div>
+    </div>
+
+    <div style="padding:18px 20px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;margin-bottom:18px;border-bottom:0.5px solid #E1E8E3;">
+            <div style="font-size:17px;font-weight:700;color:#178A4C;">Sân Nhóm H</div>
+            <div style="display:flex;gap:20px;font-size:12.5px;color:#3A453E;">
+                <span>Trang chủ</span><span>Tìm sân</span><span>Tin tức</span><span>Gói thành viên</span>
+            </div>
+            <div style="display:flex;gap:8px;">
+                <div style="padding:6px 14px;border-radius:6px;border:0.5px solid #C7D3CA;font-size:11.5px;color:#3A453E;">Đăng nhập</div>
+                <div style="padding:6px 14px;border-radius:6px;background:#F97316;font-size:11.5px;color:#FFFFFF;font-weight:600;">Đăng ký</div>
+            </div>
+        </div>
+
+        <div style="background:#E6F5EB;border-radius:14px;padding:26px 24px;margin-bottom:22px;">
+            <div style="font-size:19px;font-weight:700;color:#0F5C33;margin-bottom:6px;">Đặt sân thể thao chỉ trong 30 giây</div>
+            <div style="font-size:12.5px;color:#3F6E51;margin-bottom:16px;">Hàng trăm sân bóng đá, cầu lông, pickleball gần bạn — xem lịch trống theo thời gian thực</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <div style="flex:1;min-width:120px;height:36px;border-radius:8px;background:#FFFFFF;border:0.5px solid #C7D3CA;display:flex;align-items:center;padding:0 12px;font-size:12px;color:#3A453E;"><i class="ti ti-ball-tennis" style="font-size:14px;margin-right:6px;color:#178A4C;" aria-hidden="true"></i>Loại sân</div>
+                <div style="flex:1;min-width:120px;height:36px;border-radius:8px;background:#FFFFFF;border:0.5px solid #C7D3CA;display:flex;align-items:center;padding:0 12px;font-size:12px;color:#3A453E;"><i class="ti ti-map-pin" style="font-size:14px;margin-right:6px;color:#178A4C;" aria-hidden="true"></i>Khu vực</div>
+                <div style="flex:1;min-width:120px;height:36px;border-radius:8px;background:#FFFFFF;border:0.5px solid #C7D3CA;display:flex;align-items:center;padding:0 12px;font-size:12px;color:#3A453E;"><i class="ti ti-calendar" style="font-size:14px;margin-right:6px;color:#178A4C;" aria-hidden="true"></i>Hôm nay</div>
+                <div style="width:110px;height:36px;border-radius:8px;background:#F97316;display:flex;align-items:center;justify-content:center;font-size:12.5px;color:#FFFFFF;font-weight:600;">Tìm sân</div>
+            </div>
+        </div>
+
+        <div style="font-size:14px;font-weight:700;color:#16241C;margin-bottom:12px;">Sân nổi bật gần bạn</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+            <div style="border:0.5px solid #E1E8E3;border-radius:10px;overflow:hidden;">
+                <div style="height:66px;background:#E6F5EB;display:flex;align-items:center;justify-content:center;"><i class="ti ti-ball-football" style="font-size:24px;color:#178A4C;" aria-hidden="true"></i></div>
+                <div style="padding:8px;">
+                    <div style="font-size:12px;font-weight:600;color:#16241C;">Sân bóng Quận 9</div>
+                    <div style="font-size:10.5px;color:#6B7A70;margin:3px 0 6px;">Thủ Đức, TP.HCM</div>
+                    <div style="font-size:12px;font-weight:700;color:#C2570A;">250.000đ/giờ</div>
+                </div>
+            </div>
+            <div style="border:0.5px solid #E1E8E3;border-radius:10px;overflow:hidden;">
+                <div style="height:66px;background:#E6F0FA;display:flex;align-items:center;justify-content:center;"><i class="ti ti-ball-badminton" style="font-size:24px;color:#2563EB;" aria-hidden="true"></i></div>
+                <div style="padding:8px;">
+                    <div style="font-size:12px;font-weight:600;color:#16241C;">Cầu lông Bình Thạnh</div>
+                    <div style="font-size:10.5px;color:#6B7A70;margin:3px 0 6px;">Bình Thạnh, TP.HCM</div>
+                    <div style="font-size:12px;font-weight:700;color:#C2570A;">120.000đ/giờ</div>
+                </div>
+            </div>
+            <div style="border:0.5px solid #E1E8E3;border-radius:10px;overflow:hidden;">
+                <div style="height:66px;background:#FBEFE3;display:flex;align-items:center;justify-content:center;"><i class="ti ti-ball-tennis" style="font-size:24px;color:#C2570A;" aria-hidden="true"></i></div>
+                <div style="padding:8px;">
+                    <div style="font-size:12px;font-weight:600;color:#16241C;">Pickleball Quận 7</div>
+                    <div style="font-size:10.5px;color:#6B7A70;margin:3px 0 6px;">Quận 7, TP.HCM</div>
+                    <div style="font-size:12px;font-weight:700;color:#C2570A;">180.000đ/giờ</div>
+                </div>
+            </div>
+            <div style="border:0.5px solid #E1E8E3;border-radius:10px;overflow:hidden;">
+                <div style="height:66px;background:#F3EAF8;display:flex;align-items:center;justify-content:center;"><i class="ti ti-ball-volleyball" style="font-size:24px;color:#7C3AED;" aria-hidden="true"></i></div>
+                <div style="padding:8px;">
+                    <div style="font-size:12px;font-weight:600;color:#16241C;">Bóng chuyền Gò Vấp</div>
+                    <div style="font-size:10.5px;color:#6B7A70;margin:3px 0 6px;">Gò Vấp, TP.HCM</div>
+                    <div style="font-size:12px;font-weight:700;color:#C2570A;">200.000đ/giờ</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid #E1E8E3;display:flex;justify-content:center;gap:24px;font-size:10.5px;color:#6B7A70;">
+            <span>Về chúng tôi</span><span>Liên hệ</span><span>Điều khoản</span>
+        </div>
+    </div>
+</div>
