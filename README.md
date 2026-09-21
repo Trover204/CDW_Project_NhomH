@@ -2,9 +2,9 @@ CDW Stadium Project
 │
 ├── Cách 1: Docker 
 │   ├── docker compose up -d
-│   ├── composer install
-│   ├── php artisan key:generate
-│   └── php artisan migrate --seed
+│   ├── docker compose exec app composer install
+│   ├──  docker compose exec app php artisan key:generate
+│   └──  docker compose exec app php artisan migrate --seed
 │
 └── Cách 2: WAMP/XAMPP
     ├── composer install
