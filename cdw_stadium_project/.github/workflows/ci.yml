@@ -2,10 +2,18 @@ name: Laravel CI
 
 on:
   push:
+    branches:
+      - master
+      - main
+
   pull_request:
+    branches:
+      - master
+      - main
 
 jobs:
   test:
+
     runs-on: ubuntu-latest
 
     services:
