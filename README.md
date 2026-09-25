@@ -22,3 +22,17 @@ CDW Stadium Project
             DB_DATABASE=laravel13
             DB_USERNAME=root
             DB_PASSWORD=root
+
+
+
+
+
+
+
+            sample
+            DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=laravel13
+DB_USERNAME=admin
+DB_PASSWORD=12345
