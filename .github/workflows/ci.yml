@@ -11,18 +11,20 @@ on:
       - main
       - master
 
+  workflow_dispatch:
+
 defaults:
   run:
     working-directory: cdw_stadium_project
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
 
     services:
       mysql:
         image: mysql:8.4
+
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: laravel_test
@@ -40,11 +42,16 @@ jobs:
 
     steps:
 
+      # ========================================
       # 1. Lấy source code
+      # ========================================
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 2. Cài PHP
+
+      # ========================================
+      # 2. Cài PHP 8.3
+      # ========================================
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -52,34 +59,66 @@ jobs:
           extensions: mbstring, pdo, pdo_mysql
           coverage: none
 
-      # 3. Cài Composer dependencies
-      - name: Install dependencies
+
+      # ========================================
+      # 3. Kiểm tra PHP
+      # ========================================
+      - name: Check PHP version
+        run: php -v
+
+
+      # ========================================
+      # 4. Cài Composer dependencies
+      # ========================================
+      - name: Install Composer dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
 
-      # 4. Tạo .env
+
+      # ========================================
+      # 5. Tạo file .env cho CI
+      # ========================================
       - name: Prepare environment
         run: |
           cp .env.example .env
+
+          cat >> .env << 'EOF'
+
+          DB_CONNECTION=mysql
+          DB_HOST=127.0.0.1
+          DB_PORT=3306
+          DB_DATABASE=laravel_test
+          DB_USERNAME=laravel
+          DB_PASSWORD=password
+          EOF
+
           php artisan key:generate
 
-      # 5. Cấu hình database
-      - name: Configure database
-        run: |
-          sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=mysql/' .env
-          sed -i 's/DB_HOST=.*/DB_HOST=127.0.0.1/' .env
-          sed -i 's/DB_PORT=.*/DB_PORT=3306/' .env
-          sed -i 's/DB_DATABASE=.*/DB_DATABASE=laravel_test/' .env
-          sed -i 's/DB_USERNAME=.*/DB_USERNAME=laravel/' .env
-          sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=password/' .env
 
-      # 6. Clear cache
+      # ========================================
+      # 6. Kiểm tra database configuration
+      # ========================================
+      - name: Check database configuration
+        run: |
+          php artisan config:clear
+          php artisan about
+
+
+      # ========================================
+      # 7. Clear Laravel cache
+      # ========================================
       - name: Clear Laravel cache
         run: php artisan optimize:clear
 
-      # 7. Migration
+
+      # ========================================
+      # 8. Chạy migration
+      # ========================================
       - name: Run migrations
         run: php artisan migrate --force
 
-      # 8. Chạy test
+
+      # ========================================
+      # 9. Chạy Laravel tests
+      # ========================================
       - name: Run tests
         run: php artisan test
