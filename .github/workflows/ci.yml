@@ -13,8 +13,7 @@ on:
 
 defaults:
   run:
-    working-directory:
-cdw_stadium_project
+    working-directory: cdw_stadium_project
 
 jobs:
   test:
