@@ -102,20 +102,17 @@ jobs:
           php artisan config:clear
           php artisan about
 
- - name: Run migrations
+      # ========================================
+      # 8. Chạy migration
+      # ========================================
+     
+      - name: Run migrations
         run: php artisan migrate --force
       # ========================================
       # 7. Clear Laravel cache
       # ========================================
       - name: Clear Laravel cache
         run: php artisan optimize:clear
-
-
-      # ========================================
-      # 8. Chạy migration
-      # ========================================
-     
-
 
       # ========================================
       # 9. Chạy Laravel tests
