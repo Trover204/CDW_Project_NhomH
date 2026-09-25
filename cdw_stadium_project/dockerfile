@@ -1,9 +1,20 @@
 FROM php:8.3-apache
 
-RUN docker-php-ext-install pdo pdo_mysql
+# Cài PHP extensions + unzip
+RUN apt-get update \
+    && apt-get install -y \
+        unzip \
+        libzip-dev \
+    && docker-php-ext-install \
+        pdo \
+        pdo_mysql \
+        zip \
+    && rm -rf /var/lib/apt/lists/*
 
+# Enable Apache rewrite
 RUN a2enmod rewrite
 
+# Laravel public directory
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
@@ -13,16 +24,21 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
 
 WORKDIR /var/www/html
 
+# Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# Copy Laravel project
 COPY . /var/www/html
 
+# Install Composer dependencies
 RUN composer install \
     --no-interaction \
     --prefer-dist \
     --no-dev \
-    --optimize-autoloader
+    --optimize-autoloader \
+    --no-scripts
 
+# Laravel permissions
 RUN mkdir -p storage/logs \
     && mkdir -p bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache \
