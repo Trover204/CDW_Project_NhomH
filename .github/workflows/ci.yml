@@ -11,6 +11,11 @@ on:
       - main
       - master
 
+defaults:
+  run:
+    working-directory:
+cdw_stadium_project
+
 jobs:
   test:
 
