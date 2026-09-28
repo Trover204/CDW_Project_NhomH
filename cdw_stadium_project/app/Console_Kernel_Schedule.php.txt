@@ -1,0 +1,10 @@
+// routes/console.php  (Laravel 11/12) - tự hủy đơn chưa thanh toán sau 15 phút
+use Illuminate\Support\Facades\Schedule;
+use App\Models\Booking;
+
+Schedule::call(function () {
+    Booking::where('status', 'pending')
+        ->where('created_at', '<', now()->subMinutes(15))
+        ->whereDoesntHave('payment', fn ($q) => $q->where('status', 'paid'))
+        ->update(['status' => 'cancelled']);
+})->everyMinute();
