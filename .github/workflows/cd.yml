@@ -1,15 +1,15 @@
 name: Laravel CD
 
 on:
-  push:
-    branches:
-      - main
-      - master
-
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["Laravel CI"]
+    types:
+      - completed
 
 jobs:
   build-and-push:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
     runs-on: ubuntu-latest
 
     permissions:
@@ -17,7 +17,6 @@ jobs:
       packages: write
 
     steps:
-
       - name: Checkout
         uses: actions/checkout@v4
 
