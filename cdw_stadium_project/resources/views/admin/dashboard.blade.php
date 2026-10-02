@@ -1,92 +1,87 @@
-<h2 class="sr-only">Phác thảo giao diện màu Dashboard quản trị — Sân Nhóm H</h2>
-<div style="font-family:Arial,Helvetica,sans-serif;border:0.5px solid #E1E8E3;border-radius:12px;overflow:hidden;display:flex;background:#FFFFFF;">
-    <div style="width:150px;background:#0F5C33;padding:16px 12px;flex-shrink:0;">
-        <div style="font-size:14px;font-weight:700;color:#FFFFFF;margin-bottom:20px;line-height:1.3;">Sân Nhóm H<br><span style="font-size:10px;font-weight:400;color:#9FCBAE;">Admin</span></div>
-        <div style="display:flex;flex-direction:column;gap:2px;font-size:12px;">
-            <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:6px;background:rgba(255,255,255,.14);color:#FFFFFF;"><i class="ti ti-chart-bar" style="font-size:15px;" aria-hidden="true"></i>Dashboard</div>
-            <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;color:#BFE0CC;"><i class="ti ti-building" style="font-size:15px;" aria-hidden="true"></i>Sân &amp; cơ sở</div>
-            <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;color:#BFE0CC;"><i class="ti ti-calendar-event" style="font-size:15px;" aria-hidden="true"></i>Đơn đặt sân</div>
-            <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;color:#BFE0CC;"><i class="ti ti-users" style="font-size:15px;" aria-hidden="true"></i>Người dùng</div>
-            <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;color:#BFE0CC;"><i class="ti ti-news" style="font-size:15px;" aria-hidden="true"></i>Nội dung</div>
-            <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;color:#BFE0CC;"><i class="ti ti-settings" style="font-size:15px;" aria-hidden="true"></i>Cài đặt</div>
+@extends('layouts.admin')
+
+@section('title', 'Dashboard')
+
+@section('content')
+    <div class="topbar">
+        <h1>Tổng quan hôm nay</h1>
+        <div class="right">
+            <input class="search" type="text" placeholder="Tìm đơn, sân...">
+            <div class="avatar">NA</div>
         </div>
     </div>
 
-    <div style="flex:1;padding:18px;min-width:0;background:#F7FAF8;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-            <div style="font-size:15px;font-weight:700;color:#16241C;">Tổng quan hôm nay</div>
-            <div style="display:flex;align-items:center;gap:10px;">
-                <div style="width:150px;height:28px;border-radius:8px;border:0.5px solid #C7D3CA;background:#FFFFFF;font-size:11px;color:#6B7A70;display:flex;align-items:center;padding:0 10px;"><i class="ti ti-search" style="font-size:13px;margin-right:6px;" aria-hidden="true"></i>Tìm đơn, sân...</div>
-                <div style="width:28px;height:28px;border-radius:50%;background:#E6F5EB;color:#178A4C;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;">NA</div>
+    {{-- 4 thẻ thống kê --}}
+    <div class="stats">
+        <div class="card stat">
+            <div class="label">Doanh thu hôm nay</div>
+            <div class="value">{{ number_format($stats['revenue'], 0, ',', '.') }}đ</div>
+        </div>
+        <div class="card stat">
+            <div class="label">Đơn đặt mới</div>
+            <div class="value">{{ $stats['new_bookings'] }}</div>
+        </div>
+        <div class="card stat">
+            <div class="label">Người dùng mới</div>
+            <div class="value">{{ $stats['new_users'] }}</div>
+        </div>
+        <div class="card stat">
+            <div class="label">Sân đang hoạt động</div>
+            <div class="value green">{{ $stats['active_courts'] }}/{{ $stats['total_courts'] }}</div>
+        </div>
+    </div>
+
+    <div class="charts">
+        {{-- Biểu đồ cột --}}
+        <div class="card">
+            <h3>Doanh thu 7 ngày qua</h3>
+            @php $max = max($weeklyRevenue); @endphp
+            <div class="bars">
+                @foreach ($weeklyRevenue as $value)
+                    <div class="{{ $value === $max ? 'max' : '' }}"
+                         style="height: {{ round($value / $max * 100) }}%"
+                         title="{{ number_format($value, 0, ',', '.') }}đ"></div>
+                @endforeach
             </div>
         </div>
 
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;">
-            <div style="background:#FFFFFF;border:0.5px solid #E1E8E3;border-radius:10px;padding:12px;">
-                <div style="font-size:10.5px;color:#6B7A70;margin-bottom:6px;">Doanh thu hôm nay</div>
-                <div style="font-size:17px;font-weight:700;color:#16241C;">18.400.000đ</div>
-            </div>
-            <div style="background:#FFFFFF;border:0.5px solid #E1E8E3;border-radius:10px;padding:12px;">
-                <div style="font-size:10.5px;color:#6B7A70;margin-bottom:6px;">Đơn đặt mới</div>
-                <div style="font-size:17px;font-weight:700;color:#16241C;">42</div>
-            </div>
-            <div style="background:#FFFFFF;border:0.5px solid #E1E8E3;border-radius:10px;padding:12px;">
-                <div style="font-size:10.5px;color:#6B7A70;margin-bottom:6px;">Người dùng mới</div>
-                <div style="font-size:17px;font-weight:700;color:#16241C;">15</div>
-            </div>
-            <div style="background:#FFFFFF;border:0.5px solid #E1E8E3;border-radius:10px;padding:12px;">
-                <div style="font-size:10.5px;color:#6B7A70;margin-bottom:6px;">Sân đang hoạt động</div>
-                <div style="font-size:17px;font-weight:700;color:#178A4C;">36/40</div>
-            </div>
-        </div>
-
-        <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:12px;margin-bottom:16px;">
-            <div style="background:#FFFFFF;border:0.5px solid #E1E8E3;border-radius:10px;padding:14px;">
-                <div style="font-size:11.5px;font-weight:600;color:#16241C;margin-bottom:10px;">Doanh thu 7 ngày qua</div>
-                <div style="height:90px;display:flex;align-items:flex-end;gap:8px;">
-                    <div style="flex:1;height:40%;background:#BEE3CB;border-radius:3px 3px 0 0;"></div>
-                    <div style="flex:1;height:65%;background:#BEE3CB;border-radius:3px 3px 0 0;"></div>
-                    <div style="flex:1;height:50%;background:#BEE3CB;border-radius:3px 3px 0 0;"></div>
-                    <div style="flex:1;height:80%;background:#BEE3CB;border-radius:3px 3px 0 0;"></div>
-                    <div style="flex:1;height:60%;background:#BEE3CB;border-radius:3px 3px 0 0;"></div>
-                    <div style="flex:1;height:95%;background:#178A4C;border-radius:3px 3px 0 0;"></div>
-                    <div style="flex:1;height:70%;background:#BEE3CB;border-radius:3px 3px 0 0;"></div>
-                </div>
-            </div>
-            <div style="background:#FFFFFF;border:0.5px solid #E1E8E3;border-radius:10px;padding:14px;">
-                <div style="font-size:11.5px;font-weight:600;color:#16241C;margin-bottom:10px;">Loại sân được đặt</div>
-                <div style="display:flex;align-items:center;justify-content:center;height:80px;">
-                    <i class="ti ti-chart-pie" style="font-size:40px;color:#178A4C;" aria-hidden="true"></i>
-                </div>
-            </div>
-        </div>
-
-        <div style="font-size:12.5px;font-weight:600;color:#16241C;margin-bottom:8px;">Đơn đặt gần đây</div>
-        <div style="border:0.5px solid #E1E8E3;border-radius:10px;overflow:hidden;background:#FFFFFF;">
-            <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 0.8fr;gap:8px;padding:9px 12px;background:#F7FAF8;font-size:10.5px;color:#6B7A70;font-weight:600;">
-                <div>Khách hàng</div>
-                <div>Sân</div>
-                <div>Khung giờ</div>
-                <div>Trạng thái</div>
-            </div>
-            <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 0.8fr;gap:8px;padding:9px 12px;border-top:0.5px solid #E1E8E3;font-size:11.5px;color:#3A453E;">
-                <div>Nguyễn Văn A</div>
-                <div>Cầu lông BT</div>
-                <div>18:00-19:00</div>
-                <div><span style="background:#E6F5EB;color:#0F5C33;padding:2px 8px;border-radius:20px;font-size:10px;">Đã xác nhận</span></div>
-            </div>
-            <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 0.8fr;gap:8px;padding:9px 12px;border-top:0.5px solid #E1E8E3;font-size:11.5px;color:#3A453E;">
-                <div>Lê Thị B</div>
-                <div>Bóng đá Q9</div>
-                <div>19:00-20:00</div>
-                <div><span style="background:#FBEFE3;color:#C2570A;padding:2px 8px;border-radius:20px;font-size:10px;">Chờ duyệt</span></div>
-            </div>
-            <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 0.8fr;gap:8px;padding:9px 12px;border-top:0.5px solid #E1E8E3;font-size:11.5px;color:#3A453E;">
-                <div>Phạm C</div>
-                <div>Pickleball Q7</div>
-                <div>20:00-21:00</div>
-                <div><span style="background:#FCEBEB;color:#A32D2D;padding:2px 8px;border-radius:20px;font-size:10px;">Đã hủy</span></div>
+        {{-- Biểu đồ tròn bằng CSS --}}
+        <div class="card">
+            <h3>Loại sân được đặt</h3>
+            @php
+                $total = array_sum(array_column($courtTypes, 'count'));
+                $start = 0;
+                $parts = [];
+                foreach ($courtTypes as $t) {
+                    $end = $start + $t['count'] / $total * 100;
+                    $parts[] = "{$t['color']} {$start}% {$end}%";
+                    $start = $end;
+                }
+            @endphp
+            <div class="donut-wrap">
+                <div class="donut" style="background: conic-gradient({{ implode(', ', $parts) }})"></div>
+                <ul class="legend">
+                    @foreach ($courtTypes as $t)
+                        <li><i style="background: {{ $t['color'] }}"></i>{{ $t['name'] }} ({{ $t['count'] }})</li>
+                    @endforeach
+                </ul>
             </div>
         </div>
     </div>
-</div>
+
+    {{-- Bảng đơn gần đây --}}
+    <div class="section-title">Đơn đặt gần đây</div>
+    <div class="table">
+        <div class="row head">
+            <div>Khách hàng</div><div>Sân</div><div>Khung giờ</div><div>Trạng thái</div>
+        </div>
+        @foreach ($recentBookings as $b)
+            <div class="row">
+                <div>{{ $b['customer'] }}</div>
+                <div>{{ $b['court'] }}</div>
+                <div>{{ $b['time'] }}</div>
+                <div><span class="badge {{ $b['badge'] }}">{{ $b['status'] }}</span></div>
+            </div>
+        @endforeach
+    </div>
+@endsection
