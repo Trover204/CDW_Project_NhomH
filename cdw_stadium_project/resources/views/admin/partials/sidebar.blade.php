@@ -1,22 +1,15 @@
 @php
     $menu = [
-        ['Dashboard',    'ti-chart-bar',      'admin.dashboard'],
-        ['Sân & cơ sở',  'ti-building',       'admin.dashboard'],   // đổi route sau khi có
-        ['Đơn đặt sân',  'ti-calendar-event', 'admin.dashboard'],
-        ['Người dùng',   'ti-users',          'admin.dashboard'],
-        ['Nội dung',     'ti-news',           'admin.dashboard'],
-        ['Cài đặt',      'ti-settings',       'admin.dashboard'],
+        ['Dashboard',   'ti-chart-bar',      'admin.dashboard',      'admin.dashboard'],
+        ['Bình luận',   'ti-message-circle', 'admin.comments.index', 'admin.comments.*'],
+        // ... các mục còn lại giữ nguyên, thêm phần tử thứ 4 là pattern
     ];
 @endphp
 
-<aside class="sidebar">
-    <div class="brand">Sân Nhóm H<br><small>Admin</small></div>
-    <nav>
-        @foreach ($menu as [$label, $icon, $route])
-            <a href="{{ route($route) }}"
-               class="{{ $loop->first && request()->routeIs($route) ? 'active' : '' }}">
-                <i class="ti {{ $icon }}"></i>{{ $label }}
-            </a>
-        @endforeach
-    </nav>
-</aside>
+<nav>
+    @foreach ($menu as [$label, $icon, $route, $pattern])
+        <a href="{{ route($route) }}" class="{{ request()->routeIs($pattern) ? 'active' : '' }}">
+            <i class="ti {{ $icon }}"></i>{{ $label }}
+        </a>
+    @endforeach
+</nav>
