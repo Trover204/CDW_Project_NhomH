@@ -4,7 +4,7 @@ CDW Stadium Project
 │   ├── docker compose up -d --build
 │   ├── docker compose exec app composer install (KHI MỚI) hoặc docker compose exec app composer dump auto-load(khi đã tải)
 │   ├──  docker compose exec app php artisan key:generate
-│   └──  docker compose exec app php artisan migrate --seed
+│   └──  docker compose exec app php artisan migrate:fresh --seed
 │
 └── Cách 2: WAMP/XAMPP
     ├── composer install
