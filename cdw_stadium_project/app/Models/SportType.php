@@ -3,10 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SportType extends Model
 {
     protected $fillable = ['name', 'image', 'description', 'status'];
 
     protected $casts = ['status' => 'boolean'];
+
+    public function courts(): HasMany
+    {
+        return $this->hasMany(Court::class);
+    }
 }
