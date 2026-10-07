@@ -29,4 +29,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function favoriteCourts()
+    {
+        return $this->belongsToMany(Court::class, 'court_user_likes')->withTimestamps();
+    }
 }

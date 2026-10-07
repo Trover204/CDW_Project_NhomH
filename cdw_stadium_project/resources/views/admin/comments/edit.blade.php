@@ -6,7 +6,7 @@
     <div class="card">
         <form method="POST" action="{{ route('admin.comments.update', $comment) }}">
             @method('PUT')
-            @include('admin.comments._form')
+            @include('admin.comments.form')
         </form>
     </div>
 @endsection
