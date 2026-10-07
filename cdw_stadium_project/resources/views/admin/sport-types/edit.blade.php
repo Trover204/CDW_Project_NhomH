@@ -6,6 +6,6 @@
 <form action="{{ route('admin.sport-types.update', $sportType) }}" method="POST" enctype="multipart/form-data"
       style="background:#fff;border:0.5px solid #E1E8E3;border-radius:10px;padding:18px;max-width:560px;">
     @csrf @method('PUT')
-    @include('admin.sport-types._form')
+    @include('admin.sport-types.form')
 </form>
 @endsection
