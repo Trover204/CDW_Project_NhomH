@@ -13,14 +13,17 @@
             <span style="font-size:10px;font-weight:400;color:#9FCBAE;">Admin</span></div>
         @php
             $items = [
-                ['admin.dashboard', 'ti-chart-bar', 'Dashboard'],
-                ['admin.sport-types.index', 'ti-ball-football', 'Loại môn thể thao'],
+                ['admin.dashboard', 'ti-chart-bar', 'Dashboard', 'admin.dashboard'],
+                ['admin.facilities.index', 'ti-building', 'Cơ sở', 'admin.facilities.*'],
+                ['admin.sport-types.index', 'ti-ball-football', 'Loại môn thể thao', 'admin.sport-types.*'],
+                ['admin.courts.index', 'ti-layout-grid', 'Sân thể thao', 'admin.courts.*'],
+                ['admin.comments.index', 'ti-message-circle', 'Bình luận', 'admin.comments.*'],
             ];
         @endphp
-        @foreach ($items as [$route, $icon, $label])
+        @foreach ($items as [$route, $icon, $label, $pattern])
             <a href="{{ route($route) }}"
                style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:6px;font-size:12px;text-decoration:none;
-                      color:#fff;background:{{ request()->routeIs($route) || (str_contains($route,'sport-types') && request()->routeIs('admin.sport-types.*')) ? 'rgba(255,255,255,.14)' : 'transparent' }};">
+                      color:#fff;background:{{ request()->routeIs($pattern) ? 'rgba(255,255,255,.14)' : 'transparent' }};">
                 <i class="ti {{ $icon }}" style="font-size:15px;"></i>{{ $label }}
             </a>
         @endforeach
@@ -30,6 +33,11 @@
         @if (session('success'))
             <div style="background:#E6F5EB;color:#0F5C33;padding:10px 14px;border-radius:8px;margin-bottom:14px;font-size:13px;">
                 {{ session('success') }}
+            </div>
+        @endif
+        @if (session('error'))
+            <div style="background:#FCEBEB;color:#A32D2D;padding:10px 14px;border-radius:8px;margin-bottom:14px;font-size:13px;">
+                {{ session('error') }}
             </div>
         @endif
         @yield('content')

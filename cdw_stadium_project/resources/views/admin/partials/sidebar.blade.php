@@ -1,9 +1,10 @@
 @php
     $menu = [
         ['Dashboard',          'ti-chart-bar',      'admin.dashboard',         'admin.dashboard'],
+        ['Cơ sở',              'ti-building',       'admin.facilities.index',  'admin.facilities.*'],
         ['Loại môn thể thao', 'ti-ball-football',  'admin.sport-types.index', 'admin.sport-types.*'],
+        ['Sân thể thao',       'ti-layout-grid',    'admin.courts.index',      'admin.courts.*'],
         ['Bình luận',          'ti-message-circle', 'admin.comments.index',    'admin.comments.*'],
-        ['Sân & cơ sở',        'ti-building',       'admin.dashboard',         'admin.courts.*'],
         ['Đơn đặt sân',        'ti-calendar-event', 'admin.dashboard',         'admin.bookings.*'],
         ['Người dùng',         'ti-users',          'admin.dashboard',         'admin.users.*'],
         ['Nội dung',           'ti-news',           'admin.dashboard',         'admin.contents.*'],
