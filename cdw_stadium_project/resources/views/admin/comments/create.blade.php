@@ -5,7 +5,7 @@
     <div class="topbar"><h1>Thêm bình luận</h1></div>
     <div class="card">
         <form method="POST" action="{{ route('admin.comments.store') }}">
-            @include('admin.comments._form')
+            @include('admin.comments.form')
         </form>
     </div>
 @endsection
