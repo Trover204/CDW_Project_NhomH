@@ -27,6 +27,7 @@ class CourtRequest extends FormRequest
                     ->where(fn ($query) => $query->where('facility_id', $this->facility_id))
                     ->ignore($id),
             ],
+                 'version'  => 'required|integer', // Thêm validate cho version
             'capacity'      => ['required', 'integer', 'min:1'],
             'description'   => ['nullable', 'string', 'max:1000'],
             'status'        => ['required', Rule::in(['available', 'maintenance', 'inactive'])],

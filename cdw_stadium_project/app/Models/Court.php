@@ -15,6 +15,7 @@ class Court extends Model
         'capacity',
         'description',
         'status',
+        'version',
     ];
 
     protected $casts = [

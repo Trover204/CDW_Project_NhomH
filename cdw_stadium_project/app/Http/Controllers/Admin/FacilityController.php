@@ -38,13 +38,25 @@ class FacilityController extends Controller
 
     public function update(FacilityRequest $request, Facility $facility)
     {
-        $data = $request->validated();
-        $data['status'] = $request->boolean('status');
+        $validated = $request->validated();
+        $currentVersion = $validated['version'];
 
-        $facility->update($data);
+        // Loại bỏ version khỏi mảng data để tự xử lý tăng ++
+        unset($validated['version']);
 
-        return redirect()->route('admin.facilities.index')
-            ->with('success', 'Cập nhật cơ sở thành công.');
+        // Query update với điều kiện version phải khớp
+        $affectedRows = Facility::where('id', $facility->id)
+            ->where('version', $currentVersion)
+            ->update(array_merge($validated, [
+                'version' => $currentVersion + 1
+            ]));
+
+        // Nếu affectedRows = 0 nghĩa là version đã bị thay đổi bởi request khác
+        if ($affectedRows === 0) {
+            return redirect()->back()->with('error', 'Dữ liệu này vừa được một quản trị viên khác cập nhật. Vui lòng tải lại trang để xem dữ liệu mới nhất.');
+        }
+
+        return redirect()->route('admin.facilities.index')->with('success', 'Đã cập nhật bình luận.');
     }
 
     public function destroy(Facility $facility)

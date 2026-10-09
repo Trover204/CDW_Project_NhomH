@@ -43,10 +43,25 @@ class CourtController extends Controller
 
     public function update(CourtRequest $request, Court $court)
     {
-        $court->update($request->validated());
+         $validated = $request->validated();
+        $currentVersion = $validated['version'];
 
-        return redirect()->route('admin.courts.index')
-            ->with('success', 'Cập nhật sân thành công.');
+        // Loại bỏ version khỏi mảng data để tự xử lý tăng ++
+        unset($validated['version']);
+
+        // Query update với điều kiện version phải khớp
+        $affectedRows = Court::where('id', $court->id)
+            ->where('version', $currentVersion)
+            ->update(array_merge($validated, [
+                'version' => $currentVersion + 1
+            ]));
+
+        // Nếu affectedRows = 0 nghĩa là version đã bị thay đổi bởi request khác
+        if ($affectedRows === 0) {
+            return redirect()->back()->with('error', 'Dữ liệu này vừa được một quản trị viên khác cập nhật. Vui lòng tải lại trang để xem dữ liệu mới nhất.');
+        }
+
+        return redirect()->route('admin.court.index')->with('success', 'Đã cập nhật sân.');
     }
 
     public function destroy(Court $court)

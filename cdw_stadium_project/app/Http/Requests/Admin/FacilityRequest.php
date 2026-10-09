@@ -26,6 +26,7 @@ class FacilityRequest extends FormRequest
                     ->where(fn ($query) => $query->where('name', $this->name))
                     ->ignore($id),
             ],
+                 'version'  => 'required|integer', // Thêm validate cho version
             'phone'      => ['nullable', 'string', 'max:20'],
             'open_time'  => ['required', 'date_format:H:i'],
             'close_time' => ['required', 'date_format:H:i', 'after:open_time'],

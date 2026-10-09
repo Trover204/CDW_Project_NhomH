@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->text('description')->nullable();
             $table->enum('status', ['available', 'maintenance', 'inactive'])->default('available');
             $table->timestamps();
-
+                 $table->integer('version')->default(0); // Thêm cột version
             $table->unique(['facility_id', 'name']);
             $table->index(['sport_type_id', 'status']);
         });

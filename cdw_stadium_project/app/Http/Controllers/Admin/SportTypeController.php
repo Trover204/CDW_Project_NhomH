@@ -43,8 +43,6 @@ class SportTypeController extends Controller
 
     public function update(SportTypeRequest $request, SportType $sportType)
     {
-        $data = $request->validated();
-        $data['status'] = $request->boolean('status');
 
         if ($request->hasFile('image')) {
             if ($sportType->image) {
@@ -52,11 +50,25 @@ class SportTypeController extends Controller
             }
             $data['image'] = $request->file('image')->store('sport-types', 'public');
         }
+        $validated = $request->validated();
+        $currentVersion = $validated['version'];
 
-        $sportType->update($data);
+        // Loại bỏ version khỏi mảng data để tự xử lý tăng ++
+        unset($validated['version']);
 
-        return redirect()->route('admin.sport-types.index')
-            ->with('success', 'Cập nhật thành công.');
+        // Query update với điều kiện version phải khớp
+        $affectedRows = SportType::where('id', $sportType->id)
+            ->where('version', $currentVersion)
+            ->update(array_merge($validated, [
+                'version' => $currentVersion + 1
+            ]));
+
+        // Nếu affectedRows = 0 nghĩa là version đã bị thay đổi bởi request khác
+        if ($affectedRows === 0) {
+            return redirect()->back()->with('error', 'Dữ liệu này vừa được một quản trị viên khác cập nhật. Vui lòng tải lại trang để xem dữ liệu mới nhất.');
+        }
+
+        return redirect()->route('admin.facilities.index')->with('success', 'Đã cập nhật loại sân.');
     }
 
     public function destroy(SportType $sportType)
