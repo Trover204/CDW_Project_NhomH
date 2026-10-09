@@ -14,6 +14,7 @@ class Facility extends Model
         'open_time',
         'close_time',
         'status',
+        'version',
     ];
 
     protected $casts = [

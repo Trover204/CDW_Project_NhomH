@@ -7,5 +7,6 @@
       style="background:#fff;border:0.5px solid #E1E8E3;border-radius:10px;padding:18px;max-width:560px;">
     @csrf @method('PUT')
     @include('admin.sport-types.form')
+    <input type="hidden" name="version" value="{{ $sportType->version }}">
 </form>
 @endsection

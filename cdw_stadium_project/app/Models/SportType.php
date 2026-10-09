@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SportType extends Model
 {
-    protected $fillable = ['name', 'image', 'description', 'status'];
+    protected $fillable = ['name', 'image', 'description', 'status','version'];
 
     protected $casts = ['status' => 'boolean'];
 

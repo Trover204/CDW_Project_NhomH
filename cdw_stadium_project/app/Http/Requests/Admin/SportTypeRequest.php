@@ -21,6 +21,7 @@ class SportTypeRequest extends FormRequest
             'image'       => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'description' => ['nullable', 'string', 'max:1000'],
             'status'      => ['nullable', 'boolean'],
+                 'version'  => 'required|integer', // Thêm validate cho version
         ];
     }
 

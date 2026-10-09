@@ -8,5 +8,6 @@
     @csrf
     @method('PUT')
     @include('admin.facilities.form')
+    <input type="hidden" name="version" value="{{ $facility->version }}">
 </form>
 @endsection

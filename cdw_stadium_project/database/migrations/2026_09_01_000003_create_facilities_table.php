@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->time('close_time');
             $table->boolean('status')->default(true);
             $table->timestamps();
-
+            $table->integer('version')->default(0); // Thêm cột version
             $table->unique(['name', 'address']);
         });
 
