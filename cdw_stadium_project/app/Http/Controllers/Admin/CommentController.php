@@ -50,12 +50,28 @@ class CommentController extends Controller
     }
 
     // U - Cập nhật
-    public function update(CommentRequest $request, Comment $comment)
-    {
-        $comment->update($request->validated());
-        return redirect()->route('admin.comments.index')->with('success', 'Đã cập nhật bình luận.');
+   public function update(CommentRequest $request, Comment $comment)
+{
+    $validated = $request->validated();
+    $currentVersion = $validated['version'];
+    
+    // Loại bỏ version khỏi mảng data để tự xử lý tăng ++
+    unset($validated['version']);
+
+    // Query update với điều kiện version phải khớp
+    $affectedRows = Comment::where('id', $comment->id)
+        ->where('version', $currentVersion)
+        ->update(array_merge($validated, [
+            'version' => $currentVersion + 1
+        ]));
+
+    // Nếu affectedRows = 0 nghĩa là version đã bị thay đổi bởi request khác
+    if ($affectedRows === 0) {
+        return redirect()->back()->with('error', 'Dữ liệu này vừa được một quản trị viên khác cập nhật. Vui lòng tải lại trang để xem dữ liệu mới nhất.');
     }
 
+    return redirect()->route('admin.comments.index')->with('success', 'Đã cập nhật bình luận.');
+}
     // D - Xóa
     public function destroy(Comment $comment)
     {

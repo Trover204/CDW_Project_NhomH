@@ -6,6 +6,7 @@
     <div class="card">
         <form method="POST" action="{{ route('admin.comments.store') }}">
             @include('admin.comments.form')
+       
         </form>
     </div>
 @endsection
