@@ -13,6 +13,7 @@ return new class extends Migration {
             $table->foreignId('news_id')->constrained('news')->cascadeOnDelete();
             $table->text('content');
             $table->boolean('status')->default(true);
+            $table->integer('version')->default(0); // Thêm cột version
             $table->timestamps();
 
             $table->index(['news_id', 'status', 'created_at']);

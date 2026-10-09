@@ -20,6 +20,7 @@ public function rules(): array
         'content'  => 'required|string|max:1000',
         'rating'   => 'nullable|integer|between:1,5',
         'status'   => 'required|in:pending,approved,hidden',
+        'version'  => 'required|integer', // Thêm validate cho version
     ];
 }
 

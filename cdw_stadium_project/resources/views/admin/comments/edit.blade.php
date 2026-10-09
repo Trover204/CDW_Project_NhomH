@@ -6,7 +6,9 @@
     <div class="card">
         <form method="POST" action="{{ route('admin.comments.update', $comment) }}">
             @method('PUT')
+             
             @include('admin.comments.form')
+           <input type="hidden" name="version" value="{{ $comment->version }}">
         </form>
     </div>
 @endsection
