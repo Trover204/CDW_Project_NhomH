@@ -1,47 +1,61 @@
 @extends('layouts.admin')
-@section('title', 'Bình luận')
+@section('title', 'Quản lý bình luận')
 
 @section('content')
-    <div class="topbar">
-        <h1>Quản lý bình luận</h1>
-        <div class="right">
-            <a href="{{ route('admin.comments.create') }}">+ Thêm bình luận</a>
-        </div>
+<div class="topbar">
+    <h1>Quản lý bình luận</h1>
+    <div class="right">
+        <a href="{{ route('admin.comments.create') }}" class="btn btn-primary">
+            <i class="ti ti-plus"></i> Thêm bình luận
+        </a>
     </div>
+</div>
 
-    @if (session('success'))
-        <div class="card" style="color:#178A4C">{{ session('success') }}</div>
-    @endif
-
-    <div class="table">
-        <div class="row head">
-            <div>Người dùng</div><div>Sân</div><div>Nội dung</div><div>Sao</div><div>Trạng thái</div><div>Thao tác</div>
-        </div>
-
+<div class="table-card">
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th style="width: 140px;">Người dùng</th>
+                <th style="width: 150px;">Sân</th>
+                <th>Nội dung</th>
+                <th style="width: 100px;">Đánh giá</th>
+                <th style="width: 120px;">Trạng thái</th>
+                <th style="width: 130px; text-align: right;">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
         @forelse ($comments as $c)
-            <div class="row">
-                <div>{{ $c->user->name ?? '—' }}</div>
-                <div>{{ $c->court->name ?? '—' }}</div>
-                <div>{{ \Illuminate\Support\Str::limit($c->content, 50) }}</div>
-                <div>{{ $c->rating ?? '—' }}</div>
-                <div>
-                    <span class="badge {{ ['approved'=>'success','pending'=>'warning','hidden'=>'danger'][$c->status] }}">
-                        {{ ['approved'=>'Đã duyệt','pending'=>'Chờ duyệt','hidden'=>'Ẩn'][$c->status] }}
+            <tr>
+                <td style="font-weight: 600; color: var(--text);">{{ $c->user->name ?? '—' }}</td>
+                <td>{{ $c->court->name ?? '—' }}</td>
+                <td>{{ \Illuminate\Support\Str::limit($c->content, 60) }}</td>
+                <td>
+                    <span style="color: #F59E0B; font-weight: 600;">
+                        ★ {{ $c->rating ?? '—' }}
                     </span>
-                </div>
-                <div>
-                    <a href="{{ route('admin.comments.edit', $c) }}">Sửa</a>
+                </td>
+                <td>
+                    <span class="badge {{ ['approved'=>'success','pending'=>'warning','hidden'=>'danger'][$c->status] ?? 'info' }}">
+                        {{ ['approved'=>'Đã duyệt','pending'=>'Chờ duyệt','hidden'=>'Ẩn'][$c->status] ?? $c->status }}
+                    </span>
+                </td>
+                <td style="text-align: right; white-space: nowrap;">
+                    <a href="{{ route('admin.comments.edit', $c) }}" class="action-link">Sửa</a>
                     <form method="POST" action="{{ route('admin.comments.destroy', $c) }}"
                           style="display:inline" onsubmit="return confirm('Xóa bình luận này?')">
                         @csrf @method('DELETE')
-                        <button type="submit">Xóa</button>
+                        <button type="submit" class="action-btn-danger">Xóa</button>
                     </form>
-                </div>
-            </div>
+                </td>
+            </tr>
         @empty
-            <div class="row"><div>Chưa có bình luận nào.</div></div>
+            <tr>
+                <td colspan="6" style="padding: 24px; text-align: center; color: var(--muted);">Chưa có bình luận nào.</td>
+            </tr>
         @endforelse
-    </div>
+        </tbody>
+    </table>
+</div>
 
-    {{ $comments->links() }}
+<div class="pagination-wrap">{{ $comments->links() }}</div>
 @endsection

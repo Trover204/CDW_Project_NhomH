@@ -1,75 +1,619 @@
 :root {
-    --bg: #0A0D0B;            /* nền tổng thể: đen */
-    --surface: #111814;       /* nền card, bảng */
-    --border: #1E2B23;        /* viền */
-    --sidebar: #0B2417;       /* sidebar: xanh lá đậm */
+    /* Theme màu chủ đạo: Trắng, Xanh lá cây (Turf Green), Xanh nhạt (Mint/Lime) & Đen */
+    --bg: #F4F7F5;                  /* Nền tổng thể: trắng ngà nhẹ tươi mát */
+    --surface: #FFFFFF;             /* Nền card, bảng, form: trắng tinh khiết */
+    --surface-alt: #F0F6F2;         /* Nền tiêu đề bảng, ô phụ: xanh nhạt phớt */
+    --surface-hover: #F8FBF9;       /* Hover hàng bảng */
+    --border: #E1E8E3;              /* Viền nhẹ nhàng sạch sẽ */
+    --border-strong: #C8D6CD;       /* Viền input, ô chọn */
 
-    --green: #1F7A47;         /* xanh lá đậm (điểm nhấn) */
-    --green-dim: #15402A;     /* xanh lá tối (cột biểu đồ thường) */
+    --sidebar: #0D3E2E;             /* Sidebar xanh cỏ đậm (như mảng xanh turf banner của ảnh) */
+    --sidebar-text: #D2E7DC;        /* Màu chữ sidebar */
+    --sidebar-muted: #8AA89B;       /* Màu chữ phụ sidebar */
+    --sidebar-active-bg: rgba(255, 255, 255, 0.12); /* Nền menu active */
+    --sidebar-active-text: #BEF264; /* Chữ & icon active: xanh chanh sáng (Lime) như nút 'Book Now' */
 
-    --orange: #F59E42;        /* chữ sidebar */
-    --orange-light: #FFB366;  /* chữ sidebar khi active/hover */
+    --primary: #0D5C40;             /* Xanh lá đậm chủ đạo (nút chính, điểm nhấn, link) */
+    --primary-hover: #08432E;       /* Xanh lá đậm khi hover */
+    --primary-light: #EBF8F1;       /* Nền xanh rất nhạt */
 
-    --text: #E8EEEA;
-    --muted: #8A9A90;
+    --green-light: #DCFCE7;         /* Xanh nhạt (pastel mint) cho badge, tag, icon */
+    --green-light-text: #0D5C40;    /* Chữ trên nền xanh nhạt */
+    --lime: #BEF264;                /* Xanh chanh tươi sáng (điểm nhấn đặc trưng ảnh) */
+
+    --text: #111827;                /* Màu chữ chính: đen than / charcoal */
+    --text-secondary: #374151;      /* Màu chữ phụ */
+    --muted: #6B7280;               /* Màu chữ làm mờ */
+
+    --success: #16A34A;
+    --success-bg: #DCFCE7;
+    --warning: #B45309;
+    --warning-bg: #FEF3C7;
+    --danger: #B91C1C;
+    --danger-bg: #FEE2E2;
 }
 
-* { box-sizing: border-box; }
-body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--bg); color: var(--text); }
+* {
+    box-sizing: border-box;
+}
 
-.admin { display: flex; min-height: 100vh; }
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+}
 
-/* Sidebar */
-.sidebar { width: 210px; background: var(--sidebar); border-right: .5px solid var(--border);
-           padding: 16px 12px; flex-shrink: 0; }
-.sidebar .brand { font-size: 14px; font-weight: 700; color: var(--orange); margin-bottom: 20px; line-height: 1.3; }
-.sidebar .brand small { font-size: 10px; font-weight: 400; color: var(--orange); opacity: .7; }
-.sidebar nav { display: flex; flex-direction: column; gap: 2px; }
-.sidebar a { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 6px;
-             font-size: 13px; color: var(--orange); text-decoration: none; }
-.sidebar a:hover { background: rgba(245,158,66,.08); color: var(--orange-light); }
-.sidebar a.active { background: rgba(245,158,66,.16); color: var(--orange-light); }
-.sidebar a i { font-size: 16px; }
+.admin {
+    display: flex;
+    min-height: 100vh;
+}
 
-/* Main */
-.main { flex: 1; padding: 18px; min-width: 0; }
-.topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-.topbar h1 { font-size: 15px; margin: 0; color: var(--text); }
-.topbar .right { display: flex; align-items: center; gap: 10px; }
-.search { width: 180px; height: 28px; border-radius: 8px; border: .5px solid var(--border);
-          background: var(--surface); color: var(--text); font-size: 11px; padding: 0 10px; outline: none; }
-.search::placeholder { color: var(--muted); }
-.search:focus { border-color: var(--green); }
-.avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--green-dim); color: #6EE7A3;
-          font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+/* ==========================================================================
+   Sidebar
+   ========================================================================== */
+.sidebar {
+    width: 220px;
+    background: var(--sidebar);
+    border-right: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 20px 14px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+}
 
-.card { background: var(--surface); border: .5px solid var(--border); border-radius: 10px; padding: 14px; }
-.card h3 { font-size: 11.5px; font-weight: 600; margin: 0 0 10px; color: var(--text); }
+.sidebar .brand {
+    font-size: 16px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 22px;
+    line-height: 1.3;
+    padding-left: 8px;
+    letter-spacing: -0.3px;
+}
 
-.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
-.stat .label { font-size: 10.5px; color: var(--muted); margin-bottom: 6px; }
-.stat .value { font-size: 17px; font-weight: 700; color: var(--text); }
-.stat .value.green { color: #3DDC84; }
+.sidebar .brand small {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--lime);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-top: 2px;
+}
 
-.charts { display: grid; grid-template-columns: 1.4fr 1fr; gap: 12px; margin-bottom: 16px; }
-.bars { height: 90px; display: flex; align-items: flex-end; gap: 8px; }
-.bars div { flex: 1; background: var(--green-dim); border-radius: 3px 3px 0 0; }
-.bars div.max { background: var(--green); }
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
 
-.donut-wrap { display: flex; align-items: center; gap: 16px; }
-.donut { width: 80px; height: 80px; border-radius: 50%; position: relative; flex-shrink: 0; }
-.donut::after { content: ""; position: absolute; inset: 20px; background: var(--surface); border-radius: 50%; }
-.legend { list-style: none; margin: 0; padding: 0; font-size: 11px; color: var(--text); }
-.legend li { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
-.legend i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
 
-.section-title { font-size: 12.5px; font-weight: 600; margin-bottom: 8px; color: var(--text); }
-.table { border: .5px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--surface); }
-.row { display: grid; grid-template-columns: 1.2fr 1fr 1fr .8fr; gap: 8px; padding: 9px 12px;
-       border-top: .5px solid var(--border); font-size: 11.5px; color: var(--text); }
-.row.head { background: #0D1410; font-size: 10.5px; color: var(--muted); font-weight: 600; border-top: 0; }
+.sidebar a:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #FFFFFF;
+}
 
-.badge { padding: 2px 8px; border-radius: 20px; font-size: 10px; }
-.badge.success { background: rgba(61,220,132,.14); color: #3DDC84; }
-.badge.warning { background: rgba(245,158,66,.16); color: #F59E42; }
-.badge.danger  { background: rgba(239,83,80,.16);  color: #FF6B68; }
+.sidebar a.active {
+    background: var(--sidebar-active-bg);
+    color: var(--sidebar-active-text);
+    font-weight: 600;
+}
+
+.sidebar a.active i {
+    color: var(--lime);
+}
+
+.sidebar a i {
+    font-size: 17px;
+    width: 20px;
+    text-align: center;
+}
+
+/* ==========================================================================
+   Main Content & Topbar
+   ========================================================================== */
+.main {
+    flex: 1;
+    padding: 22px 28px;
+    min-width: 0;
+    background: var(--bg);
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.topbar h1, .page-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text);
+    letter-spacing: -0.3px;
+}
+
+.topbar .right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Thanh tìm kiếm hình viên thuốc (pill) giống style trong ảnh TurfTime */
+.search {
+    width: 210px;
+    height: 34px;
+    border-radius: 9999px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 12px;
+    padding: 0 14px;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.search::placeholder {
+    color: var(--muted);
+}
+
+.search:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(13, 92, 64, 0.12);
+}
+
+.avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--green-light);
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #FFFFFF;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* ==========================================================================
+   Cards & Stats
+   ========================================================================== */
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    box-shadow: 0 1px 3px rgba(13, 92, 64, 0.03);
+}
+
+.card h3 {
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0 0 12px;
+    color: var(--text);
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.stat .label {
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.stat .value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+}
+
+.stat .value.green {
+    color: var(--primary);
+}
+
+/* ==========================================================================
+   Charts
+   ========================================================================== */
+.charts {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.bars {
+    height: 100px;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    padding-top: 10px;
+}
+
+.bars div {
+    flex: 1;
+    background: var(--green-light);
+    border-radius: 4px 4px 0 0;
+    transition: all 0.2s ease;
+    min-height: 8px;
+}
+
+.bars div:hover {
+    background: #A7F3D0;
+}
+
+.bars div.max {
+    background: var(--primary);
+}
+
+.donut-wrap {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 6px 0;
+}
+
+.donut {
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    position: relative;
+    flex-shrink: 0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.donut::after {
+    content: "";
+    position: absolute;
+    inset: 22px;
+    background: var(--surface);
+    border-radius: 50%;
+}
+
+.legend {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+}
+
+.legend li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.legend i {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+.section-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text);
+}
+
+/* Bảng dạng grid trong dashboard */
+.table {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--surface);
+    box-shadow: 0 1px 3px rgba(13, 92, 64, 0.03);
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr .8fr;
+    gap: 10px;
+    padding: 11px 14px;
+    border-top: 1px solid var(--border);
+    font-size: 12.5px;
+    color: var(--text);
+    align-items: center;
+}
+
+.row.head {
+    background: var(--surface-alt);
+    font-size: 11.5px;
+    color: var(--muted);
+    font-weight: 600;
+    border-top: 0;
+}
+
+/* Bảng HTML tiêu chuẩn cho các trang Quản lý (Sport-types, Comments, Courts, Facilities) */
+.table-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(13, 92, 64, 0.03);
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-align: left;
+}
+
+.admin-table th {
+    background: var(--surface-alt);
+    padding: 11px 14px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+}
+
+.admin-table td {
+    padding: 12px 14px;
+    border-top: 1px solid var(--border);
+    vertical-align: middle;
+}
+
+.admin-table tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.admin-table tbody tr:hover {
+    background: var(--surface-hover);
+}
+
+/* ==========================================================================
+   Badges
+   ========================================================================== */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 9px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.badge.success {
+    background: var(--success-bg);
+    color: var(--green-light-text);
+}
+
+.badge.warning {
+    background: var(--warning-bg);
+    color: var(--warning);
+}
+
+.badge.danger {
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    line-height: 1.4;
+}
+
+/* Nút chính xanh đậm (Turf Green) */
+.btn-primary {
+    background: var(--primary);
+    color: #FFFFFF;
+    border-color: var(--primary);
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+    border-color: var(--primary-hover);
+    color: #FFFFFF;
+}
+
+/* Nút phụ / Hủy */
+.btn-secondary {
+    background: var(--surface);
+    color: var(--text-secondary);
+    border-color: var(--border-strong);
+}
+
+.btn-secondary:hover {
+    background: var(--surface-alt);
+    color: var(--text);
+}
+
+/* Nút xóa / Danger */
+.btn-danger {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border-color: transparent;
+}
+
+.btn-danger:hover {
+    background: #FECDCD;
+    color: #991B1B;
+}
+
+/* Thao tác bảng (Edit / Delete links) */
+.action-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 13px;
+    margin-right: 12px;
+    transition: color 0.15s ease;
+}
+
+.action-link:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+.action-btn-danger {
+    background: none;
+    border: 0;
+    color: var(--danger);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 0;
+    transition: color 0.15s ease;
+}
+
+.action-btn-danger:hover {
+    color: #7F1D1D;
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+.form-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    max-width: 620px;
+    box-shadow: 0 1px 3px rgba(13, 92, 64, 0.03);
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+}
+
+.form-control {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--text);
+    background: var(--surface);
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    font-family: inherit;
+}
+
+.form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(13, 92, 64, 0.12);
+}
+
+.form-error {
+    color: var(--danger);
+    font-size: 12px;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+.form-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text);
+    cursor: pointer;
+    user-select: none;
+}
+
+.form-check input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 22px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+
+/* ==========================================================================
+   Alerts & Notifications
+   ========================================================================== */
+.alert {
+    padding: 11px 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.alert-success {
+    background: var(--success-bg);
+    color: var(--green-light-text);
+    border: 1px solid #BBF7D0;
+}
+
+.alert-danger {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid #FECACA;
+}
+
+/* ==========================================================================
+   Pagination
+   ========================================================================== */
+.pagination-wrap {
+    margin-top: 16px;
+}
