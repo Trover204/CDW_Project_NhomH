@@ -1,13 +1,22 @@
-@extends('admin.layouts.app')
+@extends('layouts.admin')
 @section('title', 'Sửa cơ sở')
 
 @section('content')
-<h2 style="margin:0 0 14px;font-size:16px;color:#16241C;">Sửa cơ sở: {{ $facility->name }}</h2>
-<form action="{{ route('admin.facilities.update', $facility) }}" method="POST"
-      style="background:#fff;border:0.5px solid #E1E8E3;border-radius:10px;padding:18px;max-width:560px;">
-    @csrf
-    @method('PUT')
-    @include('admin.facilities.form')
-    <input type="hidden" name="version" value="{{ $facility->version }}">
-</form>
+<div class="topbar">
+    <h1>Sửa cơ sở: {{ $facility->name }}</h1>
+    <div class="right">
+        <a href="{{ route('admin.facilities.index') }}" class="btn btn-secondary">
+            <i class="ti ti-arrow-left"></i> Quay lại
+        </a>
+    </div>
+</div>
+
+<div class="form-card">
+    <form action="{{ route('admin.facilities.update', $facility) }}" method="POST">
+        @csrf
+        @method('PUT')
+        @include('admin.facilities.form')
+        <input type="hidden" name="version" value="{{ $facility->version }}">
+    </form>
+</div>
 @endsection
