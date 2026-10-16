@@ -112,7 +112,7 @@ jobs:
       # 7. Clear Laravel cache
       # ========================================
       - name: Clear Laravel cache
-        run: php artisan optimize:clear
+        run: php artisan optimize:clear || true
 
       # ========================================
       # 9. Chạy Laravel tests
