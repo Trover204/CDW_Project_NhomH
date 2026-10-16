@@ -4,9 +4,9 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\LogsActivity;
@@ -14,7 +14,9 @@ use App\Traits\LogsActivity;
 class User extends Authenticatable
 {
     protected $fillable = ['name', 'email', 'password', 'phone', 'avatar', 'birthday', 'role', 'status'];
+
     protected $hidden = ['password', 'remember_token'];
+
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, LogsActivity;
 
@@ -27,16 +29,23 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'birthday' => 'date',
             'password' => 'hashed',
         ];
     }
-    public function favoriteCourts()
+
+    public function favoriteCourts(): BelongsToMany
     {
         return $this->belongsToMany(Court::class, 'court_user_likes')->withTimestamps();
     }
 
-    public function subscriptions()
+    public function subscriptions(): HasMany
     {
         return $this->hasMany(Subscription::class);
+    }
+
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
     }
 }

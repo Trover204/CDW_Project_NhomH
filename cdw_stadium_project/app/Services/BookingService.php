@@ -23,8 +23,8 @@ class BookingService
         $total = 0;
 
         for ($t = Carbon::createFromFormat('H:i', $start);
-             $t->lt(Carbon::createFromFormat('H:i', $end));
-             $t->addHour()) {
+            $t->lt(Carbon::createFromFormat('H:i', $end));
+            $t->addHour()) {
 
             $hour = $t->format('H:i:s');
 
@@ -37,7 +37,7 @@ class BookingService
                 ->orderByRaw('court_id IS NULL')   // giá riêng sân trước
                 ->first();
 
-            if (!$rule) {
+            if (! $rule) {
                 throw ValidationException::withMessages(['start_time' => "Chưa có bảng giá cho khung giờ {$t->format('H:i')}."]);
             }
             $total += (int) $rule->price;
@@ -54,7 +54,7 @@ class BookingService
         if ($court->status !== 'available') {
             throw ValidationException::withMessages(['court_id' => 'Sân hiện không nhận đặt.']);
         }
-        if (Carbon::parse($data['booking_date'] . ' ' . $data['start_time'])->isPast()) {
+        if (Carbon::parse($data['booking_date'].' '.$data['start_time'])->isPast()) {
             throw ValidationException::withMessages(['booking_date' => 'Không thể đặt sân trong quá khứ.']);
         }
         if ($data['start_time'] >= $data['end_time']
@@ -90,12 +90,12 @@ class BookingService
                 }
 
                 $booking = Booking::create($data + [
-                    'user_id'         => $userId,
+                    'user_id' => $userId,
                     'subscription_id' => $subscription?->id,
-                    'subtotal'        => $subtotal,
+                    'subtotal' => $subtotal,
                     'discount_amount' => $discount,
-                    'total_price'     => $subtotal - $discount,
-                    'status'          => 'pending',
+                    'total_price' => $subtotal - $discount,
+                    'status' => 'pending',
                 ]);
 
                 $booking->logs()->create(['user_id' => $userId, 'action' => 'created']);
@@ -113,7 +113,7 @@ class BookingService
 
     public function cancel(Booking $booking, int $userId, int $freeCancelHours = 2): void
     {
-        $startAt = Carbon::parse($booking->booking_date->format('Y-m-d') . ' ' . $booking->start_time);
+        $startAt = Carbon::parse($booking->booking_date->format('Y-m-d').' '.$booking->start_time);
 
         if (now()->addHours($freeCancelHours)->gt($startAt)) {
             throw ValidationException::withMessages(['booking' => 'Không thể hủy vì đã quá thời gian quy định.']);

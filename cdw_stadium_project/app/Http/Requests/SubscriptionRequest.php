@@ -21,7 +21,7 @@ class SubscriptionRequest extends FormRequest
             'status' => 'boolean',
             'payment_method' => 'nullable|string|max:191',
             'amount_paid' => 'nullable|numeric|min:0',
-            'transaction_code' => 'nullable|string|max:191|unique:subscriptions,transaction_code,' . ($this->route('subscription') ? $this->route('subscription')->id : 'NULL'),
+            'transaction_code' => 'nullable|string|max:191|unique:subscriptions,transaction_code,'.($this->route('subscription') ? $this->route('subscription')->id : 'NULL'),
         ];
     }
 }

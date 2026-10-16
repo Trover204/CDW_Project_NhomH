@@ -14,6 +14,7 @@ class CommentController extends Controller
     public function index()
     {
         $comments = Comment::with(['user', 'court'])->latest()->paginate(10);
+
         return view('admin.comments.index', compact('comments'));
     }
 
@@ -21,7 +22,7 @@ class CommentController extends Controller
     public function create()
     {
         return view('admin.comments.create', [
-            'users'  => User::all(),
+            'users' => User::all(),
             'courts' => Court::all(),
         ]);
     }
@@ -30,6 +31,7 @@ class CommentController extends Controller
     public function store(CommentRequest $request)
     {
         Comment::create($request->validated());
+
         return redirect()->route('admin.comments.index')->with('success', 'Đã thêm bình luận.');
     }
 
@@ -44,38 +46,40 @@ class CommentController extends Controller
     {
         return view('admin.comments.edit', [
             'comment' => $comment,
-            'users'   => User::all(),
-            'courts'  => Court::all(),
+            'users' => User::all(),
+            'courts' => Court::all(),
         ]);
     }
 
     // U - Cập nhật
-   public function update(CommentRequest $request, Comment $comment)
-{
-    $validated = $request->validated();
-    $currentVersion = $validated['version'];
-    
-    // Loại bỏ version khỏi mảng data để tự xử lý tăng ++
-    unset($validated['version']);
+    public function update(CommentRequest $request, Comment $comment)
+    {
+        $validated = $request->validated();
+        $currentVersion = $validated['version'];
 
-    // Query update với điều kiện version phải khớp
-    $affectedRows = Comment::where('id', $comment->id)
-        ->where('version', $currentVersion)
-        ->update(array_merge($validated, [
-            'version' => $currentVersion + 1
-        ]));
+        // Loại bỏ version khỏi mảng data để tự xử lý tăng ++
+        unset($validated['version']);
 
-    // Nếu affectedRows = 0 nghĩa là version đã bị thay đổi bởi request khác
-    if ($affectedRows === 0) {
-        return redirect()->back()->with('error', 'Dữ liệu này vừa được một quản trị viên khác cập nhật. Vui lòng tải lại trang để xem dữ liệu mới nhất.');
+        // Query update với điều kiện version phải khớp
+        $affectedRows = Comment::where('id', $comment->id)
+            ->where('version', $currentVersion)
+            ->update(array_merge($validated, [
+                'version' => $currentVersion + 1,
+            ]));
+
+        // Nếu affectedRows = 0 nghĩa là version đã bị thay đổi bởi request khác
+        if ($affectedRows === 0) {
+            return redirect()->back()->with('error', 'Dữ liệu này vừa được một quản trị viên khác cập nhật. Vui lòng tải lại trang để xem dữ liệu mới nhất.');
+        }
+
+        return redirect()->route('admin.comments.index')->with('success', 'Đã cập nhật bình luận.');
     }
 
-    return redirect()->route('admin.comments.index')->with('success', 'Đã cập nhật bình luận.');
-}
     // D - Xóa
     public function destroy(Comment $comment)
     {
         $comment->delete();
+
         return redirect()->route('admin.comments.index')->with('success', 'Đã xóa bình luận.');
     }
 }

@@ -5,7 +5,8 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         Schema::create('bookings', function (Blueprint $table) {
@@ -28,11 +29,11 @@ return new class extends Migration {
             $table->decimal('total_price', 12, 0)->default(0);      // = subtotal - discount_amount
             $table->text('note')->nullable();
             $table->enum('status', ['pending', 'confirmed', 'checked_in', 'completed', 'cancelled', 'rejected'])
-                  ->default('pending');
+                ->default('pending');
 
             // Cột sinh tự động: NULL khi đơn đã hủy/từ chối => không chặn đặt lại khung giờ đó
             $table->unsignedTinyInteger('slot_lock')->nullable()
-                  ->storedAs("CASE WHEN status IN ('cancelled','rejected') THEN NULL ELSE 1 END");
+                ->storedAs("CASE WHEN status IN ('cancelled','rejected') THEN NULL ELSE 1 END");
 
             $table->timestamps();
 

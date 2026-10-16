@@ -15,8 +15,8 @@ class CourtSeeder extends Seeder
         // tên loại môn => [tiền tố tên sân, sức chứa]
         $config = [
             'Bóng đá mini' => ['Sân bóng', 10],
-            'Cầu lông'     => ['Sân cầu lông', 4],
-            'Pickleball'   => ['Sân pickleball', 4],
+            'Cầu lông' => ['Sân cầu lông', 4],
+            'Pickleball' => ['Sân pickleball', 4],
         ];
 
         foreach ($facilityIds as $facilityId) {

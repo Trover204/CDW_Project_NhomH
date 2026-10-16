@@ -5,7 +5,8 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         Schema::create('courts', function (Blueprint $table) {
@@ -17,15 +18,15 @@ return new class extends Migration {
             $table->text('description')->nullable();
             $table->enum('status', ['available', 'maintenance', 'inactive'])->default('available');
             $table->timestamps();
-                 $table->integer('version')->default(0); // Thêm cột version
+            $table->integer('version')->default(0); // Thêm cột version
             $table->unique(['facility_id', 'name']);
             $table->index(['sport_type_id', 'status']);
         });
 
         if (DB::getDriverName() !== 'sqlite') {
             if (DB::getDriverName() !== 'sqlite') {
-            DB::statement('ALTER TABLE courts ADD CONSTRAINT chk_court_capacity CHECK (capacity > 0)');
-        }
+                DB::statement('ALTER TABLE courts ADD CONSTRAINT chk_court_capacity CHECK (capacity > 0)');
+            }
         }
     }
 

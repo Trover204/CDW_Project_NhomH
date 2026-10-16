@@ -1,0 +1,114 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
+use Tests\TestCase;
+
+class ProfileTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_guest_cannot_access_profile_page(): void
+    {
+        $response = $this->get(route('profile.edit'));
+
+        $response->assertRedirect(route('login'));
+    }
+
+    public function test_authenticated_user_can_view_profile_page(): void
+    {
+        $user = User::factory()->create([
+            'name' => 'Nguyễn Văn A',
+            'email' => 'nguyenvana@example.com',
+            'phone' => '0901234567',
+        ]);
+
+        $response = $this->actingAs($user)->get(route('profile.edit'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Nguyễn Văn A');
+        $response->assertSee('nguyenvana@example.com');
+        $response->assertSee('0901234567');
+    }
+
+    public function test_user_can_update_profile_information(): void
+    {
+        $user = User::factory()->create([
+            'name' => 'Tên Ban Đầu',
+            'email' => 'bandau@example.com',
+            'phone' => '0911111111',
+            'birthday' => '1995-05-15',
+        ]);
+
+        $response = $this->actingAs($user)->put(route('profile.update'), [
+            'name' => 'Tên Mới Đổi',
+            'email' => 'tenmoi@example.com',
+            'phone' => '0922222222',
+            'birthday' => '1998-08-20',
+        ]);
+
+        $response->assertRedirect(route('profile.edit'));
+        $response->assertSessionHas('success');
+
+        $user->refresh();
+        $this->assertSame('Tên Mới Đổi', $user->name);
+        $this->assertSame('tenmoi@example.com', $user->email);
+        $this->assertSame('0922222222', $user->phone);
+        $this->assertSame('1998-08-20', $user->birthday->format('Y-m-d'));
+    }
+
+    public function test_user_cannot_update_birthday_if_under_16_years_old(): void
+    {
+        $user = User::factory()->create([
+            'birthday' => '2000-01-01',
+        ]);
+
+        // Trẻ hơn 16 tuổi (ví dụ: sinh 10 năm trước)
+        $under16Birthday = now()->subYears(10)->format('Y-m-d');
+
+        $response = $this->actingAs($user)->put(route('profile.update'), [
+            'name' => $user->name,
+            'email' => $user->email,
+            'birthday' => $under16Birthday,
+        ]);
+
+        $response->assertSessionHasErrors('birthday');
+    }
+
+    public function test_user_can_update_password(): void
+    {
+        $user = User::factory()->create([
+            'password' => Hash::make('oldpassword123'),
+        ]);
+
+        $response = $this->actingAs($user)->put(route('profile.password.update'), [
+            'current_password' => 'oldpassword123',
+            'password' => 'newpassword456',
+            'password_confirmation' => 'newpassword456',
+        ]);
+
+        $response->assertRedirect(route('profile.edit'));
+        $response->assertSessionHas('success');
+
+        $user->refresh();
+        $this->assertTrue(Hash::check('newpassword456', $user->password));
+    }
+
+    public function test_user_cannot_update_password_with_wrong_current_password(): void
+    {
+        $user = User::factory()->create([
+            'password' => Hash::make('oldpassword123'),
+        ]);
+
+        $response = $this->actingAs($user)->put(route('profile.password.update'), [
+            'current_password' => 'wrongpassword',
+            'password' => 'newpassword456',
+            'password_confirmation' => 'newpassword456',
+        ]);
+
+        $response->assertSessionHasErrors('current_password');
+    }
+}

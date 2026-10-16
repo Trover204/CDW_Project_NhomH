@@ -5,7 +5,8 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         Schema::create('facilities', function (Blueprint $table) {
@@ -23,8 +24,8 @@ return new class extends Migration {
 
         if (DB::getDriverName() !== 'sqlite') {
             if (DB::getDriverName() !== 'sqlite') {
-            DB::statement('ALTER TABLE facilities ADD CONSTRAINT chk_facility_time CHECK (open_time < close_time)');
-        }
+                DB::statement('ALTER TABLE facilities ADD CONSTRAINT chk_facility_time CHECK (open_time < close_time)');
+            }
         }
     }
 
