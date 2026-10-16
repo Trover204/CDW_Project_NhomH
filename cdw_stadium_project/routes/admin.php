@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\SubscriptionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\PaymentController;
+use App\Http\Controllers\Admin\NewsController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -22,3 +23,4 @@ Route::resource('subscriptions', SubscriptionController::class);
 Route::resource('users', UserController::class);
 Route::resource('bookings', BookingController::class);
 Route::resource('payments', PaymentController::class);
+Route::resource('news', NewsController::class);
