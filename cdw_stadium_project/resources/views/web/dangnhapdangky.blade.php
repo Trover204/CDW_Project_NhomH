@@ -1,44 +1,220 @@
-<h2 class="sr-only">Phác thảo giao diện màu trang Đăng nhập / Đăng ký — Sân Nhóm H</h2>
-<div style="font-family:Arial,Helvetica,sans-serif;border:0.5px solid #E1E8E3;border-radius:12px;overflow:hidden;display:flex;background:#FFFFFF;min-height:320px;">
-    <div style="flex:1;background:#0F5C33;padding:28px 24px;display:flex;flex-direction:column;justify-content:space-between;">
-        <div style="font-size:17px;font-weight:700;color:#FFFFFF;">Sân Nhóm H</div>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Đăng nhập / Đăng ký - Sân Nhóm H</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+    <style>
+        body {
+            background-color: #f4f7f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .container {
+            border: 0.5px solid #E1E8E3;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            background: #FFFFFF;
+            width: 100%;
+            max-width: 800px;
+            min-height: 400px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+        .left-panel {
+            flex: 1;
+            background: #0F5C33;
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: #FFFFFF;
+        }
+        .right-panel {
+            flex: 1.2;
+            padding: 40px 40px;
+        }
+        .tabs {
+            display: flex;
+            gap: 20px;
+            border-bottom: 0.5px solid #E1E8E3;
+            margin-bottom: 24px;
+        }
+        .tab {
+            padding-bottom: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            color: #6B7A70;
+        }
+        .tab.active {
+            color: #178A4C;
+            border-bottom: 2px solid #178A4C;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: #3A453E;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        .form-group input {
+            width: 100%;
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid #C7D3CA;
+            padding: 0 12px;
+            font-size: 14px;
+            box-sizing: border-box;
+            outline: none;
+        }
+        .form-group input:focus {
+            border-color: #178A4C;
+        }
+        .btn-submit {
+            width: 100%;
+            height: 42px;
+            border-radius: 8px;
+            background: #F97316;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #FFFFFF;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 16px;
+        }
+        .btn-submit:hover {
+            background: #ea660d;
+        }
+        .text-error {
+            color: #e3342f;
+            font-size: 11px;
+            margin-top: 4px;
+            display: block;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="left-panel">
+        <div style="font-size:20px;font-weight:700;">
+            <a href="{{ route('home') }}" style="color: white; text-decoration: none;">Sân Nhóm H</a>
+        </div>
         <div>
-            <div style="font-size:18px;font-weight:700;color:#FFFFFF;line-height:1.4;margin-bottom:8px;">Đặt sân thể thao yêu thích chỉ trong vài giây</div>
-            <div style="font-size:12px;color:#BFE0CC;">Hơn 500 sân bóng đá, cầu lông, pickleball trên toàn thành phố</div>
+            <div style="font-size:22px;font-weight:700;line-height:1.4;margin-bottom:12px;">Đặt sân thể thao yêu thích chỉ trong vài giây</div>
+            <div style="font-size:14px;color:#BFE0CC;">Hơn 500 sân bóng đá, cầu lông, pickleball trên toàn thành phố</div>
         </div>
         <div style="display:flex;gap:8px;">
-            <div style="width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.15);"></div>
-            <div style="width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.15);"></div>
-            <div style="width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.15);"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.3);"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:#fff;"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.3);"></div>
         </div>
     </div>
 
-    <div style="flex:1.1;padding:28px 30px;">
-        <div style="display:flex;gap:20px;border-bottom:0.5px solid #E1E8E3;margin-bottom:20px;">
-            <div style="padding-bottom:10px;font-size:13px;font-weight:700;color:#178A4C;border-bottom:2px solid #178A4C;">Đăng nhập</div>
-            <div style="padding-bottom:10px;font-size:13px;color:#6B7A70;">Đăng ký</div>
+    <div class="right-panel">
+        <div class="tabs">
+            <div class="tab {{ old('form_type', 'login') == 'login' ? 'active' : '' }}" onclick="showForm('login')">Đăng nhập</div>
+            <div class="tab {{ old('form_type') == 'register' ? 'active' : '' }}" onclick="showForm('register')">Đăng ký</div>
         </div>
 
-        <div style="font-size:11px;color:#3A453E;margin-bottom:4px;">Email</div>
-        <div style="height:36px;border-radius:8px;border:0.5px solid #C7D3CA;margin-bottom:14px;display:flex;align-items:center;padding:0 10px;font-size:12px;color:#8A968F;">ban@email.com</div>
+        <!-- FORM ĐĂNG NHẬP -->
+        <form id="loginForm" class="{{ old('form_type', 'login') == 'login' ? '' : 'hidden' }}" action="{{ route('login.post') }}" method="POST">
+            @csrf
+            <input type="hidden" name="form_type" value="login">
 
-        <div style="font-size:11px;color:#3A453E;margin-bottom:4px;">Mật khẩu</div>
-        <div style="height:36px;border-radius:8px;border:0.5px solid #C7D3CA;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;padding:0 10px;font-size:12px;color:#8A968F;">••••••••<i class="ti ti-eye" style="font-size:14px;color:#6B7A70;" aria-hidden="true"></i></div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" value="{{ old('form_type', 'login') == 'login' ? old('email') : '' }}" placeholder="ban@email.com" required>
+                @if(old('form_type', 'login') == 'login')
+                    @error('email') <span class="text-error">{{ $message }}</span> @enderror
+                @endif
+            </div>
 
-        <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
-            <span style="font-size:11px;color:#178A4C;">Quên mật khẩu?</span>
-        </div>
+            <div class="form-group">
+                <label>Mật khẩu</label>
+                <input type="password" name="password" placeholder="••••••••" required>
+                @if(old('form_type', 'login') == 'login')
+                    @error('password') <span class="text-error">{{ $message }}</span> @enderror
+                @endif
+            </div>
 
-        <div style="height:38px;border-radius:8px;background:#F97316;display:flex;align-items:center;justify-content:center;font-size:12.5px;color:#FFFFFF;font-weight:600;margin-bottom:16px;">Đăng nhập</div>
+            <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
+                <a href="#" style="font-size:12px;color:#178A4C;text-decoration:none;">Quên mật khẩu?</a>
+            </div>
 
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
-            <div style="flex:1;height:0.5px;background:#E1E8E3;"></div>
-            <span style="font-size:10.5px;color:#8A968F;">hoặc</span>
-            <div style="flex:1;height:0.5px;background:#E1E8E3;"></div>
-        </div>
+            <button type="submit" class="btn-submit">Đăng nhập</button>
+        </form>
 
-        <div style="height:36px;border-radius:8px;border:0.5px solid #C7D3CA;display:flex;align-items:center;justify-content:center;gap:8px;font-size:12px;color:#3A453E;">
-            <i class="ti ti-brand-google" style="font-size:15px;" aria-hidden="true"></i>Tiếp tục với Google
-        </div>
+        <!-- FORM ĐĂNG KÝ -->
+        <form id="registerForm" class="{{ old('form_type') == 'register' ? '' : 'hidden' }}" action="{{ route('register.post') }}" method="POST">
+            @csrf
+            <input type="hidden" name="form_type" value="register">
+
+            <div class="form-group">
+                <label>Họ tên</label>
+                <input type="text" name="name" value="{{ old('form_type') == 'register' ? old('name') : '' }}" placeholder="Nguyễn Văn A" required>
+                @if(old('form_type') == 'register')
+                    @error('name') <span class="text-error">{{ $message }}</span> @enderror
+                @endif
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" value="{{ old('form_type') == 'register' ? old('email') : '' }}" placeholder="ban@email.com" required>
+                @if(old('form_type') == 'register')
+                    @error('email') <span class="text-error">{{ $message }}</span> @enderror
+                @endif
+            </div>
+
+            <div class="form-group">
+                <label>Mật khẩu</label>
+                <input type="password" name="password" placeholder="••••••••" required>
+                @if(old('form_type') == 'register')
+                    @error('password') <span class="text-error">{{ $message }}</span> @enderror
+                @endif
+            </div>
+
+            <div class="form-group">
+                <label>Xác nhận mật khẩu</label>
+                <input type="password" name="password_confirmation" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn-submit">Đăng ký</button>
+        </form>
+
     </div>
 </div>
+
+<script>
+    function showForm(type) {
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        document.getElementById('loginForm').classList.add('hidden');
+        document.getElementById('registerForm').classList.add('hidden');
+
+        if(type === 'login') {
+            document.querySelectorAll('.tab')[0].classList.add('active');
+            document.getElementById('loginForm').classList.remove('hidden');
+        } else {
+            document.querySelectorAll('.tab')[1].classList.add('active');
+            document.getElementById('registerForm').classList.remove('hidden');
+        }
+    }
+</script>
+
+</body>
+</html>
