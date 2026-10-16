@@ -75,7 +75,22 @@ jobs:
 
 
       # ========================================
-      # 5. Tạo file .env cho CI
+      # 5. Setup Node.js and build frontend
+      # ========================================
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: cdw_stadium_project/package-lock.json
+
+      - name: Install NPM dependencies and build
+        run: |
+          npm install
+          npm run build
+
+      # ========================================
+      # 6. Tạo file .env cho CI
       # ========================================
       - name: Prepare environment
         run: |
@@ -95,7 +110,7 @@ jobs:
 
 
       # ========================================
-      # 6. Kiểm tra database configuration
+      # 7. Kiểm tra database configuration
       # ========================================
       - name: Check database configuration
         run: |
@@ -103,19 +118,19 @@ jobs:
           php artisan about
 
       # ========================================
-      # 8. Chạy migration
-      # ========================================
-     
-      - name: Run migrations
-        run: php artisan migrate --force
-      # ========================================
-      # 7. Clear Laravel cache
+      # 8. Clear Laravel cache
       # ========================================
       - name: Clear Laravel cache
         run: php artisan optimize:clear || true
 
       # ========================================
-      # 9. Chạy Laravel tests
+      # 9. Chạy migration
+      # ========================================
+      - name: Run migrations
+        run: php artisan migrate --force
+
+      # ========================================
+      # 10. Chạy Laravel tests
       # ========================================
       - name: Run tests
         run: php artisan test
