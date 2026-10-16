@@ -14,6 +14,7 @@ class SportTypeSeeder extends Seeder
             ['Bóng đá mini', 'Sân cỏ nhân tạo 5-7 người'],
             ['Cầu lông',     'Sân cầu lông trong nhà, có mái che'],
             ['Pickleball',   'Sân pickleball tiêu chuẩn'],
+            ['Bóng rổ',      'Sân bóng rổ tiêu chuẩn'],
         ];
 
         foreach ($types as [$name, $desc]) {

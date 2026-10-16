@@ -25,7 +25,7 @@ class WebNewsTest extends TestCase
         $response = $this->get(route('news.index'));
 
         $response->assertStatus(200);
-        $response->assertViewIs('web.news');
+        $response->assertViewIs('web.news.index');
         $response->assertSee('Published News Title');
         $response->assertDontSee('Draft News Title');
     }
@@ -41,7 +41,7 @@ class WebNewsTest extends TestCase
         $response = $this->get(route('news.show', 'test-news-slug'));
 
         $response->assertStatus(200);
-        $response->assertViewIs('web.news-detail');
+        $response->assertViewIs('web.news.detail');
         $response->assertSee('Single News Title');
     }
 

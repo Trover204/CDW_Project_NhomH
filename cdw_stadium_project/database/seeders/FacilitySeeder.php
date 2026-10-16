@@ -14,6 +14,8 @@ class FacilitySeeder extends Seeder
             ['Sân Nhóm H - Thủ Đức',   '53 Võ Văn Ngân, Thủ Đức, TP.HCM',       '0281111001'],
             ['Sân Nhóm H - Quận 9',    '12 Lê Văn Việt, Quận 9, TP.HCM',         '0281111002'],
             ['Sân Nhóm H - Bình Thạnh', '88 Điện Biên Phủ, Bình Thạnh, TP.HCM',   '0281111003'],
+            ['Sân Nhóm H - Quận 1',    '10 Lê Duẩn, Quận 1, TP.HCM',             '0281111004'],
+            ['Sân Nhóm H - Quận 7',    '105 Nguyễn Thị Thập, Quận 7, TP.HCM',    '0281111005'],
         ];
 
         foreach ($facilities as [$name, $address, $phone]) {
