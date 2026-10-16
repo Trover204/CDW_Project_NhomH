@@ -21,4 +21,9 @@
             </a>
         @endforeach
     </nav>
+    <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+        <a href="{{ route('home') }}">
+            <i class="ti ti-home"></i>Quay về trang chủ
+        </a>
+    </div>
 </aside>

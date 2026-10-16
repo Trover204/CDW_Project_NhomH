@@ -29,7 +29,7 @@ class SubscriptionSeeder extends Seeder
                     'status' => 1,
                     'payment_method' => 'vnpay',
                     'amount_paid' => $plan->price,
-                    'transaction_code' => 'SUB-DEMO-' . str_pad($index + 2, 4, '0', STR_PAD_LEFT), // Avoid conflict with PlanSeeder
+                    'transaction_code' => 'SUB-DEMO-'.str_pad($index + 2, 4, '0', STR_PAD_LEFT), // Avoid conflict with PlanSeeder
                     'created_at' => $now,
                     'updated_at' => $now,
                 ]
