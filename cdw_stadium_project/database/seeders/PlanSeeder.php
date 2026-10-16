@@ -14,6 +14,7 @@ class PlanSeeder extends Seeder
             ['Cơ bản',     30,  99000,  5],
             ['Tiêu chuẩn', 180, 499000, 10],
             ['VIP',        365, 899000, 18],
+            ['Premium',    730, 1599000, 25],
         ];
 
         foreach ($plans as [$name, $days, $price, $discount]) {

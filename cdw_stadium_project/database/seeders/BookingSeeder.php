@@ -13,6 +13,8 @@ class BookingSeeder extends Seeder
 
         $an = DB::table('users')->where('email', 'an@example.com')->first();
         $binh = DB::table('users')->where('email', 'binh@example.com')->first();
+        $cuong = DB::table('users')->where('email', 'cuong@example.com')->first();
+
         $sub = DB::table('subscriptions')->where('user_id', $an->id)->value('id');
 
         $footballType = DB::table('sport_types')->where('name', 'Bóng đá mini')->value('id');
@@ -25,6 +27,8 @@ class BookingSeeder extends Seeder
             [$an,   $court1, $now->copy()->addDays(2)->toDateString(), '19:00', '20:00', 300000, 30000, 'confirmed', 'cod',   'pending'],
             [$binh, $court2, $now->copy()->addDays(3)->toDateString(), '17:00', '18:00', 300000, 0,     'pending',   'vnpay', 'pending'],
             [$binh, $court1, $now->copy()->subDays(2)->toDateString(), '20:00', '21:00', 300000, 0,     'cancelled', 'vnpay', 'failed'],
+            [$cuong, $court1, $now->copy()->addDays(1)->toDateString(), '15:00', '17:00', 600000, 0,     'confirmed', 'momo',  'paid'],
+            [$cuong, $court2, $now->copy()->addDays(4)->toDateString(), '18:00', '20:00', 600000, 0,     'pending',   'cod',   'pending'],
         ];
 
         foreach ($rows as $n => [$user, $courtId, $date, $start, $end, $subtotal, $discount, $status, $method, $payStatus]) {

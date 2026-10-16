@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             PlanSeeder::class,
             NewsAdSeeder::class,
             BookingSeeder::class,
+            SubscriptionSeeder::class,
         ]);
     }
 }

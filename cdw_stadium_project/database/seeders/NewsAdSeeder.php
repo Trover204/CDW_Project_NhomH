@@ -21,6 +21,10 @@ class NewsAdSeeder extends Seeder
                 'Giới thiệu môn pickleball đang phổ biến tại TP.HCM.'],
             ['Ra mắt gói thành viên VIP giảm đến 18%', 'ra-mat-goi-thanh-vien-vip', 'Khuyến mãi',
                 'Đăng ký gói thành viên để được giảm giá mỗi lần đặt sân.'],
+            ['Bóng rổ - Môn thể thao mới tại Sân Nhóm H', 'bong-ro-mon-the-thao-moi', 'Thể thao',
+                'Hệ thống sân bóng rổ tiêu chuẩn đã chính thức đi vào hoạt động.'],
+            ['Hướng dẫn đặt sân và thanh toán qua VNPay', 'huong-dan-dat-san-va-thanh-toan', 'Hướng dẫn',
+                'Các bước đơn giản để đặt sân và thanh toán trực tuyến dễ dàng.'],
         ];
 
         foreach ($news as $i => [$title, $slug, $category, $summary]) {
