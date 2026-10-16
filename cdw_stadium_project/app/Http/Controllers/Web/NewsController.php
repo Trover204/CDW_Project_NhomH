@@ -38,7 +38,7 @@ class NewsController extends Controller
 
         // Fallback if no related news found by category
         if ($relatedNews->isEmpty()) {
-             $relatedNews = News::where('id', '!=', $newsItem->id)
+            $relatedNews = News::where('id', '!=', $newsItem->id)
                 ->where('status', 'published')
                 ->latest()
                 ->take(3)
