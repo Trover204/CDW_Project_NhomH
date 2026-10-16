@@ -13,7 +13,7 @@ class NewsController extends Controller
             ->latest()
             ->paginate(12);
 
-        return view('web.news', compact('news'));
+        return view('web.news.index', compact('news'));
     }
 
     public function show($slug)
@@ -45,6 +45,6 @@ class NewsController extends Controller
                 ->get();
         }
 
-        return view('web.news-detail', compact('newsItem', 'relatedNews'));
+        return view('web.news.detail', compact('newsItem', 'relatedNews'));
     }
 }

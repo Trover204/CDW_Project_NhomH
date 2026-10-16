@@ -19,6 +19,8 @@ class UserSeeder extends Seeder
             ['Nguyễn Văn An',  'an@example.com',    '12345678', '0900000003', 'customer', '2003-03-15'],
             ['Trần Thị Bình',  'binh@example.com',  '12345678', '0900000004', 'customer', '2002-07-20'],
             ['Lê Minh Cường',  'cuong@example.com', '12345678', '0900000005', 'customer', '2001-11-02'],
+            ['Phạm Văn Duy',   'duy@example.com',   '12345678', '0900000006', 'customer', '1999-09-09'],
+            ['Hoàng Thị Mai',  'mai@example.com',   '12345678', '0900000007', 'customer', '1995-12-25'],
         ];
 
         // LƯU Ý DÒNG NÀY: Phải có đủ 6 biến (thêm $plainPassword vào vị trí thứ 3)
