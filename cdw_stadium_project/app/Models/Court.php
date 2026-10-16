@@ -41,8 +41,8 @@ class Court extends Model
         return $this->hasMany(CourtImage::class);
     }
 
-    public function comments(): HasMany
+    public function reviews(): HasMany
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Review::class);
     }
 }
