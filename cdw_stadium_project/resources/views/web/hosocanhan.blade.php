@@ -646,6 +646,13 @@
 
                     <div class="menu-divider"></div>
 
+                    @if(in_array($user->role, ['admin', 'staff']))
+                        <a href="{{ route('admin.dashboard') }}" class="menu-item" style="color: #0F5C33; font-weight: 600;">
+                            <i class="ti ti-layout-dashboard" style="color: #178A4C;"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    @endif
+
                     <a href="{{ route('favorites.index') }}" class="menu-item">
                         <i class="ti ti-heart"></i>
                         <span>Sân yêu thích</span>
@@ -789,12 +796,19 @@
                             {{-- VAI TRÒ / QUYỀN HẠN --}}
                             <div class="field-group form-group-full">
                                 <label class="field-label">Loại tài khoản</label>
-                                <div style="display: flex; gap: 12px; align-items: center; padding: 10px 14px; background: #F7FAF8; border-radius: 8px; border: 1px solid #E1E8E3;">
-                                    <i class="ti ti-id-badge" style="font-size: 20px; color: #178A4C;"></i>
-                                    <div>
-                                        <strong style="color: #16241C; font-size: 13.5px; text-transform: uppercase;">{{ $user->role }}</strong>
-                                        <span style="color: #6B7A70; font-size: 12px; margin-left: 8px;">(Trạng thái: {{ $user->status ? 'Đang hoạt động' : 'Tạm khóa' }})</span>
+                                <div style="display: flex; gap: 12px; align-items: center; justify-content: space-between; padding: 10px 14px; background: #F7FAF8; border-radius: 8px; border: 1px solid #E1E8E3;">
+                                    <div style="display: flex; gap: 12px; align-items: center;">
+                                        <i class="ti ti-id-badge" style="font-size: 20px; color: #178A4C;"></i>
+                                        <div>
+                                            <strong style="color: #16241C; font-size: 13.5px; text-transform: uppercase;">{{ $user->role }}</strong>
+                                            <span style="color: #6B7A70; font-size: 12px; margin-left: 8px;">(Trạng thái: {{ $user->status ? 'Đang hoạt động' : 'Tạm khóa' }})</span>
+                                        </div>
                                     </div>
+                                    @if(in_array($user->role, ['admin', 'staff']))
+                                        <a href="{{ route('admin.dashboard') }}" class="btn-save" style="height: 36px; padding: 0 16px; font-size: 13px; text-decoration: none; background: #0F5C33;">
+                                            <i class="ti ti-layout-dashboard"></i> Dashboard
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
 

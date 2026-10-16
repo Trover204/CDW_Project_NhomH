@@ -111,4 +111,29 @@ class ProfileTest extends TestCase
 
         $response->assertSessionHasErrors('current_password');
     }
+
+    public function test_admin_sees_dashboard_button_in_profile(): void
+    {
+        $admin = User::factory()->create([
+            'role' => 'admin',
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('profile.edit'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Dashboard');
+        $response->assertSee(route('admin.dashboard'), false);
+    }
+
+    public function test_customer_does_not_see_dashboard_button_in_profile(): void
+    {
+        $customer = User::factory()->create([
+            'role' => 'customer',
+        ]);
+
+        $response = $this->actingAs($customer)->get(route('profile.edit'));
+
+        $response->assertStatus(200);
+        $response->assertDontSee(route('admin.dashboard'), false);
+    }
 }

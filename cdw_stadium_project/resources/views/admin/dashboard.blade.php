@@ -6,6 +6,9 @@
     <div class="topbar">
         <h1>Tổng quan hôm nay</h1>
         <div class="right">
+            <a href="{{ route('home') }}" class="btn btn-secondary">
+                <i class="ti ti-home"></i> Quay về trang chủ
+            </a>
             <input class="search" type="text" placeholder="Tìm đơn, sân...">
             <div class="avatar">NA</div>
         </div>
