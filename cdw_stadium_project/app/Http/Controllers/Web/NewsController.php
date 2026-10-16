@@ -43,7 +43,12 @@ class NewsController extends Controller
 
         // Fallback if no related news found by category
         if ($relatedNews->isEmpty()) {
+<<<<<<< HEAD
             $relatedNews = $relatedQuery
+=======
+            $relatedNews = News::where('id', '!=', $newsItem->id)
+                ->where('status', 'published')
+>>>>>>> hai/feature/thongke
                 ->latest()
                 ->take(3)
                 ->get();

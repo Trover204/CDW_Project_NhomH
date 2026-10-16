@@ -5,10 +5,10 @@
         ['Loại môn thể thao', 'ti-ball-football',  'admin.sport-types.index', 'admin.sport-types.*'],
         ['Sân thể thao',       'ti-layout-grid',    'admin.courts.index',      'admin.courts.*'],
         ['Bình luận',          'ti-message-circle', 'admin.comments.index',    'admin.comments.*'],
-        ['Đơn đặt sân',        'ti-calendar-event', 'admin.dashboard',         'admin.bookings.*'],
-        ['Người dùng',         'ti-users',          'admin.dashboard',         'admin.users.*'],
-        ['Nội dung',           'ti-news',           'admin.dashboard',         'admin.contents.*'],
-        ['Cài đặt',            'ti-settings',       'admin.dashboard',         'admin.settings.*'],
+        ['Đơn đặt sân',        'ti-calendar-event', 'admin.bookings.index',    'admin.bookings.*'],
+        ['Người dùng',         'ti-users',          'admin.users.index',       'admin.users.*'],
+        ['Nội dung',           'ti-news',           'admin.news.index',        'admin.news.*'],
+        ['Báo cáo',            'ti-report',         'admin.reports.revenue',   'admin.reports.*'],
     ];
 @endphp
 
