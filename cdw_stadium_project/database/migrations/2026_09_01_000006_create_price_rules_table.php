@@ -26,8 +26,12 @@ return new class extends Migration {
             $table->index(['court_id', 'day_type', 'start_time']);
         });
 
-        DB::statement('ALTER TABLE price_rules ADD CONSTRAINT chk_price_time CHECK (start_time < end_time)');
-        DB::statement('ALTER TABLE price_rules ADD CONSTRAINT chk_price_value CHECK (price >= 0)');
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE price_rules ADD CONSTRAINT chk_price_time CHECK (start_time < end_time)');
+        }
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE price_rules ADD CONSTRAINT chk_price_value CHECK (price >= 0)');
+        }
     }
 
     public function down(): void
