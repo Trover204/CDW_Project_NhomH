@@ -33,4 +33,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Court::class, 'court_user_likes')->withTimestamps();
     }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
 }
