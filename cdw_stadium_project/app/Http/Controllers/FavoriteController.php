@@ -12,7 +12,7 @@ class FavoriteController extends Controller
     {
         $courts = $request->user()
             ->favoriteCourts()
-            ->with(['facility', 'sportType'])
+            ->with(['facility:id,name', 'sportType:id,name'])
             ->latest('court_user_likes.created_at')
             ->paginate(12);
 

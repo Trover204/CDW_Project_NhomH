@@ -12,7 +12,7 @@ class PaymentController extends Controller
 {
     public function index()
     {
-        $payments = Payment::with(['booking', 'user'])->latest()->paginate(10);
+        $payments = Payment::with('user:id,name')->latest()->paginate(10);
 
         return view('admin.payments.index', compact('payments'));
     }
@@ -20,8 +20,8 @@ class PaymentController extends Controller
     public function create()
     {
         return view('admin.payments.create', [
-            'bookings' => Booking::all(),
-            'users' => User::all(),
+            'bookings' => Booking::select('id', 'customer_name')->latest()->take(100)->get(),
+            'users' => User::select('id', 'name')->orderBy('name')->get(),
         ]);
     }
 
@@ -41,8 +41,8 @@ class PaymentController extends Controller
     {
         return view('admin.payments.edit', [
             'payment' => $payment,
-            'bookings' => Booking::all(),
-            'users' => User::all(),
+            'bookings' => Booking::select('id', 'customer_name')->latest()->take(100)->get(),
+            'users' => User::select('id', 'name')->orderBy('name')->get(),
         ]);
     }
 

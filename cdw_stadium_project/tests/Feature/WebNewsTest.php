@@ -14,12 +14,12 @@ class WebNewsTest extends TestCase
     {
         News::factory()->create([
             'status' => 'published',
-            'title' => 'Published News Title'
+            'title' => 'Published News Title',
         ]);
 
         News::factory()->create([
             'status' => 'draft',
-            'title' => 'Draft News Title'
+            'title' => 'Draft News Title',
         ]);
 
         $response = $this->get(route('news.index'));
@@ -35,7 +35,7 @@ class WebNewsTest extends TestCase
         $news = News::factory()->create([
             'status' => 'published',
             'slug' => 'test-news-slug',
-            'title' => 'Single News Title'
+            'title' => 'Single News Title',
         ]);
 
         $response = $this->get(route('news.show', 'test-news-slug'));

@@ -12,15 +12,15 @@ class CourtController extends Controller
 {
     public function index()
     {
-        $courts = Court::with(['facility', 'sportType'])->latest()->paginate(10);
+        $courts = Court::with(['facility:id,name', 'sportType:id,name'])->latest()->paginate(10);
 
         return view('admin.courts.index', compact('courts'));
     }
 
     public function create()
     {
-        $facilities = Facility::where('status', true)->orderBy('name')->get();
-        $sportTypes = SportType::where('status', true)->orderBy('name')->get();
+        $facilities = Facility::where('status', true)->select('id', 'name')->orderBy('name')->get();
+        $sportTypes = SportType::where('status', true)->select('id', 'name')->orderBy('name')->get();
 
         return view('admin.courts.create', compact('facilities', 'sportTypes'));
     }
@@ -35,8 +35,8 @@ class CourtController extends Controller
 
     public function edit(Court $court)
     {
-        $facilities = Facility::orderBy('name')->get();
-        $sportTypes = SportType::orderBy('name')->get();
+        $facilities = Facility::select('id', 'name')->orderBy('name')->get();
+        $sportTypes = SportType::select('id', 'name')->orderBy('name')->get();
 
         return view('admin.courts.edit', compact('court', 'facilities', 'sportTypes'));
     }

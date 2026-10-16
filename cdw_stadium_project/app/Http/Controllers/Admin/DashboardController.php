@@ -31,7 +31,7 @@ class DashboardController extends Controller
             ['customer' => 'Phạm C',       'court' => 'Pickleball Q7', 'time' => '20:00-21:00', 'status' => 'Đã hủy',      'badge' => 'danger'],
         ];
 
-        $activityLogs = ActivityLog::with('user')->latest()->take(10)->get();
+        $activityLogs = ActivityLog::with('user:id,name,avatar')->latest()->take(10)->get();
 
         return view('admin.dashboard', compact('stats', 'weeklyRevenue', 'courtTypes', 'recentBookings', 'activityLogs'));
     }
