@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 
 class DashboardController extends Controller
 {
@@ -30,6 +31,8 @@ class DashboardController extends Controller
             ['customer' => 'Phạm C',       'court' => 'Pickleball Q7', 'time' => '20:00-21:00', 'status' => 'Đã hủy',      'badge' => 'danger'],
         ];
 
-        return view('admin.dashboard', compact('stats', 'weeklyRevenue', 'courtTypes', 'recentBookings'));
+        $activityLogs = ActivityLog::with('user')->latest()->take(10)->get();
+
+        return view('admin.dashboard', compact('stats', 'weeklyRevenue', 'courtTypes', 'recentBookings', 'activityLogs'));
     }
 }
