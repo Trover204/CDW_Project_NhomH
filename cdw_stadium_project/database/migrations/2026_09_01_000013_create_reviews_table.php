@@ -22,7 +22,9 @@ return new class extends Migration {
             $table->index(['court_id', 'status']);
         });
 
-        DB::statement('ALTER TABLE reviews ADD CONSTRAINT chk_review_rating CHECK (rating BETWEEN 1 AND 5)');
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE reviews ADD CONSTRAINT chk_review_rating CHECK (rating BETWEEN 1 AND 5)');
+        }
     }
 
     public function down(): void

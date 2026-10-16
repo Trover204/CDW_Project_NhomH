@@ -22,7 +22,11 @@ return new class extends Migration {
             $table->index(['sport_type_id', 'status']);
         });
 
-        DB::statement('ALTER TABLE courts ADD CONSTRAINT chk_court_capacity CHECK (capacity > 0)');
+        if (DB::getDriverName() !== 'sqlite') {
+            if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE courts ADD CONSTRAINT chk_court_capacity CHECK (capacity > 0)');
+        }
+        }
     }
 
     public function down(): void

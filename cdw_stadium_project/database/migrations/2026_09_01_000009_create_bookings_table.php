@@ -32,7 +32,7 @@ return new class extends Migration {
 
             // Cột sinh tự động: NULL khi đơn đã hủy/từ chối => không chặn đặt lại khung giờ đó
             $table->unsignedTinyInteger('slot_lock')->nullable()
-                  ->storedAs("IF(status IN ('cancelled','rejected'), NULL, 1)");
+                  ->storedAs("CASE WHEN status IN ('cancelled','rejected') THEN NULL ELSE 1 END");
 
             $table->timestamps();
 
@@ -42,8 +42,12 @@ return new class extends Migration {
             $table->index(['status', 'booking_date']);
         });
 
-        DB::statement('ALTER TABLE bookings ADD CONSTRAINT chk_booking_time CHECK (start_time < end_time)');
-        DB::statement('ALTER TABLE bookings ADD CONSTRAINT chk_booking_total CHECK (total_price >= 0 AND discount_amount >= 0)');
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE bookings ADD CONSTRAINT chk_booking_time CHECK (start_time < end_time)');
+        }
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE bookings ADD CONSTRAINT chk_booking_total CHECK (total_price >= 0 AND discount_amount >= 0)');
+        }
     }
 
     public function down(): void

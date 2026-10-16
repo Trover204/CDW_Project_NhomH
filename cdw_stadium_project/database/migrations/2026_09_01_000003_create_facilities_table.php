@@ -21,7 +21,11 @@ return new class extends Migration {
             $table->unique(['name', 'address']);
         });
 
-        DB::statement('ALTER TABLE facilities ADD CONSTRAINT chk_facility_time CHECK (open_time < close_time)');
+        if (DB::getDriverName() !== 'sqlite') {
+            if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE facilities ADD CONSTRAINT chk_facility_time CHECK (open_time < close_time)');
+        }
+        }
     }
 
     public function down(): void
