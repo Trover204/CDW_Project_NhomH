@@ -43,7 +43,7 @@ class CourtController extends Controller
 
     public function update(CourtRequest $request, Court $court)
     {
-         $validated = $request->validated();
+        $validated = $request->validated();
         $currentVersion = $validated['version'];
 
         // Loại bỏ version khỏi mảng data để tự xử lý tăng ++
@@ -53,7 +53,7 @@ class CourtController extends Controller
         $affectedRows = Court::where('id', $court->id)
             ->where('version', $currentVersion)
             ->update(array_merge($validated, [
-                'version' => $currentVersion + 1
+                'version' => $currentVersion + 1,
             ]));
 
         // Nếu affectedRows = 0 nghĩa là version đã bị thay đổi bởi request khác

@@ -17,8 +17,8 @@ class FacilityRequest extends FormRequest
         $id = $this->route('facility')?->id;
 
         return [
-            'name'       => ['required', 'string', 'max:191'],
-            'address'    => [
+            'name' => ['required', 'string', 'max:191'],
+            'address' => [
                 'required',
                 'string',
                 'max:255',
@@ -26,11 +26,11 @@ class FacilityRequest extends FormRequest
                     ->where(fn ($query) => $query->where('name', $this->name))
                     ->ignore($id),
             ],
-                 'version'  => 'required|integer', // Thêm validate cho version
-            'phone'      => ['nullable', 'string', 'max:20'],
-            'open_time'  => ['required', 'date_format:H:i'],
+            'version' => 'required|integer', // Thêm validate cho version
+            'phone' => ['nullable', 'string', 'max:20'],
+            'open_time' => ['required', 'date_format:H:i'],
             'close_time' => ['required', 'date_format:H:i', 'after:open_time'],
-            'status'     => ['nullable', 'boolean'],
+            'status' => ['nullable', 'boolean'],
         ];
     }
 
@@ -44,7 +44,7 @@ class FacilityRequest extends FormRequest
         if ($this->has('close_time') && is_string($this->close_time)) {
             $merge['close_time'] = substr($this->close_time, 0, 5);
         }
-        if (!empty($merge)) {
+        if (! empty($merge)) {
             $this->merge($merge);
         }
     }
@@ -52,13 +52,13 @@ class FacilityRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required'       => 'Vui lòng nhập tên cơ sở.',
-            'name.max'            => 'Tên cơ sở không được vượt quá 191 ký tự.',
-            'address.required'    => 'Vui lòng nhập địa chỉ cơ sở.',
-            'address.unique'      => 'Cơ sở với tên và địa chỉ này đã tồn tại.',
-            'open_time.required'  => 'Vui lòng chọn giờ mở cửa.',
+            'name.required' => 'Vui lòng nhập tên cơ sở.',
+            'name.max' => 'Tên cơ sở không được vượt quá 191 ký tự.',
+            'address.required' => 'Vui lòng nhập địa chỉ cơ sở.',
+            'address.unique' => 'Cơ sở với tên và địa chỉ này đã tồn tại.',
+            'open_time.required' => 'Vui lòng chọn giờ mở cửa.',
             'close_time.required' => 'Vui lòng chọn giờ đóng cửa.',
-            'close_time.after'    => 'Giờ đóng cửa phải sau giờ mở cửa.',
+            'close_time.after' => 'Giờ đóng cửa phải sau giờ mở cửa.',
         ];
     }
 }

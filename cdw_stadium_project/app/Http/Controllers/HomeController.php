@@ -61,7 +61,7 @@ class HomeController extends Controller
 
         foreach ($courts as &$court) {
             $court['price_formatted'] =
-                number_format($court['price'], 0, ',', '.') . 'đ';
+                number_format($court['price'], 0, ',', '.').'đ';
         }
 
         unset($court);

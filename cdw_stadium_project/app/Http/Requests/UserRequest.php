@@ -17,23 +17,23 @@ class UserRequest extends FormRequest
         $userId = $this->route('user') ? $this->route('user')->id : null;
 
         $rules = [
-            'name'     => 'required|string|max:191',
-            'email'    => [
+            'name' => 'required|string|max:191',
+            'email' => [
                 'required',
                 'email',
                 'max:191',
                 Rule::unique('users')->ignore($userId),
             ],
-            'phone'    => [
+            'phone' => [
                 'nullable',
                 'string',
                 'max:20',
                 Rule::unique('users')->ignore($userId),
             ],
-            'avatar'   => 'nullable|string|max:191',
-            'birthday' => 'nullable|date|before_or_equal:' . now()->subYears(16)->format('Y-m-d'),
-            'role'     => 'required|in:admin,staff,customer',
-            'status'   => 'required|boolean',
+            'avatar' => 'nullable|string|max:191',
+            'birthday' => 'nullable|date|before_or_equal:'.now()->subYears(16)->format('Y-m-d'),
+            'role' => 'required|in:admin,staff,customer',
+            'status' => 'required|boolean',
         ];
 
         if ($this->isMethod('post')) {

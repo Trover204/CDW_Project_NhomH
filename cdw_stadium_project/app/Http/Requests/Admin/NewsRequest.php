@@ -25,7 +25,7 @@ class NewsRequest extends FormRequest
         if ($this->isMethod('post')) {
             $rules['slug'] = 'nullable|string|max:191|unique:news,slug';
         } else {
-            $rules['slug'] = 'nullable|string|max:191|unique:news,slug,' . $this->route('news')->id;
+            $rules['slug'] = 'nullable|string|max:191|unique:news,slug,'.$this->route('news')->id;
         }
 
         return $rules;
