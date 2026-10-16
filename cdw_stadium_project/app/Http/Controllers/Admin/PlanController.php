@@ -11,6 +11,7 @@ class PlanController extends Controller
     public function index()
     {
         $plans = Plan::latest()->paginate(10);
+
         return view('admin.plans.index', compact('plans'));
     }
 
@@ -22,6 +23,7 @@ class PlanController extends Controller
     public function store(PlanRequest $request)
     {
         Plan::create($request->validated());
+
         return redirect()->route('admin.plans.index')->with('success', 'Đã thêm plan.');
     }
 
@@ -38,6 +40,7 @@ class PlanController extends Controller
     public function update(PlanRequest $request, Plan $plan)
     {
         $plan->update($request->validated());
+
         return redirect()->route('admin.plans.index')->with('success', 'Đã cập nhật plan.');
     }
 
@@ -49,6 +52,7 @@ class PlanController extends Controller
         }
 
         $plan->delete();
+
         return redirect()->route('admin.plans.index')->with('success', 'Đã xóa plan.');
     }
 }

@@ -60,7 +60,7 @@ class SportTypeController extends Controller
         $affectedRows = SportType::where('id', $sportType->id)
             ->where('version', $currentVersion)
             ->update(array_merge($validated, [
-                'version' => $currentVersion + 1
+                'version' => $currentVersion + 1,
             ]));
 
         // Nếu affectedRows = 0 nghĩa là version đã bị thay đổi bởi request khác

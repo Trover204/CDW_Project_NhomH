@@ -13,6 +13,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::latest()->paginate(10);
+
         return view('admin.users.index', compact('users'));
     }
 
@@ -31,6 +32,7 @@ class UserController extends Controller
         // Handle avatar upload if necessary later
 
         User::create($validated);
+
         return redirect()->route('admin.users.index')->with('success', 'Đã thêm người dùng.');
     }
 
@@ -53,7 +55,7 @@ class UserController extends Controller
     {
         $validated = $request->validated();
 
-        if (isset($validated['password']) && !empty($validated['password'])) {
+        if (isset($validated['password']) && ! empty($validated['password'])) {
             $validated['password'] = Hash::make($validated['password']);
         } else {
             unset($validated['password']);
@@ -70,6 +72,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
+
         return redirect()->route('admin.users.index')->with('success', 'Đã xóa người dùng.');
     }
 }

@@ -10,11 +10,11 @@ class DashboardController extends Controller
     public function index()
     {
         $stats = [
-            'revenue'       => 18400000,
-            'new_bookings'  => 42,
-            'new_users'     => 15,
+            'revenue' => 18400000,
+            'new_bookings' => 42,
+            'new_users' => 15,
             'active_courts' => 36,
-            'total_courts'  => 40,
+            'total_courts' => 40,
         ];
 
         $weeklyRevenue = [8, 13, 10, 16, 12, 19, 14]; // triệu đồng
@@ -22,7 +22,7 @@ class DashboardController extends Controller
         $courtTypes = [
             ['name' => 'Cầu lông',  'count' => 18, 'color' => '#178A4C'],
             ['name' => 'Bóng đá',   'count' => 14, 'color' => '#6CC48F'],
-            ['name' => 'Pickleball','count' => 10, 'color' => '#BEE3CB'],
+            ['name' => 'Pickleball', 'count' => 10, 'color' => '#BEE3CB'],
         ];
 
         $recentBookings = [

@@ -14,6 +14,7 @@ class BookingController extends Controller
     public function index()
     {
         $bookings = Booking::with(['user', 'court', 'subscription', 'payment'])->latest()->paginate(10);
+
         return view('admin.bookings.index', compact('bookings'));
     }
 
@@ -29,6 +30,7 @@ class BookingController extends Controller
     public function store(BookingRequest $request)
     {
         Booking::create($request->validated());
+
         return redirect()->route('admin.bookings.index')->with('success', 'Đã thêm đặt sân.');
     }
 
@@ -50,12 +52,14 @@ class BookingController extends Controller
     public function update(BookingRequest $request, Booking $booking)
     {
         $booking->update($request->validated());
+
         return redirect()->route('admin.bookings.index')->with('success', 'Đã cập nhật đặt sân.');
     }
 
     public function destroy(Booking $booking)
     {
         $booking->delete();
+
         return redirect()->route('admin.bookings.index')->with('success', 'Đã xóa đặt sân.');
     }
 }

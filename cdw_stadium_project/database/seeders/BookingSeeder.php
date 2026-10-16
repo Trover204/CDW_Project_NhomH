@@ -11,9 +11,9 @@ class BookingSeeder extends Seeder
     {
         $now = now();
 
-        $an   = DB::table('users')->where('email', 'an@example.com')->first();
+        $an = DB::table('users')->where('email', 'an@example.com')->first();
         $binh = DB::table('users')->where('email', 'binh@example.com')->first();
-        $sub  = DB::table('subscriptions')->where('user_id', $an->id)->value('id');
+        $sub = DB::table('subscriptions')->where('user_id', $an->id)->value('id');
 
         $footballType = DB::table('sport_types')->where('name', 'Bóng đá mini')->value('id');
         $courts = DB::table('courts')->where('sport_type_id', $footballType)->orderBy('id')->limit(2)->pluck('id');
@@ -41,7 +41,7 @@ class BookingSeeder extends Seeder
             DB::table('payments')->insert([
                 'booking_id' => $bookingId, 'user_id' => $user->id,
                 'amount' => $subtotal - $discount, 'payment_method' => $method,
-                'transaction_code' => 'PAY-DEMO-' . str_pad($n + 1, 4, '0', STR_PAD_LEFT),
+                'transaction_code' => 'PAY-DEMO-'.str_pad($n + 1, 4, '0', STR_PAD_LEFT),
                 'status' => $payStatus, 'paid_at' => $payStatus === 'paid' ? $now : null,
                 'created_at' => $now, 'updated_at' => $now,
             ]);
