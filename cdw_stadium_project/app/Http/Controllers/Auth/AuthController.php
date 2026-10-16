@@ -16,7 +16,7 @@ class AuthController extends Controller
      */
     public function loginForm()
     {
-        return view('web.dangnhapdangky');
+        return view('web.login');
     }
 
     /**
