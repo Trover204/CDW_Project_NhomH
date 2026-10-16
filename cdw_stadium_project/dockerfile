@@ -5,8 +5,9 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl \
+    libicu-dev \
     libzip-dev \
-    && docker-php-ext-install pdo pdo_mysql zip \
+    && docker-php-ext-install pdo pdo_mysql zip intl \
     && rm -rf /var/lib/apt/lists/*
 
 
