@@ -23,7 +23,9 @@ return new class extends Migration {
             $table->index(['user_id', 'status', 'expires_at']);
         });
 
-        DB::statement('ALTER TABLE subscriptions ADD CONSTRAINT chk_sub_time CHECK (expires_at > starts_at)');
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE subscriptions ADD CONSTRAINT chk_sub_time CHECK (expires_at > starts_at)');
+        }
     }
 
     public function down(): void

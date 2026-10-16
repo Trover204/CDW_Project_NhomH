@@ -18,9 +18,15 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        DB::statement('ALTER TABLE plans ADD CONSTRAINT chk_plan_duration CHECK (duration_days > 0)');
-        DB::statement('ALTER TABLE plans ADD CONSTRAINT chk_plan_price CHECK (price >= 0)');
-        DB::statement('ALTER TABLE plans ADD CONSTRAINT chk_plan_discount CHECK (discount_percent BETWEEN 0 AND 100)');
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE plans ADD CONSTRAINT chk_plan_duration CHECK (duration_days > 0)');
+        }
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE plans ADD CONSTRAINT chk_plan_price CHECK (price >= 0)');
+        }
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE plans ADD CONSTRAINT chk_plan_discount CHECK (discount_percent BETWEEN 0 AND 100)');
+        }
     }
 
     public function down(): void

@@ -22,7 +22,9 @@ return new class extends Migration {
             $table->index(['status', 'paid_at']);
         });
 
-        DB::statement('ALTER TABLE payments ADD CONSTRAINT chk_payment_amount CHECK (amount >= 0)');
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE payments ADD CONSTRAINT chk_payment_amount CHECK (amount >= 0)');
+        }
     }
 
     public function down(): void
