@@ -21,9 +21,9 @@ class BookingController extends Controller
     public function create()
     {
         return view('admin.bookings.create', [
-            'users' => User::all(),
-            'courts' => Court::all(),
-            'subscriptions' => Subscription::all(),
+            'users' => User::select('id', 'name', 'email')->orderBy('name')->get(),
+            'courts' => Court::select('id', 'name')->orderBy('name')->get(),
+            'subscriptions' => Subscription::with('plan:id,name')->select('id', 'user_id', 'plan_id')->latest()->get(),
         ]);
     }
 
@@ -43,9 +43,9 @@ class BookingController extends Controller
     {
         return view('admin.bookings.edit', [
             'booking' => $booking,
-            'users' => User::all(),
-            'courts' => Court::all(),
-            'subscriptions' => Subscription::all(),
+            'users' => User::select('id', 'name', 'email')->orderBy('name')->get(),
+            'courts' => Court::select('id', 'name')->orderBy('name')->get(),
+            'subscriptions' => Subscription::with('plan:id,name')->select('id', 'user_id', 'plan_id')->latest()->get(),
         ]);
     }
 

@@ -10,6 +10,7 @@ class NewsController extends Controller
     public function index()
     {
         $news = News::where('status', 'published')
+            ->with('user:id,name')
             ->latest()
             ->paginate(12);
 
@@ -18,7 +19,8 @@ class NewsController extends Controller
 
     public function show($slug)
     {
-        $newsItem = News::where('slug', $slug)
+        $newsItem = News::with('user:id,name')
+            ->where('slug', $slug)
             ->where('status', 'published')
             ->firstOrFail();
 
@@ -26,11 +28,14 @@ class NewsController extends Controller
         $newsItem->increment('views');
 
         // Fetch related news (same category)
+        $relatedQuery = News::where('status', 'published')
+            ->where('id', '!=', $newsItem->id)
+            ->select(['id', 'title', 'slug', 'image', 'category', 'created_at']);
+
         $relatedNews = collect();
         if ($newsItem->category) {
-            $relatedNews = News::where('category', $newsItem->category)
-                ->where('id', '!=', $newsItem->id)
-                ->where('status', 'published')
+            $relatedNews = (clone $relatedQuery)
+                ->where('category', $newsItem->category)
                 ->latest()
                 ->take(3)
                 ->get();
@@ -38,8 +43,7 @@ class NewsController extends Controller
 
         // Fallback if no related news found by category
         if ($relatedNews->isEmpty()) {
-             $relatedNews = News::where('id', '!=', $newsItem->id)
-                ->where('status', 'published')
+            $relatedNews = $relatedQuery
                 ->latest()
                 ->take(3)
                 ->get();

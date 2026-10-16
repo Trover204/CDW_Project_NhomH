@@ -12,7 +12,7 @@ class SubscriptionController extends Controller
 {
     public function index()
     {
-        $subscriptions = Subscription::with(['user', 'plan'])->latest()->paginate(10);
+        $subscriptions = Subscription::with(['user:id,name', 'plan:id,name'])->latest()->paginate(10);
 
         return view('admin.subscriptions.index', compact('subscriptions'));
     }
@@ -20,8 +20,8 @@ class SubscriptionController extends Controller
     public function create()
     {
         return view('admin.subscriptions.create', [
-            'users' => User::all(),
-            'plans' => Plan::all(),
+            'users' => User::select('id', 'name', 'email')->orderBy('name')->get(),
+            'plans' => Plan::select('id', 'name')->get(),
         ]);
     }
 
@@ -41,8 +41,8 @@ class SubscriptionController extends Controller
     {
         return view('admin.subscriptions.edit', [
             'subscription' => $subscription,
-            'users' => User::all(),
-            'plans' => Plan::all(),
+            'users' => User::select('id', 'name', 'email')->orderBy('name')->get(),
+            'plans' => Plan::select('id', 'name')->get(),
         ]);
     }
 
