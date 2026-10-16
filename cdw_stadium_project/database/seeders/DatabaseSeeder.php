@@ -13,8 +13,8 @@ class DatabaseSeeder extends Seeder
             SportTypeSeeder::class,
             FacilitySeeder::class,
             CourtSeeder::class,
-            PriceRuleSeeder::class,
             PlanSeeder::class,
+            PriceRuleSeeder::class,
             NewsAdSeeder::class,
             BookingSeeder::class,
         ]);

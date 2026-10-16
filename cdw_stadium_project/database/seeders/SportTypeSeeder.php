@@ -10,10 +10,12 @@ class SportTypeSeeder extends Seeder
     public function run(): void
     {
         $now = now();
-        $types = [
+        $types =[
             ['Bóng đá mini', 'Sân cỏ nhân tạo 5-7 người'],
             ['Cầu lông',     'Sân cầu lông trong nhà, có mái che'],
             ['Pickleball',   'Sân pickleball tiêu chuẩn'],
+            ['Tennis',       'Sân tennis mặt cứng, có đèn chiếu sáng'],
+            ['Bóng rổ',      'Sân bóng rổ ngoài trời, nửa sân và cả sân'],
         ];
 
         foreach ($types as [$name, $desc]) {

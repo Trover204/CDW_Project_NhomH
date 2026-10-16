@@ -26,9 +26,9 @@ class PlanSeeder extends Seeder
             );
         }
 
-        // Cho khách "An" đăng ký gói Tiêu chuẩn để demo giảm giá
-        $userId = DB::table('users')->where('email', 'an@example.com')->value('id');
-        $plan = DB::table('plans')->where('name', 'Tiêu chuẩn')->first();
+        // // Cho khách "An" đăng ký gói Tiêu chuẩn để demo giảm giá
+        // $userId = DB::table('users')->where('email', 'an@example.com')->value('id');
+        // $plan = DB::table('plans')->where('name', 'Tiêu chuẩn')->first();
 
         DB::table('subscriptions')->where('user_id', $userId)->delete();
         DB::table('subscriptions')->insert([

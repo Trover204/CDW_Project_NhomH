@@ -14,10 +14,11 @@ class PriceRuleSeeder extends Seeder
         // loại môn => [thường ngày-sáng, thường ngày-tối, cuối tuần-sáng, cuối tuần-tối]  (VNĐ/giờ)
         $prices = [
             'Bóng đá mini' => [200000, 300000, 250000, 350000],
-            'Cầu lông' => [80000, 120000, 100000, 140000],
-            'Pickleball' => [100000, 150000, 120000, 180000],
+            'Cầu lông'     => [80000, 120000, 100000, 140000],
+            'Pickleball'   => [100000, 150000, 120000, 180000],
+            'Tennis'       => [150000, 220000, 180000, 260000],
+            'Bóng rổ'      => [120000, 180000, 150000, 210000],
         ];
-
         // Giá chung theo loại môn (court_id = NULL)
         DB::table('price_rules')->whereNull('court_id')->delete();
 
