@@ -185,9 +185,9 @@
 
                 {{-- MENU --}}
                 <nav class="nav-links">
-                    <a href="{{ route('home') }}">Trang chủ</a>
-                    <a href="#">Tìm sân</a>
-                    <a href="{{ route('news.index') }}" class="active">Tin tức</a>
+                    <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Trang chủ</a>
+                    <a href="{{ route('courts.index') }}" class="{{ request()->routeIs('courts.*') ? 'active' : '' }}">Tìm sân</a>
+                    <a href="{{ route('news.index') }}" class="{{ request()->routeIs('news.*') ? 'active' : '' }}">Tin tức</a>
                     <a href="#">Gói thành viên</a>
                 </nav>
 
