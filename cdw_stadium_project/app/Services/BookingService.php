@@ -22,20 +22,22 @@ class BookingService
         $dayType = Carbon::parse($date)->isWeekend() ? 'weekend' : 'weekday';
         $total = 0;
 
+        $rules = PriceRule::where('status', 1)
+            ->where('sport_type_id', $court->sport_type_id)
+            ->where('day_type', $dayType)
+            ->where(fn ($q) => $q->where('court_id', $court->id)->orWhereNull('court_id'))
+            ->orderByRaw('court_id IS NULL')
+            ->get();
+
         for ($t = Carbon::createFromFormat('H:i', $start);
             $t->lt(Carbon::createFromFormat('H:i', $end));
             $t->addHour()) {
 
             $hour = $t->format('H:i:s');
 
-            $rule = PriceRule::where('status', 1)
-                ->where('sport_type_id', $court->sport_type_id)
-                ->where('day_type', $dayType)
-                ->where('start_time', '<=', $hour)
-                ->where('end_time', '>', $hour)
-                ->where(fn ($q) => $q->where('court_id', $court->id)->orWhereNull('court_id'))
-                ->orderByRaw('court_id IS NULL')   // giá riêng sân trước
-                ->first();
+            $rule = $rules->first(function ($r) use ($hour) {
+                return $r->start_time <= $hour && $r->end_time > $hour;
+            });
 
             if (! $rule) {
                 throw ValidationException::withMessages(['start_time' => "Chưa có bảng giá cho khung giờ {$t->format('H:i')}."]);
