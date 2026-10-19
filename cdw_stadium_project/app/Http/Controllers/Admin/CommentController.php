@@ -13,7 +13,7 @@ class CommentController extends Controller
     // R - Danh sách
     public function index()
     {
-        $comments = Comment::with(['user:id,name', 'court:id,name'])->latest()->paginate(10);
+        $comments = Comment::with(['user', 'court'])->latest()->paginate(10);
 
         return view('admin.comments.index', compact('comments'));
     }
@@ -22,8 +22,8 @@ class CommentController extends Controller
     public function create()
     {
         return view('admin.comments.create', [
-            'users' => User::select('id', 'name', 'email')->orderBy('name')->get(),
-            'courts' => Court::select('id', 'name')->orderBy('name')->get(),
+            'users' => User::all(),
+            'courts' => Court::all(),
         ]);
     }
 
@@ -46,8 +46,8 @@ class CommentController extends Controller
     {
         return view('admin.comments.edit', [
             'comment' => $comment,
-            'users' => User::select('id', 'name', 'email')->orderBy('name')->get(),
-            'courts' => Court::select('id', 'name')->orderBy('name')->get(),
+            'users' => User::all(),
+            'courts' => Court::all(),
         ]);
     }
 
