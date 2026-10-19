@@ -40,7 +40,7 @@
                     <a href="{{ route('home') }}" class="active">Trang chủ</a>
                     <a href="{{ route('courts.index') }}">Sân</a>
                     <a href="{{ route('news.index') }}">Tin tức</a>
-                    <a href="#">Gói thành viên</a>
+                    <a href="{{ route('plans.index') }}">Gói thành viên</a>
                 </nav>
 
                 {{-- LOGIN / REGISTER --}}
