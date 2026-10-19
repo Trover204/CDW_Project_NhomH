@@ -40,6 +40,8 @@
                     <a href="{{ route('home') }}" class="active">Trang chủ</a>
                     <a href="{{ route('courts.index') }}">Tìm sân</a>
                     <a href="#">Tin tức</a>
+                    <a href="#">Tìm sân</a>
+                    <a href="{{ route('news.index') }}">Tin tức</a>
                     <a href="#">Gói thành viên</a>
                 </nav>
 
@@ -174,26 +176,34 @@
                         <div class="court-card">
 
                             {{-- TAG --}}
-                            <span class="court-tag">
-                                {{ $court['tag'] }}
+                            <span class="court-tag" style="display:flex; justify-content:space-between; width:100%;">
+                                <span>{{ $court->sportType->name ?? 'Thể thao' }}</span>
+                                @auth
+                                    @php
+                                        $isFavorited = auth()->user()->favoriteCourts->contains($court->id);
+                                    @endphp
+                                    <form action="{{ route('favorites.toggle', $court->id) }}" method="POST" style="margin:0;">
+                                        @csrf
+                                        <button type="submit" style="background:none;border:none;cursor:pointer;padding:0;">
+                                            <i class="ti {{ $isFavorited ? 'ti-heart-filled' : 'ti-heart' }}" style="font-size:18px;color:{{ $isFavorited ? '#F97316' : '#6B7A70' }};" aria-hidden="true"></i>
+                                        </button>
+                                    </form>
+                                @else
+                                    <a href="{{ route('login') }}" style="background:none;border:none;cursor:pointer;padding:0;text-decoration:none;">
+                                        <i class="ti ti-heart" style="font-size:18px;color:#6B7A70;" aria-hidden="true"></i>
+                                    </a>
+                                @endauth
                             </span>
 
                             {{-- ICON / MEDIA --}}
                             <div class="court-media">
-                                <svg
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="1.6"
-                                >
-                                    {!! $court['icon'] !!}
-                                </svg>
+                                <i class="ti ti-ball-football" style="font-size:48px;color:#178A4C;" aria-hidden="true"></i>
                             </div>
 
                             {{-- INFORMATION --}}
                             <div class="court-body">
                                 <div class="court-name">
-                                    {{ $court['name'] }}
+                                    {{ $court->name }}
                                 </div>
 
                                 <div class="court-loc">
@@ -201,16 +211,16 @@
                                         <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/>
                                         <circle cx="12" cy="10" r="2.5"/>
                                     </svg>
-                                    <span>{{ $court['loc'] }}</span>
+                                    <span>{{ $court->facility->address ?? 'Không rõ địa chỉ' }}</span>
                                 </div>
 
                                 <div class="court-foot">
                                     <div>
                                         <div class="court-price">
-                                            {{ $court['price_formatted'] }}/h
+                                            {{ number_format($court->price ?? 150000, 0, ',', '.') }}đ/h
                                         </div>
                                         <span class="court-slots">
-                                            {{ $court['slots'] }} khung trống
+                                            {{ $court->capacity ?? 0 }} khung trống
                                         </span>
                                     </div>
 

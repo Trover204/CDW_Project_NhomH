@@ -11,8 +11,8 @@ return new class extends Migration
     {
         Schema::create('facilities', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 191);
-            $table->string('address', 255);
+            $table->string('name', 100);
+            $table->string('address', 150);
             $table->string('phone', 20)->nullable();
             $table->time('open_time');
             $table->time('close_time');
