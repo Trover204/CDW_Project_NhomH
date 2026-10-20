@@ -817,7 +817,11 @@ footer {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    padding-right: 15px; /* space for custom dropdown arrow if needed */
+    padding-right: 28px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23106764'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: 16px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -877,4 +881,20 @@ nav[aria-label="Pagination Navigation"] .hidden {
     nav[aria-label="Pagination Navigation"] .sm\:justify-between {
         justify-content: space-between;
     }
+}
+
+.field select option {
+    background-color: #ffffff;
+    color: #11201B;
+    padding: 10px;
+    font-size: 14px;
+}
+
+[data-theme="dark"] .field select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23ffffff'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+}
+
+[data-theme="dark"] .field select option {
+    background-color: #1a1a1a;
+    color: #ffffff;
 }
