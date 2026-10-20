@@ -22,8 +22,8 @@ class CommentController extends Controller
     public function create()
     {
         return view('admin.comments.create', [
-            'users' => User::all(),
-            'courts' => Court::all(),
+            'users' => User::select('id', 'name', 'email')->get(),
+            'courts' => Court::select('id', 'name')->get(),
         ]);
     }
 
@@ -46,8 +46,8 @@ class CommentController extends Controller
     {
         return view('admin.comments.edit', [
             'comment' => $comment,
-            'users' => User::all(),
-            'courts' => Court::all(),
+            'users' => User::select('id', 'name', 'email')->get(),
+            'courts' => Court::select('id', 'name')->get(),
         ]);
     }
 
