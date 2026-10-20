@@ -996,10 +996,10 @@
                 </div>
             </div>
 
-            <div class="foot-links">
-                <a href="#">Về chúng tôi</a>
-                <a href="#">Liên hệ</a>
-                <a href="#">Điều khoản</a>
+                        <div class="foot-links">
+                <a href="{{ route('pages.about') }}">Về chúng tôi</a>
+                <a href="{{ route('pages.contact') }}">Liên hệ</a>
+                <a href="{{ route('pages.privacy') }}">Điều khoản</a>
             </div>
         </div>
     </footer>
