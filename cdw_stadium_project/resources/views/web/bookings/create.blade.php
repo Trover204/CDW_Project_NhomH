@@ -1,6 +1,6 @@
 @extends('web.layouts.app')
 
-@section('title', 'Đặt sân - Sân Nhóm H')
+@section('title', 'Xác nhận đặt sân - Sân Nhóm H')
 
 @section('content')
 <header>
@@ -16,7 +16,7 @@
                 <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Trang chủ</a>
                 <a href="{{ route('courts.index') }}" class="{{ request()->routeIs('courts.*') ? 'active' : '' }}">Tìm sân</a>
                 <a href="{{ route('news.index') }}" class="{{ request()->routeIs('news.*') ? 'active' : '' }}">Tin tức</a>
-                <a href="#">Gói thành viên</a>
+                <a href="{{ route('plans.index') }}" class="{{ request()->routeIs('plans.*') ? 'active' : '' }}">Gói thành viên</a>
             </nav>
 
             {{-- LOGIN / REGISTER --}}
@@ -41,14 +41,8 @@
     </div>
 </header>
 
-<div class="wrap" style="padding: 40px 0;">
+<div class="wrap" style="padding: 40px 0; min-height: 80vh;">
     <div style="font-family:Arial,Helvetica,sans-serif;border:0.5px solid #E1E8E3;border-radius:12px;overflow:hidden;background:#FFFFFF;">
-        <div style="display:flex;align-items:center;gap:6px;padding:8px 12px;border-bottom:0.5px solid #E1E8E3;background:#F7FAF8;">
-            <div style="width:8px;height:8px;border-radius:50%;background:#D8E2D9;"></div>
-            <div style="width:8px;height:8px;border-radius:50%;background:#D8E2D9;"></div>
-            <div style="width:8px;height:8px;border-radius:50%;background:#D8E2D9;"></div>
-            <div style="flex:1;margin-left:8px;height:18px;border-radius:6px;background:#FFFFFF;border:0.5px solid #E1E8E3;font-size:11px;color:#6B7A70;display:flex;align-items:center;padding:0 8px;">sannhomh.vn/dat-san/{{ $court->id }}/xac-nhan</div>
-        </div>
         <div style="padding:18px 20px;">
             <div style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:20px;">
                 <div style="display:flex;align-items:center;gap:6px;">
@@ -74,6 +68,19 @@
                 </div>
             @endif
 
+            @php
+                $reqDate = request('date');
+                $reqTime = request('time');
+                $endDate = null;
+                if ($reqTime) {
+                    try {
+                        $endDate = \Carbon\Carbon::parse($reqTime)->addHour()->format('H:i');
+                    } catch (\Exception $e) {
+                        $endDate = '19:00';
+                    }
+                }
+            @endphp
+
             <form action="{{ route('bookings.store', $court->id) }}" method="POST">
                 @csrf
                 <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:20px;">
@@ -97,15 +104,15 @@
                         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;">
                             <div>
                                 <div style="font-size:11px;color:#3A453E;margin-bottom:4px;">Ngày đặt *</div>
-                                <input type="date" name="booking_date" value="{{ old('booking_date', \Carbon\Carbon::now()->format('Y-m-d')) }}" required style="width: 100%; height:34px;border-radius:8px;border:0.5px solid #C7D3CA;display:flex;align-items:center;padding:0 10px;font-size:12px;color:#16241C;">
+                                <input type="date" name="booking_date" value="{{ old('booking_date', $reqDate ?? \Carbon\Carbon::now()->format('Y-m-d')) }}" required style="width: 100%; height:34px;border-radius:8px;border:0.5px solid #C7D3CA;display:flex;align-items:center;padding:0 10px;font-size:12px;color:#16241C;">
                             </div>
                             <div>
                                 <div style="font-size:11px;color:#3A453E;margin-bottom:4px;">Giờ bắt đầu *</div>
-                                <input type="time" name="start_time" value="{{ old('start_time', '18:00') }}" required style="width: 100%; height:34px;border-radius:8px;border:0.5px solid #C7D3CA;display:flex;align-items:center;padding:0 10px;font-size:12px;color:#16241C;">
+                                <input type="time" name="start_time" value="{{ old('start_time', $reqTime ?? '18:00') }}" required style="width: 100%; height:34px;border-radius:8px;border:0.5px solid #C7D3CA;display:flex;align-items:center;padding:0 10px;font-size:12px;color:#16241C;">
                             </div>
                             <div>
                                 <div style="font-size:11px;color:#3A453E;margin-bottom:4px;">Giờ kết thúc *</div>
-                                <input type="time" name="end_time" value="{{ old('end_time', '19:00') }}" required style="width: 100%; height:34px;border-radius:8px;border:0.5px solid #C7D3CA;display:flex;align-items:center;padding:0 10px;font-size:12px;color:#16241C;">
+                                <input type="time" name="end_time" value="{{ old('end_time', $endDate ?? '19:00') }}" required style="width: 100%; height:34px;border-radius:8px;border:0.5px solid #C7D3CA;display:flex;align-items:center;padding:0 10px;font-size:12px;color:#16241C;">
                             </div>
                         </div>
 
