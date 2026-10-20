@@ -1,3 +1,0 @@
-1. **Update `HomeController`:** Add queries to fetch available sport types and locations (already done partially, need to make sure we extract something useful for "Khu vực" maybe districts if address is too long or just use addresses for now). I will use the address.
-2. **Update `home.blade.php`:** Add `<select>` dropdowns inside the `.field` divs in the hero search section. Or modify `.field` to use `select` instead of `span`.
-3. **Update `home.css`:** Adjust styling of `.field select` so it matches the current `span` style, ensuring it looks clean without borders or backgrounds to blend with the container.

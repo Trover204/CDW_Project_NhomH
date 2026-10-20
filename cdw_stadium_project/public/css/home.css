@@ -45,6 +45,19 @@
     --nav-bg: rgba(255, 255, 255, 0.95);
 }
 
+[data-theme="dark"] {
+    --bg-page: #111111;
+    --bg-white: #1a1a1a;
+    --ink: #ffffff;
+    --ink-dark: #f3f4f6;
+    --ink-soft: #d1d5db;
+    --ink-muted: #9ca3af;
+    --nav-bg: rgba(26, 26, 26, 0.95);
+    --line: #374151;
+    --line-light: #4b5563;
+    --turf-dark: #ffffff;
+}
+
 /* =====================================================
    RESET & BASE STYLES
 ===================================================== */
