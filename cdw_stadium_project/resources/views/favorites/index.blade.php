@@ -1,73 +1,17 @@
-<!DOCTYPE html>
-<html lang="vi">
+@extends('web.layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sân yêu thích - Sân Nhóm H</title>
 
-    {{-- Google Fonts --}}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
+@section('content')
+{{-- =====================================================
 
-    {{-- Tabler Icons --}}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
-
-    {{-- Home Stylesheet --}}
-    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
-</head>
-
-<body>
-
-    {{-- =====================================================
-         HEADER
     ====================================================== --}}
-    <header>
-        <div class="wrap">
-            <div class="nav">
 
-                {{-- LOGO --}}
-                <a href="{{ route('home') }}" class="brand">
-                    Sân Nhóm <span>H</span>
-                </a>
-
-                {{-- MENU --}}
-                <nav class="nav-links">
-                    <a href="{{ route('home') }}">Trang chủ</a>
-                    <a href="#">Tìm sân</a>
-                    <a href="#">Tin tức</a>
-                    <a href="#">Gói thành viên</a>
-                </nav>
-
-                {{-- LOGIN / REGISTER --}}
-                <div class="nav-actions">
-                    @guest
-                        <a href="{{ route('login') }}" class="btn btn-ghost">Đăng nhập</a>
-                        <a href="{{ route('login') }}?tab=register" class="btn btn-solid">Đăng ký</a>
-                    @else
-                        <a href="{{ route('profile.edit') }}" style="margin-right: 15px; font-weight: 600; color: #124C3E; display: inline-flex; align-items: center; gap: 6px; text-decoration: none;">
-                            <i class="ti ti-user-circle" style="font-size: 19px;"></i>
-                            <span>{{ Auth::user()->name }}</span>
-                        </a>
-                        <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="btn btn-ghost">Đăng xuất</a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            @csrf
-                        </form>
-                    @endguest
-                </div>
-
-            </div>
-        </div>
-    </header>
 
     {{-- =====================================================
          MAIN CONTENT
     ====================================================== --}}
-    <main style="padding: 40px 0; background: #F6F8F6; min-height: 70vh;">
+
+        <div style="padding: 40px 0; background: #F6F8F6; min-height: 70vh;">
         <div class="wrap">
             <div style="font-family:Arial,Helvetica,sans-serif;border:0.5px solid #E1E8E3;border-radius:12px;overflow:hidden;background:#FFFFFF;max-width:900px;margin:0 auto;">
                 <div style="display:flex;align-items:center;gap:6px;padding:8px 12px;border-bottom:0.5px solid #E1E8E3;background:#F7FAF8;">
@@ -135,32 +79,10 @@
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 
     {{-- =====================================================
-         FOOTER
+
     ====================================================== --}}
-    <footer>
-        <div class="wrap foot-row">
-            <div class="foot-content">
-                <span>
-                    © {{ date('Y') }} Sân Nhóm H. All rights reserved.
-                </span>
-                <div class="social-links">
-                    <a href="#" aria-label="Facebook"><i class="ti ti-brand-facebook"></i></a>
-                    <a href="#" aria-label="Instagram"><i class="ti ti-brand-instagram"></i></a>
-                    <a href="#" aria-label="Twitter"><i class="ti ti-brand-twitter"></i></a>
-                </div>
-            </div>
+@endsection
 
-                        <div class="foot-links">
-                <a href="{{ route('pages.about') }}">Về chúng tôi</a>
-                <a href="{{ route('pages.contact') }}">Liên hệ</a>
-                <a href="{{ route('pages.privacy') }}">Điều khoản</a>
-            </div>
-        </div>
-    </footer>
-
-</body>
-
-</html>

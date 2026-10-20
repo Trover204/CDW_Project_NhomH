@@ -1,27 +1,7 @@
-<!DOCTYPE html>
-<html lang="vi">
+@extends('web.layouts.app')
 
-<head>
-    <script>if(localStorage.getItem("theme")==="dark") document.documentElement.setAttribute("data-theme", "dark");</script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hồ sơ cá nhân - Sân Nhóm H</title>
-
-    {{-- Google Fonts --}}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
-
-    {{-- Tabler Icons --}}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
-
-    {{-- Home Stylesheet --}}
-    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
-
-    <style>
+@push('styles')
+<style>
         .profile-container {
             max-width: 1180px;
             margin: 36px auto 60px;
@@ -505,52 +485,18 @@
             font-size: 16px;
         }
     </style>
-</head>
+@endpush
 
-<body>
+@section('content')
+{{-- =====================================================
 
-    {{-- =====================================================
-         HEADER
     ====================================================== --}}
-    <header>
-        <div class="wrap">
-            <div class="nav">
 
-                {{-- LOGO --}}
-                <a href="{{ route('home') }}" class="brand">
-                    Sân Nhóm <span>H</span>
-                </a>
-
-                {{-- MENU --}}
-                <nav class="nav-links">
-                    <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Trang chủ</a>
-                    <a href="{{ route('courts.index') }}" class="{{ request()->routeIs('courts.*') ? 'active' : '' }}">Tìm sân</a>
-                    <a href="{{ route('news.index') }}" class="{{ request()->routeIs('news.*') ? 'active' : '' }}">Tin tức</a>
-                    <a href="#">Gói thành viên</a>
-                </nav>
-
-                {{-- USER PROFILE / ACTIONS --}}
-                <div class="nav-actions">
-                <button class="theme-toggle-btn" aria-label="Toggle Theme" style="background: none; border: none; cursor: pointer; color: var(--ink); margin-right: 15px; font-size: 20px;"><i class="ti ti-moon"></i></button>
-
-                    <a href="{{ route('profile.edit') }}" style="margin-right: 15px; font-weight: 600; color: #124C3E; display: inline-flex; align-items: center; gap: 6px; text-decoration: none;">
-                        <i class="ti ti-user-circle" style="font-size: 20px;"></i>
-                        <span>{{ Auth::user()->name }}</span>
-                    </a>
-                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="btn btn-ghost">Đăng xuất</a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
-                </div>
-
-            </div>
-        </div>
-    </header>
 
     {{-- =====================================================
          MAIN PROFILE CONTENT
     ====================================================== --}}
-    <main class="profile-container">
+
 
         {{-- BREADCRUMB --}}
         <div class="breadcrumb">
@@ -978,36 +924,19 @@
 
         </div>
 
-    </main>
 
     {{-- =====================================================
-         FOOTER
-    ====================================================== --}}
-    <footer>
-        <div class="wrap foot-row">
-            <div class="foot-content">
-                <span>
-                    © {{ date('Y') }} Sân Nhóm H. All rights reserved.
-                </span>
-                <div class="social-links">
-                    <a href="#" aria-label="Facebook"><i class="ti ti-brand-facebook"></i></a>
-                    <a href="#" aria-label="Instagram"><i class="ti ti-brand-instagram"></i></a>
-                    <a href="#" aria-label="Twitter"><i class="ti ti-brand-twitter"></i></a>
-                </div>
-            </div>
 
-                        <div class="foot-links">
-                <a href="{{ route('pages.about') }}">Về chúng tôi</a>
-                <a href="{{ route('pages.contact') }}">Liên hệ</a>
-                <a href="{{ route('pages.privacy') }}">Điều khoản</a>
-            </div>
-        </div>
-    </footer>
+    ====================================================== --}}
+
 
     {{-- =====================================================
          JAVASCRIPT XỬ LÝ CHUYỂN TAB & PREVIEW AVATAR
     ====================================================== --}}
-    <script>
+@endsection
+
+@push('scripts')
+<script>
         function switchTab(tabName, btnElement) {
             // Ẩn tất cả tab pane
             const panes = document.querySelectorAll('.tab-pane');
@@ -1069,7 +998,4 @@
             }
         }
     </script>
-    <script src="{{ asset('js/theme-toggle.js') }}"></script>
-</body>
-
-</html>
+@endpush
