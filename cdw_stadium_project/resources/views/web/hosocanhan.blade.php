@@ -2,6 +2,7 @@
 <html lang="vi">
 
 <head>
+    <script>if(localStorage.getItem("theme")==="dark") document.documentElement.setAttribute("data-theme", "dark");</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hồ sơ cá nhân - Sân Nhóm H</title>
@@ -530,6 +531,8 @@
 
                 {{-- USER PROFILE / ACTIONS --}}
                 <div class="nav-actions">
+                <button class="theme-toggle-btn" aria-label="Toggle Theme" style="background: none; border: none; cursor: pointer; color: var(--ink); margin-right: 15px; font-size: 20px;"><i class="ti ti-moon"></i></button>
+
                     <a href="{{ route('profile.edit') }}" style="margin-right: 15px; font-weight: 600; color: #124C3E; display: inline-flex; align-items: center; gap: 6px; text-decoration: none;">
                         <i class="ti ti-user-circle" style="font-size: 20px;"></i>
                         <span>{{ Auth::user()->name }}</span>
@@ -1059,6 +1062,7 @@
             }
         }
     </script>
+    <script src="{{ asset('js/theme-toggle.js') }}"></script>
 </body>
 
 </html>

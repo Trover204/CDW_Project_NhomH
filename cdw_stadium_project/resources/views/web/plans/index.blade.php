@@ -17,6 +17,8 @@
                     <a href="{{ route('plans.index') }}" class="active">Gói thành viên</a>
                 </nav>
                 <div class="nav-actions">
+                <button class="theme-toggle-btn" aria-label="Toggle Theme" style="background: none; border: none; cursor: pointer; color: var(--ink); margin-right: 15px; font-size: 20px;"><i class="ti ti-moon"></i></button>
+
                     @guest
                         <a href="{{ route('login') }}" class="btn btn-ghost">Đăng nhập</a>
                         <a href="{{ route('login') }}?tab=register" class="btn btn-solid">Đăng ký</a>

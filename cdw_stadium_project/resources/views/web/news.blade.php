@@ -3,6 +3,7 @@
 <html lang="vi">
 
 <head>
+    <script>if(localStorage.getItem("theme")==="dark") document.documentElement.setAttribute("data-theme", "dark");</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tin tức thể thao - Sân Nhóm H</title>
@@ -136,6 +137,8 @@
                     <a href="#">Gói thành viên</a>
                 </nav>
                 <div class="nav-actions">
+                <button class="theme-toggle-btn" aria-label="Toggle Theme" style="background: none; border: none; cursor: pointer; color: var(--ink); margin-right: 15px; font-size: 20px;"><i class="ti ti-moon"></i></button>
+
                     @guest
                         <a href="{{ route('login') }}" class="btn btn-ghost">Đăng nhập</a>
                         <a href="{{ route('login') }}?tab=register" class="btn btn-solid">Đăng ký</a>
@@ -211,6 +214,7 @@
             </div>
         </div>
     </footer>
+    <script src="{{ asset('js/theme-toggle.js') }}"></script>
 </body>
 </html>
 =======
