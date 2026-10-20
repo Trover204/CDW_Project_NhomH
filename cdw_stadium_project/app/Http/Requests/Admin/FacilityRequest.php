@@ -18,6 +18,7 @@ class FacilityRequest extends FormRequest
 
         return [
             'name' => ['required', 'string', 'max:191'],
+            'district' => ['required', 'string', 'max:100'],
             'address' => [
                 'required',
                 'string',
