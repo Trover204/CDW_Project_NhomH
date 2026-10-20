@@ -39,7 +39,7 @@ class ProfileUpdateRequest extends FormRequest
             'avatar' => [
                 'nullable',
                 'image',
-                'mimes:jpeg,png,jpg,webp,svg',
+                'mimes:jpeg,png,jpg',
                 'max:2048',
             ],
         ];
@@ -58,7 +58,7 @@ class ProfileUpdateRequest extends FormRequest
             'birthday.date' => 'Ngày sinh không hợp lệ.',
             'birthday.before_or_equal' => 'Người dùng phải đủ từ 16 tuổi trở lên.',
             'avatar.image' => 'File tải lên phải là hình ảnh.',
-            'avatar.mimes' => 'Ảnh đại diện phải có định dạng: jpeg, png, jpg, webp, svg.',
+            'avatar.mimes' => 'Ảnh đại diện phải có định dạng: jpeg, png, jpg.',
             'avatar.max' => 'Dung lượng ảnh đại diện tối đa là 2MB.',
         ];
     }

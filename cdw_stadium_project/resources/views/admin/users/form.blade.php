@@ -43,7 +43,8 @@
 
 <div class="form-group">
     <label class="form-label">Ảnh đại diện</label>
-    <input type="file" name="avatar" class="form-control" accept="image/*">
+    <input type="file" name="avatar" class="form-control" accept="image/png, image/jpeg, image/jpg">
+    <small class="form-text text-muted">Hỗ trợ ảnh JPG, PNG tối đa 2MB.</small>
     @if(isset($user) && $user->avatar)
         <div style="margin-top: 10px;">
             <img src="{{ Storage::url($user->avatar) }}" alt="Avatar" style="max-height: 100px; border-radius: 4px;">
