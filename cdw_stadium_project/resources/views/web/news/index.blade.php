@@ -12,6 +12,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+    {{-- Tabler Icons --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+
     {{-- Stylesheet --}}
     <link rel="stylesheet" href="{{ asset('css/home.css') }}">
     <style>
@@ -47,7 +50,7 @@
         }
 
         .news-card {
-            background: #FFFFFF;
+            background: var(--surface);
             border: 1px solid var(--line);
             border-radius: 16px;
             overflow: hidden;
@@ -267,5 +270,6 @@
         </div>
     </footer>
 
+    <script src="{{ asset('js/theme-toggle.js') }}"></script>
 </body>
 </html>

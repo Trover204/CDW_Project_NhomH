@@ -12,6 +12,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+    {{-- Tabler Icons --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+
     {{-- Stylesheet --}}
     <link rel="stylesheet" href="{{ asset('css/home.css') }}">
     <style>
@@ -21,7 +24,7 @@
         }
 
         .news-detail-content {
-            background: #FFFFFF;
+            background: var(--surface);
             border-radius: 24px;
             padding: 40px;
             box-shadow: 0 12px 36px rgba(13, 56, 46, 0.04);
@@ -118,7 +121,7 @@
         }
 
         .related-card {
-            background: #FFFFFF;
+            background: var(--surface);
             border: 1px solid var(--line);
             border-radius: 12px;
             overflow: hidden;
@@ -322,5 +325,6 @@
         </div>
     </footer>
 
+    <script src="{{ asset('js/theme-toggle.js') }}"></script>
 </body>
 </html>
