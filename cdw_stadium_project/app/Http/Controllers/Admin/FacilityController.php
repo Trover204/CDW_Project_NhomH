@@ -56,7 +56,7 @@ class FacilityController extends Controller
             return redirect()->back()->with('error', 'Dữ liệu này vừa được một quản trị viên khác cập nhật. Vui lòng tải lại trang để xem dữ liệu mới nhất.');
         }
 
-        return redirect()->route('admin.facilities.index')->with('success', 'Đã cập nhật bình luận.');
+        return redirect()->route('admin.facilities.index')->with('success', 'Đã cập nhật cơ sở.');
     }
 
     public function destroy(Facility $facility)
