@@ -16,8 +16,17 @@ class PlanController extends Controller
         return view('web.plans.index', compact('plans'));
     }
 
+    public function checkout(Plan $plan)
+    {
+        return view('web.plans.checkout', compact('plan'));
+    }
+
     public function subscribe(Request $request, Plan $plan)
     {
+        $validated = $request->validate([
+            'payment_method' => 'required|in:momo,visa,paypal',
+        ]);
+
         $user = Auth::user();
 
         // Optional logic: Check if user already has an active subscription to this plan, etc.
@@ -34,10 +43,10 @@ class PlanController extends Controller
             'expires_at' => $expiresAt,
             'status' => true,
             'amount_paid' => $amountPaid,
-            // 'payment_method' => 'bank_transfer',
-            // 'transaction_code' => ...
+            'payment_method' => $validated['payment_method'],
+            'transaction_code' => strtoupper(uniqid('TXN_')),
         ]);
 
-        return redirect()->route('home')->with('success', 'Bạn đã đăng ký thành công gói ' . $plan->name);
+        return redirect()->route('home')->with('success', 'Bạn đã đăng ký thành công gói ' . $plan->name . ' (Thanh toán qua ' . ucfirst($validated['payment_method']) . ')');
     }
 }

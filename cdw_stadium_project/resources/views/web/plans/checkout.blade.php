@@ -1,0 +1,104 @@
+@extends('web.layouts.app')
+
+@section('title', 'Thanh toán gói thành viên')
+
+@section('content')
+
+    <header>
+        <div class="wrap">
+            <div class="nav">
+                <a href="{{ route('home') }}" class="brand">
+                    Sân Nhóm <span>H</span>
+                </a>
+                <nav class="nav-links">
+                    <a href="{{ route('home') }}">Trang chủ</a>
+                    <a href="{{ route('courts.index') }}">Sân</a>
+                    <a href="{{ route('news.index') }}">Tin tức</a>
+                    <a href="{{ route('plans.index') }}" class="active">Gói thành viên</a>
+                </nav>
+                <div class="nav-actions">
+                <button class="theme-toggle-btn" aria-label="Toggle Theme" style="background: none; border: none; cursor: pointer; color: var(--ink); margin-right: 15px; font-size: 20px;"><i class="ti ti-moon"></i></button>
+
+                    @guest
+                        <a href="{{ route('login') }}" class="btn btn-ghost">Đăng nhập</a>
+                        <a href="{{ route('login') }}?tab=register" class="btn btn-solid">Đăng ký</a>
+                    @else
+                        <a href="{{ route('profile.edit') }}" style="margin-right: 15px; font-weight: 600; color: #124C3E; display: inline-flex; align-items: center; gap: 6px; text-decoration: none;">
+                            <i class="ti ti-user-circle" style="font-size: 19px;"></i>
+                            <span>{{ Auth::user()->name }}</span>
+                        </a>
+                        <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="btn btn-ghost">Đăng xuất</a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                    @endguest
+                </div>
+            </div>
+        </div>
+    </header>
+
+<div style="overflow:hidden; background:#FFFFFF; max-width: 600px; margin: 40px auto; padding: 20px; border: 1px solid #E1E8E3; border-radius: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+
+    <div style="padding:22px 20px;">
+        <div style="text-align:center;margin-bottom:30px;">
+            <div style="font-size:24px;font-weight:700;color:#16241C;margin-bottom:6px;">Thanh toán gói thành viên</div>
+        </div>
+
+        <div style="background:#F9FAFB; padding:20px; border-radius:12px; margin-bottom: 24px; border: 1px solid #E5E7EB;">
+            <div style="font-size:18px;font-weight:700;color:#16241C;margin-bottom:10px;">Chi tiết gói</div>
+            <div style="display:flex; justify-content:space-between; margin-bottom: 8px;">
+                <span style="color:#4B5563;">Tên gói:</span>
+                <span style="font-weight:600; color:#111827;">{{ $plan->name }}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom: 8px;">
+                <span style="color:#4B5563;">Thời hạn:</span>
+                <span style="font-weight:600; color:#111827;">{{ $plan->duration_days }} ngày</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom: 8px;">
+                <span style="color:#4B5563;">Ưu đãi:</span>
+                <span style="font-weight:600; color:#178A4C;">Giảm {{ $plan->discount_percent }}%</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; border-top: 1px solid #E5E7EB; padding-top: 10px; margin-top: 10px;">
+                <span style="font-weight:600; color:#111827;">Tổng tiền:</span>
+                <span style="font-weight:700; font-size:18px; color:#F97316;">{{ number_format($plan->price, 0, ',', '.') }}đ</span>
+            </div>
+        </div>
+
+        <form action="{{ route('plans.subscribe', $plan->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn mua gói này không?');">
+            @csrf
+
+            <div style="margin-bottom: 24px;">
+                <div style="font-size:16px;font-weight:600;color:#16241C;margin-bottom:12px;">Phương thức thanh toán</div>
+
+                <label style="display:flex; align-items:center; padding: 12px; border: 1px solid #E1E8E3; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s;">
+                    <input type="radio" name="payment_method" value="momo" required style="margin-right: 12px; width: 18px; height: 18px;">
+                    <span style="font-weight: 500; color: #374151;">Ví MoMo</span>
+                </label>
+
+                <label style="display:flex; align-items:center; padding: 12px; border: 1px solid #E1E8E3; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s;">
+                    <input type="radio" name="payment_method" value="visa" required style="margin-right: 12px; width: 18px; height: 18px;">
+                    <span style="font-weight: 500; color: #374151;">Thẻ Visa/Mastercard</span>
+                </label>
+
+                <label style="display:flex; align-items:center; padding: 12px; border: 1px solid #E1E8E3; border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+                    <input type="radio" name="payment_method" value="paypal" required style="margin-right: 12px; width: 18px; height: 18px;">
+                    <span style="font-weight: 500; color: #374151;">PayPal</span>
+                </label>
+
+                @error('payment_method')
+                    <div style="color: red; font-size: 14px; margin-top: 8px;">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <button type="submit" style="width:100%;height:48px;border-radius:8px;background:#178A4C;color:#fff;border:none;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;cursor:pointer;">
+                Thanh toán ngay
+            </button>
+
+            <div style="text-align: center; margin-top: 16px;">
+                <a href="{{ route('plans.index') }}" style="color: #6B7280; text-decoration: none; font-size: 14px;">Quay lại</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@endsection
