@@ -23,7 +23,18 @@ class UserSeeder extends Seeder
             ['Hoàng Thị Mai',  'mai@example.com',   '12345678', '0900000007', 'customer', '1995-12-25'],
         ];
 
-        // LƯU Ý DÒNG NÀY: Phải có đủ 6 biến (thêm $plainPassword vào vị trí thứ 3)
+                $faker = \Faker\Factory::create('vi_VN');
+        for ($i = 1; $i <= 20; $i++) {
+            $users[] = [
+                $faker->name,
+                $faker->unique()->safeEmail,
+                '12345678',
+                $faker->numerify('09########'),
+                'customer',
+                $faker->date('Y-m-d', '2005-01-01')
+            ];
+        }
+// LƯU Ý DÒNG NÀY: Phải có đủ 6 biến (thêm $plainPassword vào vị trí thứ 3)
         foreach ($users as [$name, $email, $plainPassword, $phone, $role, $birthday]) {
             DB::table('users')->updateOrInsert(
                 ['email' => $email],

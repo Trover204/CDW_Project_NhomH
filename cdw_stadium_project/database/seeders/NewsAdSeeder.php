@@ -38,6 +38,28 @@ class NewsAdSeeder extends Seeder
                 ]
             );
         }
+        // Fake 20 additional news
+        $faker = \Faker\Factory::create('vi_VN');
+        for ($i = 1; $i <= 20; $i++) {
+            $title = $faker->realText(50);
+            $slug = \Illuminate\Support\Str::slug($title) . '-' . $i;
+            $summary = $faker->realText(100);
+            DB::table('news')->updateOrInsert(
+                ['slug' => $slug],
+                [
+                    'title' => $title,
+                    'content' => $faker->realText(500),
+                    'summary' => $summary,
+                    'category' => $faker->randomElement(['Tin tức', 'Sự kiện', 'Khuyến mãi', 'Thể thao']),
+                    'user_id' => $adminId,
+                    'views' => $faker->numberBetween(10, 500),
+                    'status' => 'published',
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ]
+            );
+        }
+
 
         $ads = [
             ['Banner khuyến mãi tháng 9', '/promo', 'Giảm 20% khung giờ sáng'],
@@ -48,6 +70,17 @@ class NewsAdSeeder extends Seeder
             DB::table('ads')->insert([
                 'name' => $name, 'link_url' => $link, 'description' => $desc,
                 'is_active' => 1, 'created_at' => $now, 'updated_at' => $now,
+            ]);
+        }
+        // Fake 20 additional ads
+        for ($i = 1; $i <= 20; $i++) {
+            DB::table('ads')->insert([
+                'name' => $faker->realText(30),
+                'link_url' => '/ad-' . $i,
+                'description' => $faker->realText(50),
+                'is_active' => 1,
+                'created_at' => $now,
+                'updated_at' => $now,
             ]);
         }
     }
