@@ -312,6 +312,18 @@ header {
     text-overflow: ellipsis;
 }
 
+.field select, .field input {
+    appearance: none;
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 100%;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+}
+
 .search-btn {
     min-height: 44px;
     padding: 0 26px;
