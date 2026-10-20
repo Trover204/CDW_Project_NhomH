@@ -58,6 +58,22 @@
     --turf-dark: #ffffff;
 }
 
+[data-theme="dark"] .court-card {
+    --ink: #11201B;
+    --ink-soft: #5E726A;
+    --turf-dark: #0D382E;
+    --ink-muted: #879C94;
+}
+
+[data-theme="dark"] .field {
+    background: #1a1a1a;
+    color: #ffffff;
+}
+[data-theme="dark"] .field select,
+[data-theme="dark"] .field input[type="date"] {
+    color: #ffffff;
+}
+
 /* =====================================================
    RESET & BASE STYLES
 ===================================================== */
