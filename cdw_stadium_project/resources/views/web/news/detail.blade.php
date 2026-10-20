@@ -203,7 +203,6 @@
                         <a href="{{ route('login') }}" class="btn btn-ghost">Đăng nhập</a>
                         <a href="{{ route('login') }}?tab=register" class="btn btn-solid">Đăng ký</a>
                     @else
-                        <span style="margin-right: 15px; font-weight: 500;">Xin chào, {{ Auth::user()->name }}</span>
                         <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="btn btn-ghost">Đăng xuất</a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             @csrf
