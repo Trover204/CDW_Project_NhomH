@@ -642,10 +642,10 @@
                         <span>Đổi mật khẩu</span>
                     </button>
 
-                    <button type="button" class="menu-item {{ session('active_tab') == 'subscription' ? 'active' : '' }}" onclick="switchTab('subscription', this)">
+                    <a href="{{ route('plans.index') }}" class="menu-item">
                         <i class="ti ti-award"></i>
                         <span>Gói hội viên</span>
-                    </button>
+                    </a>
 
                     <div class="menu-divider"></div>
 
@@ -983,16 +983,23 @@
     {{-- =====================================================
          FOOTER
     ====================================================== --}}
-    <footer style="background: #0D382E; color: #E3ECE6; padding: 40px 20px 24px; margin-top: 60px;">
-        <div style="max-width: 1180px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: gap: 20px;">
-            <div>
-                <a href="{{ route('home') }}" style="font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; color: #FFFFFF;">
-                    Sân Nhóm <span style="color: #D2F85A;">H</span>
-                </a>
-                <div style="font-size: 12.5px; color: #879C94; margin-top: 4px;">Nền tảng đặt sân thể thao trực tuyến hàng đầu TP.HCM</div>
+    <footer>
+        <div class="wrap foot-row">
+            <div class="foot-content">
+                <span>
+                    © {{ date('Y') }} Sân Nhóm H. All rights reserved.
+                </span>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="ti ti-brand-facebook"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="ti ti-brand-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="ti ti-brand-twitter"></i></a>
+                </div>
             </div>
-            <div style="font-size: 12px; color: #879C94;">
-                &copy; {{ date('Y') }} Sân Nhóm H. Mọi quyền được bảo lưu.
+
+            <div class="foot-links">
+                <a href="#">Về chúng tôi</a>
+                <a href="#">Liên hệ</a>
+                <a href="#">Điều khoản</a>
             </div>
         </div>
     </footer>
