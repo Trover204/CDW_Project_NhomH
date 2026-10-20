@@ -10,7 +10,10 @@ class CourtController extends Controller
 {
     public function index()
     {
-        $courts = Court::with(['facility', 'sportType'])->where('status', '!=', 'inactive')->paginate(12);
+        $courts = Court::with(['facility', 'sportType'])
+            ->where('status', '!=', 'inactive')
+            ->orderBy('sport_type_id', 'asc')
+            ->paginate(12);
         return view('web.courts.index', compact('courts'));
     }
 
