@@ -31,7 +31,7 @@ class ProfileController extends Controller
         $favoritesCount = $user->favoriteCourts()->count();
         $bookingsCount = $user->bookings()->count();
 
-        return view('web.hosocanhan', compact('user', 'activeSubscription', 'favoritesCount', 'bookingsCount'));
+        return view('web.profile', compact('user', 'activeSubscription', 'favoritesCount', 'bookingsCount'));
     }
 
     /**
