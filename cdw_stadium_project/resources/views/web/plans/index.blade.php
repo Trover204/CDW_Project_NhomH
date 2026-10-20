@@ -37,7 +37,7 @@
         </div>
     </header>
 
-<div style="font-family:Arial,Helvetica,sans-serif; overflow:hidden; background:#FFFFFF; max-width: 1000px; margin: 40px auto; padding: 20px;">
+<div style="font-family:Arial,Helvetica,sans-serif; overflow:hidden; background:#FFFFFF; max-width: 1000px; margin: 40px auto; padding: 20px; border: 1px solid #E1E8E3; border-radius: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
 
     @if(session('success'))
         <div style="background: #178A4C; color: white; padding: 10px 20px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
