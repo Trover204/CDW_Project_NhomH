@@ -65,6 +65,67 @@ class BookingSeeder extends Seeder
             }
         }
 
+
+
+        // Fake 20 additional bookings
+        $faker = \Faker\Factory::create('vi_VN');
+        $allCustomers = DB::table('users')->where('role', 'customer')->get();
+        $allCourts = DB::table('courts')->pluck('id')->toArray();
+
+        for ($i = 1; $i <= 20; $i++) {
+            $user = $faker->randomElement($allCustomers);
+            $courtId = $faker->randomElement($allCourts);
+            $sub = DB::table('subscriptions')->where('user_id', $user->id)->value('id');
+            $date = $faker->dateTimeBetween('-30 days', '+30 days')->format('Y-m-d');
+
+            // To avoid unique constraint on (court_id, booking_date, start_time, slot_lock),
+            // ensure start_time is unique by iterating over hours starting from 6 + i
+            $startHour = 6 + ($i % 15);
+            $endHour = $startHour + 1;
+
+            $start = str_pad($startHour, 2, '0', STR_PAD_LEFT) . ':00';
+            $end = str_pad($endHour, 2, '0', STR_PAD_LEFT) . ':00';
+            $subtotal = $faker->numberBetween(100, 1000) * 1000;
+            $discount = $sub ? $faker->numberBetween(10, 50) * 1000 : 0;
+            $status = $faker->randomElement(['pending', 'confirmed', 'completed', 'cancelled']);
+            $method = $faker->randomElement(['vnpay', 'momo', 'cod']);
+            $payStatus = $method == 'cod' && $status != 'completed' ? 'pending' : ($status == 'cancelled' ? 'failed' : 'paid');
+
+            try {
+                $bookingId = DB::table('bookings')->insertGetId([
+                    'user_id' => $user->id, 'court_id' => $courtId,
+                    'subscription_id' => $discount > 0 ? $sub : null,
+                    'customer_name' => $user->name, 'customer_phone' => $user->phone, 'customer_email' => $user->email,
+                    'booking_date' => $date, 'start_time' => $start . ':00', 'end_time' => $end . ':00',
+                    'subtotal' => $subtotal, 'discount_amount' => $discount, 'total_price' => $subtotal - $discount,
+                    'note' => $faker->realText(50), 'status' => $status,
+                    'created_at' => $now, 'updated_at' => $now,
+                ]);
+
+                DB::table('payments')->insert([
+                    'booking_id' => $bookingId, 'user_id' => $user->id,
+                    'amount' => $subtotal - $discount, 'payment_method' => $method,
+                    'transaction_code' => 'PAY-FAK-'.str_pad($i, 4, '0', STR_PAD_LEFT),
+                    'status' => $payStatus, 'paid_at' => $payStatus === 'paid' ? $now : null,
+                    'created_at' => $now, 'updated_at' => $now,
+                ]);
+
+                DB::table('booking_logs')->insert([
+                    'booking_id' => $bookingId, 'user_id' => $user->id, 'action' => 'created',
+                    'created_at' => $now, 'updated_at' => $now,
+                ]);
+
+                if ($status === 'completed') {
+                    DB::table('reviews')->insert([
+                        'user_id' => $user->id, 'court_id' => $courtId, 'booking_id' => $bookingId,
+                        'rating' => $faker->numberBetween(3, 5), 'content' => $faker->realText(100),
+                        'status' => 1, 'created_at' => $now, 'updated_at' => $now,
+                    ]);
+                }
+            } catch (\Exception $e) {
+                // Ignore unique constraint violation and continue
+            }
+        }
         // Sân yêu thích
         DB::table('court_user_likes')->insertOrIgnore([
             ['user_id' => $an->id, 'court_id' => $court1, 'created_at' => $now, 'updated_at' => $now],
