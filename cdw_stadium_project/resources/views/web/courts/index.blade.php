@@ -157,7 +157,9 @@
             @endforelse
 
             <div style="margin-top: 20px;">
-                {{ $courts->links() }}
+                @if(method_exists($courts, 'links'))
+                    {{ $courts->links() }}
+                @endif
             </div>
         </div>
     </div>
