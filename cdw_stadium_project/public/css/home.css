@@ -769,3 +769,37 @@ footer {
         align-items: flex-start;
     }
 }
+
+/* Styles for select and date input within the search card */
+.field select,
+.field input[type="date"] {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--ink);
+    font-family: inherit;
+    width: 100%;
+    cursor: pointer;
+}
+
+.field select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 15px; /* space for custom dropdown arrow if needed */
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.field input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.field input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
