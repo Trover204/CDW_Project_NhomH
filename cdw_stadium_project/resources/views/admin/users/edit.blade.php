@@ -8,7 +8,7 @@
 </div>
 
 <div class="form-card" style="max-width: 600px;">
-    <form action="{{ route('admin.users.update', $user) }}" method="POST">
+    <form action="{{ route('admin.users.update', $user) }}" method="POST" enctype="multipart/form-data">
         @method('PUT')
         @include('admin.users.form')
     </form>

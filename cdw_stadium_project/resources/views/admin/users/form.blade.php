@@ -42,6 +42,17 @@
 </div>
 
 <div class="form-group">
+    <label class="form-label">Ảnh đại diện</label>
+    <input type="file" name="avatar" class="form-control" accept="image/*">
+    @if(isset($user) && $user->avatar)
+        <div style="margin-top: 10px;">
+            <img src="{{ Storage::url($user->avatar) }}" alt="Avatar" style="max-height: 100px; border-radius: 4px;">
+        </div>
+    @endif
+    @error('avatar') <div class="form-error">{{ $message }}</div> @enderror
+</div>
+
+<div class="form-group">
     <label class="form-label">Vai trò *</label>
     <select name="role" class="form-control">
         @foreach (['customer' => 'Khách hàng', 'staff' => 'Nhân viên', 'admin' => 'Quản trị viên'] as $val => $text)

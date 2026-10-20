@@ -8,7 +8,7 @@
 </div>
 
 <div class="form-card" style="max-width: 600px;">
-    <form action="{{ route('admin.users.store') }}" method="POST">
+    <form action="{{ route('admin.users.store') }}" method="POST" enctype="multipart/form-data">
         @include('admin.users.form')
     </form>
 </div>
