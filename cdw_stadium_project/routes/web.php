@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
     Route::post('/courts/{court}/favorite', [FavoriteController::class, 'toggle'])->name('favorites.toggle');
 
+    Route::get('/plans/{plan}/checkout', [PlanController::class, 'checkout'])->name('plans.checkout');
     Route::post('/plans/{plan}/subscribe', [PlanController::class, 'subscribe'])->name('plans.subscribe');
 
     // Màn hình hồ sơ cá nhân (Profile)

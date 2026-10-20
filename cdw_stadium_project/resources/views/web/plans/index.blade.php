@@ -82,18 +82,18 @@
                         @endif
                     </div>
 
-                    <form action="{{ route('plans.subscribe', $plan->id) }}" method="POST" style="margin-top:24px;">
-                        @csrf
+                    <div style="margin-top:24px;">
+
                         @auth
-                            <button type="submit" style="width:100%;height:44px;border-radius:8px;{{ $isPopular ? 'background:#F97316;color:#fff;border:none;' : 'background:#fff;border:1px solid #C7D3CA;color:#3A453E;' }} display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;cursor:pointer;">
+                            <a href="{{ route('plans.checkout', $plan->id) }}" style="width:100%;height:44px;border-radius:8px;{{ $isPopular ? 'background:#F97316;color:#fff;border:none;' : 'background:#fff;border:1px solid #C7D3CA;color:#3A453E;' }} display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;cursor:pointer;text-decoration:none;">
                                 Chọn gói
-                            </button>
+                            </a>
                         @else
                             <a href="{{ route('login') }}" style="width:100%;height:44px;border-radius:8px;{{ $isPopular ? 'background:#F97316;color:#fff;border:none;' : 'background:#fff;border:1px solid #C7D3CA;color:#3A453E;' }} display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;cursor:pointer;text-decoration:none;">
                                 Đăng nhập để đăng ký
                             </a>
                         @endauth
-                    </form>
+                    </div>
                 </div>
             @endforeach
 
