@@ -43,3 +43,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
 });
+
+// Static Pages
+Route::get('/about-us', [App\Http\Controllers\Web\PageController::class, 'about'])->name('pages.about');
+Route::get('/contact', [App\Http\Controllers\Web\PageController::class, 'contact'])->name('pages.contact');
+Route::get('/privacy-policy', [App\Http\Controllers\Web\PageController::class, 'privacy'])->name('pages.privacy');
