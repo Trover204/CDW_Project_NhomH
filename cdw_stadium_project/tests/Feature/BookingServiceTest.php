@@ -19,7 +19,7 @@ class BookingServiceTest extends TestCase
         // Setup data
         $sportType = SportType::create(['name' => 'Football']);
         $facility = Facility::create([
-            'name' => 'Facility 1', 'address' => 'Address 1', 'phone' => '1234567890',
+            'name' => 'Facility 1', 'district' => 'District 1', 'address' => 'Address 1', 'phone' => '1234567890',
             'open_time' => '06:00:00', 'close_time' => '23:00:00',
         ]);
         $court = Court::create([

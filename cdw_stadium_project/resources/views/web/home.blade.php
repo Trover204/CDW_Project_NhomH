@@ -123,7 +123,7 @@
                             <select name="location">
                                 <option value="">Khu vực</option>
                                 @foreach($locations as $location)
-                                    <option value="{{ $location->address }}">{{ $location->address }}</option>
+                                    <option value="{{ $location->district }}">{{ $location->district }}</option>
                                 @endforeach
                             </select>
                         </div>

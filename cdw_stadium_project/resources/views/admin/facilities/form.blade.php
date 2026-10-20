@@ -5,6 +5,12 @@
 </div>
 
 <div class="form-group">
+    <label class="form-label">Quận/Huyện *</label>
+    <input type="text" name="district" value="{{ old('district', $facility->district ?? '') }}" class="form-control" placeholder="Ví dụ: Quận 9, Thủ Đức">
+    @error('district') <div class="form-error">{{ $message }}</div> @enderror
+</div>
+
+<div class="form-group">
     <label class="form-label">Địa chỉ *</label>
     <input type="text" name="address" value="{{ old('address', $facility->address ?? '') }}" class="form-control" placeholder="Ví dụ: 53 Võ Văn Ngân, TP. Thủ Đức, TP.HCM">
     @error('address') <div class="form-error">{{ $message }}</div> @enderror
