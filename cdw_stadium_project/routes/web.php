@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/courts', [CourtController::class, 'index'])->name('courts.index');
+Route::get('/courts/search', [CourtController::class, 'search'])->name('courts.search');
 Route::get('/courts/{court}', [CourtController::class, 'show'])->name('courts.show');
 
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');

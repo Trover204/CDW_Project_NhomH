@@ -98,7 +98,7 @@
                     </div>
 
                     {{-- SEARCH BAR (PASTEL LIME PILL) --}}
-                    <div class="search-card">
+                    <form action="{{ route('courts.search') }}" method="GET" class="search-card">
 
                         {{-- LOẠI SÂN --}}
                         <div class="field">
@@ -138,10 +138,10 @@
                         </div>
 
                         {{-- BUTTON --}}
-                        <button type="button" class="search-btn">
+                        <button type="submit" class="search-btn">
                             Tìm sân
                         </button>
-                    </div>
+                    </form>
 
                     {{-- STATISTICS --}}
                     <div class="scoreboard">
