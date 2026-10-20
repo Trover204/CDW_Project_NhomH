@@ -43,14 +43,14 @@ class SportTypeController extends Controller
 
     public function update(SportTypeRequest $request, SportType $sportType)
     {
+        $validated = $request->validated();
 
         if ($request->hasFile('image')) {
             if ($sportType->image) {
                 Storage::disk('public')->delete($sportType->image);
             }
-            $data['image'] = $request->file('image')->store('sport-types', 'public');
+            $validated['image'] = $request->file('image')->store('sport-types', 'public');
         }
-        $validated = $request->validated();
         $currentVersion = $validated['version'];
 
         // Loại bỏ version khỏi mảng data để tự xử lý tăng ++
