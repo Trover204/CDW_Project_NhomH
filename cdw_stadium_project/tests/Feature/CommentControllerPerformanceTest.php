@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use App\Models\Comment;
 use App\Models\News;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -36,14 +36,14 @@ class CommentControllerPerformanceTest extends TestCase
         $start = microtime(true);
 
         $response = $this->actingAs($admin)
-                         ->get(route('admin.comments.edit', $comment));
+            ->get(route('admin.comments.edit', $comment));
 
         $end = microtime(true);
         $time = $end - $start;
 
         $response->assertStatus(200);
 
-        echo "Time taken for edit (baseline with 10k users): {$time} seconds\n";
+        echo "Time taken for edit (optimized with 10k users): {$time} seconds\n";
         $this->assertTrue(true);
     }
 }
