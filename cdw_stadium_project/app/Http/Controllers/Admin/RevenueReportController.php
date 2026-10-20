@@ -295,23 +295,30 @@ class RevenueReportController extends Controller
 
         // Sport types breakdown
         $sportTypes = SportType::all();
-        $sportTypesBreakdown = $sportTypes->map(function ($sportType) use ($startDate, $endDate, $request) {
-            $courtIds = Court::where('sport_type_id', $sportType->id);
-            if ($request->filled('facility_id')) {
-                $courtIds->where('facility_id', $request->facility_id);
-            }
-            $courtIds = $courtIds->pluck('id');
 
-            $bookings = Booking::whereIn('court_id', $courtIds)
-                ->whereBetween('booking_date', [$startDate->toDateString(), $endDate->toDateString()])
-                ->whereIn('status', ['completed', 'confirmed'])
-                ->get();
+        // Build a grouped query for all bookings within the date range, joined with courts
+        $bookingsQuery = Booking::join('courts', 'bookings.court_id', '=', 'courts.id')
+            ->whereBetween('bookings.booking_date', [$startDate->toDateString(), $endDate->toDateString()])
+            ->whereIn('bookings.status', ['completed', 'confirmed']);
+
+        if ($request->filled('facility_id')) {
+            $bookingsQuery->where('courts.facility_id', $request->facility_id);
+        }
+
+        $sportTypeStats = $bookingsQuery
+            ->selectRaw('courts.sport_type_id, COUNT(bookings.id) as b_count, SUM(bookings.total_price) as b_revenue')
+            ->groupBy('courts.sport_type_id')
+            ->get()
+            ->keyBy('sport_type_id');
+
+        $sportTypesBreakdown = $sportTypes->map(function ($sportType) use ($sportTypeStats) {
+            $stats = $sportTypeStats->get($sportType->id);
 
             return [
                 'id' => $sportType->id,
                 'name' => $sportType->name,
-                'count' => $bookings->count(),
-                'revenue' => (float) $bookings->sum('total_price'),
+                'count' => $stats ? (int) $stats->b_count : 0,
+                'revenue' => $stats ? (float) $stats->b_revenue : 0,
             ];
         });
 
