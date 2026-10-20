@@ -10,12 +10,18 @@ class CourtController extends Controller
 {
     public function index()
     {
-        $courts = Court::with(['facility', 'sportType'])
-            ->where('status', '!=', 'inactive')
-            ->orderBy('sport_type_id', 'asc')
-            ->paginate(12);
-
         $sportTypes = \App\Models\SportType::where('status', 1)->get();
+
+        $courts = collect();
+        foreach ($sportTypes as $sportType) {
+            $typeCourts = Court::with(['facility', 'sportType'])
+                ->where('status', '!=', 'inactive')
+                ->where('sport_type_id', $sportType->id)
+                ->take(4)
+                ->get();
+            $courts = $courts->merge($typeCourts);
+        }
+
         $locations = \App\Models\Facility::where('status', 1)
             ->select('district')
             ->whereNotNull('district')
