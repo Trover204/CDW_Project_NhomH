@@ -659,8 +659,8 @@ section.list {
    FOOTER
 ===================================================== */
 footer {
-    padding: 28px 0;
-    background: #FFFFFF;
+    padding: 32px 0;
+    background: var(--bg-white, #FFFFFF);
     border-top: 1px solid var(--line);
 }
 
@@ -670,24 +670,62 @@ footer {
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 14px;
-    font-size: 13px;
+    font-size: 14px;
     color: var(--ink-soft);
+}
+
+.foot-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .foot-links {
     display: flex;
-    gap: 22px;
+    gap: 24px;
+    align-items: center;
 }
 
 .foot-links a {
     color: var(--ink-soft);
     transition: color 0.2s;
+    font-weight: 500;
 }
 
 .foot-links a:hover {
     color: var(--turf-dark);
 }
 
+[data-theme="dark"] footer {
+    background: var(--bg-white);
+    border-top: 1px solid var(--line);
+}
+[data-theme="dark"] .social-links a:hover {
+    color: var(--turf-dark);
+}
+
+.social-links {
+    display: flex;
+    gap: 16px;
+    margin-top: 8px;
+}
+
+.social-links a {
+    color: var(--ink-muted);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-links a:hover {
+    color: var(--turf-teal);
+    transform: translateY(-2px);
+}
+
+.social-links i {
+    font-size: 20px;
+}
 /* =====================================================
    RESPONSIVE - TABLET
 ===================================================== */
