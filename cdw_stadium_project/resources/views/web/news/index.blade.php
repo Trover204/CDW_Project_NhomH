@@ -2,7 +2,9 @@
 <html lang="vi">
 
 <head>
-    <script>if(localStorage.getItem("theme")==="dark") document.documentElement.setAttribute("data-theme", "dark");</script>
+    <script>
+        if (localStorage.getItem("theme") === "dark") document.documentElement.setAttribute("data-theme", "dark");
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tin tức &amp; Mẹo thể thao - Sân Nhóm H</title>
@@ -142,6 +144,7 @@
             display: flex;
             justify-content: center;
         }
+
         .pagination-wrap nav p {
             display: none;
         }
@@ -151,6 +154,7 @@
                 grid-template-columns: repeat(2, 1fr);
             }
         }
+
         @media (max-width: 600px) {
             .news-grid {
                 grid-template-columns: 1fr;
@@ -175,23 +179,27 @@
                 {{-- MENU --}}
                 <nav class="nav-links">
                     <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Trang chủ</a>
-                    <a href="{{ route('courts.index') }}" class="{{ request()->routeIs('courts.*') ? 'active' : '' }}">Tìm sân</a>
+                    <a href="{{ route('courts.index') }}" class="{{ request()->routeIs('courts.*') ? 'active' : '' }}">Sân</a>
                     <a href="{{ route('news.index') }}" class="{{ request()->routeIs('news.*') ? 'active' : '' }}">Tin tức</a>
                     <a href="{{ route('plans.index') }}" class="{{ request()->routeIs('plans.*') ? 'active' : '' }}">Gói thành viên</a>
                 </nav>
 
                 {{-- LOGIN / REGISTER --}}
                 <div class="nav-actions">
-                <button class="theme-toggle-btn" aria-label="Toggle Theme" style="background: none; border: none; cursor: pointer; color: var(--ink); margin-right: 15px; font-size: 20px;"><i class="ti ti-moon"></i></button>
+                    <button class="theme-toggle-btn" aria-label="Toggle Theme" style="background: none; border: none; cursor: pointer; color: var(--ink); margin-right: 15px; font-size: 20px;"><i class="ti ti-moon"></i></button>
 
                     @guest
-                        <a href="{{ route('login') }}" class="btn btn-ghost">Đăng nhập</a>
-                        <a href="{{ route('login') }}?tab=register" class="btn btn-solid">Đăng ký</a>
+                    <a href="{{ route('login') }}" class="btn btn-ghost">Đăng nhập</a>
+                    <a href="{{ route('login') }}?tab=register" class="btn btn-solid">Đăng ký</a>
                     @else
-                        <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="btn btn-ghost">Đăng xuất</a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            @csrf
-                        </form>
+                    <a href="{{ route('profile.edit') }}" style="margin-right: 15px; font-weight: 600; color: #124C3E; display: inline-flex; align-items: center; gap: 6px; text-decoration: none;">
+                        <i class="ti ti-user-circle" style="font-size: 19px;"></i>
+                        <span>{{ Auth::user()->name }}</span>
+                    </a>
+                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="btn btn-ghost">Đăng xuất</a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
                     @endguest
                 </div>
             </div>
@@ -209,44 +217,44 @@
             </div>
 
             @if($news->isEmpty())
-                <div style="text-align: center; padding: 40px; background: #fff; border-radius: 12px; color: var(--ink-soft);">
-                    Chưa có bài viết nào được đăng.
-                </div>
+            <div style="text-align: center; padding: 40px; background: #fff; border-radius: 12px; color: var(--ink-soft);">
+                Chưa có bài viết nào được đăng.
+            </div>
             @else
-                <div class="news-grid">
-                    @foreach($news as $item)
-                        <a href="{{ route('news.show', $item->slug) }}" class="news-card">
-                            <div class="news-img-wrap">
-                                @if($item->category)
-                                    <span class="news-category">{{ $item->category }}</span>
-                                @endif
+            <div class="news-grid">
+                @foreach($news as $item)
+                <a href="{{ route('news.show', $item->slug) }}" class="news-card">
+                    <div class="news-img-wrap">
+                        @if($item->category)
+                        <span class="news-category">{{ $item->category }}</span>
+                        @endif
 
-                                @if($item->image)
-                                    <img src="{{ Storage::url($item->image) }}" alt="{{ $item->title }}">
-                                @else
-                                    {{-- Placeholder icon if no image --}}
-                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="color: var(--turf-teal);">
-                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                        <line x1="3" y1="9" x2="21" y2="9"></line>
-                                        <line x1="9" y1="21" x2="9" y2="9"></line>
-                                    </svg>
-                                @endif
-                            </div>
-                            <div class="news-content">
-                                <h3 class="news-title">{{ $item->title }}</h3>
-                                <div class="news-summary">{{ $item->summary }}</div>
-                                <div class="news-meta">
-                                    <span>{{ $item->created_at->format('d/m/Y') }}</span>
-                                    <span>{{ $item->views }} lượt xem</span>
-                                </div>
-                            </div>
-                        </a>
-                    @endforeach
-                </div>
+                        @if($item->image)
+                        <img src="{{ Storage::url($item->image) }}" alt="{{ $item->title }}">
+                        @else
+                        {{-- Placeholder icon if no image --}}
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="color: var(--turf-teal);">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="3" y1="9" x2="21" y2="9"></line>
+                            <line x1="9" y1="21" x2="9" y2="9"></line>
+                        </svg>
+                        @endif
+                    </div>
+                    <div class="news-content">
+                        <h3 class="news-title">{{ $item->title }}</h3>
+                        <div class="news-summary">{{ $item->summary }}</div>
+                        <div class="news-meta">
+                            <span>{{ $item->created_at->format('d/m/Y') }}</span>
+                            <span>{{ $item->views }} lượt xem</span>
+                        </div>
+                    </div>
+                </a>
+                @endforeach
+            </div>
 
-                <div class="pagination-wrap">
-                    {{ $news->links() }}
-                </div>
+            <div class="pagination-wrap">
+                {{ $news->links() }}
+            </div>
             @endif
 
         </div>
@@ -278,4 +286,5 @@
 
     <script src="{{ asset('js/theme-toggle.js') }}"></script>
 </body>
+
 </html>
