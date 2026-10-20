@@ -702,8 +702,8 @@
                                 <label for="avatarInput" class="btn-upload-file">
                                     <i class="ti ti-upload"></i> Chọn ảnh đại diện mới
                                 </label>
-                                <input type="file" id="avatarInput" name="avatar" accept="image/png, image/jpeg, image/jpg, image/webp" style="display: none;" onchange="previewSelectedAvatar(this)">
-                                <div class="form-hint" style="margin-top: 6px;">Hỗ trợ ảnh JPG, PNG, WEBP tối đa 2MB.</div>
+                                <input type="file" id="avatarInput" name="avatar" accept="image/png, image/jpeg, image/jpg" style="display: none;" onchange="previewSelectedAvatar(this)">
+                                <div class="form-hint" style="margin-top: 6px;">Hỗ trợ ảnh JPG, PNG tối đa 2MB.</div>
                             </div>
                         </div>
 
