@@ -92,7 +92,7 @@
 
                     {{-- CALL TO ACTION (LIME BUTTON) --}}
                     <div>
-                        <a href="#courts-section" class="btn-hero">
+                        <a href="{{ route('courts.index') }}" class="btn-hero">
                             Đặt sân ngay
                         </a>
                     </div>
