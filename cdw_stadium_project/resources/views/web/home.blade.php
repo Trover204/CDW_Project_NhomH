@@ -187,7 +187,7 @@
                         <div class="court-card">
 
                             {{-- TAG --}}
-                            <span class="court-tag" style="display:flex; justify-content:space-between; width:100%;">
+                            <span class="court-tag" style="display:flex; justify-content:space-between; width: calc(100% - 40px);">
                                 <span>{{ $court->sportType->name ?? 'Thể thao' }}</span>
                                 @auth
                                     @php
