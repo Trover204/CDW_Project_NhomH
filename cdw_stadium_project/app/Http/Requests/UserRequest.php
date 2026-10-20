@@ -30,7 +30,7 @@ class UserRequest extends FormRequest
                 'max:20',
                 Rule::unique('users')->ignore($userId),
             ],
-            'avatar' => 'nullable|string|max:191',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:2048',
             'birthday' => 'nullable|date|before_or_equal:'.now()->subYears(16)->format('Y-m-d'),
             'role' => 'required|in:admin,staff,customer',
             'status' => 'required|boolean',
@@ -56,6 +56,9 @@ class UserRequest extends FormRequest
             'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự.',
             'phone.unique' => 'Số điện thoại này đã được sử dụng.',
             'birthday.before_or_equal' => 'Người dùng phải đủ 16 tuổi.',
+            'avatar.image' => 'File tải lên phải là hình ảnh.',
+            'avatar.mimes' => 'Ảnh đại diện phải có định dạng: jpeg, png, jpg, webp, svg.',
+            'avatar.max' => 'Dung lượng ảnh đại diện tối đa là 2MB.',
         ];
     }
 }
