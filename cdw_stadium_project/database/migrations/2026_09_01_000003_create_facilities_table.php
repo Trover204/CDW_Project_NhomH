@@ -12,7 +12,7 @@ return new class extends Migration
         Schema::create('facilities', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100);
-            $table->string('district', 100);
+            $table->string('district', 100); // Added district column
             $table->string('address', 150);
             $table->string('phone', 20)->nullable();
             $table->time('open_time');

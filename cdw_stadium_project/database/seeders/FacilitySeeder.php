@@ -9,6 +9,7 @@ class FacilitySeeder extends Seeder
 {
     public function run(): void
     {
+        // Ensure districts are seeded
         $now = now();
         $facilities = [
             ['Sân Nhóm H - Thủ Đức',   'Thủ Đức', '53 Võ Văn Ngân, Thủ Đức, TP.HCM',       '0281111001'],
