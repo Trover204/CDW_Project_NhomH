@@ -180,7 +180,7 @@
                 <div class="news-header">
                     @if($newsItem->category)
                         <div style="margin-bottom: 12px;">
-                            <span style="padding: 4px 12px; background: var(--turf-lime-bg); color: var(--turf-dark); border-radius: 9999px; font-size: 12px; font-weight: 600;">{{ $newsItem->category }}</span>
+                            <span style="padding: 4px 12px; background: var(--turf-lime-bg); color: var(--turf-accent-ink); border-radius: 9999px; font-size: 12px; font-weight: 600;">{{ $newsItem->category }}</span>
                         </div>
                     @endif
                     <h1 class="news-title">{{ $newsItem->title }}</h1>
@@ -257,9 +257,5 @@
 
         </div>
     </section>
-
-    {{-- =====================================================
-         FOOTER
-    ====================================================== --}}
-    @include('layouts.footer')
+@endsection
 
