@@ -2,11 +2,22 @@
 
 @section('title', 'Đăng ký Cộng tác viên')
 
+@push('styles')
+<style>
+    .partnership-title {
+        color: #16241C;
+    }
+    [data-theme="dark"] .partnership-title {
+        color: #FFFFFF;
+    }
+</style>
+@endpush
+
 @section('content')
 
 <div style="max-width: 800px; margin: 60px auto; padding: 0 20px;">
     <div style="text-align: center; margin-bottom: 40px;">
-        <h1 style="font-size: 32px; font-weight: 700; color: #16241C; margin-bottom: 10px;">Chương trình Cộng tác viên</h1>
+        <h1 class="partnership-title" style="font-size: 32px; font-weight: 700; margin-bottom: 10px;">Chương trình Cộng tác viên</h1>
         <p style="font-size: 16px; color: #4B5563;">Trở thành đối tác của chúng tôi và nhận nhiều ưu đãi hấp dẫn.</p>
     </div>
 
