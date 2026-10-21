@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('avatar', 191)->nullable();
             $table->date('birthday')->nullable();              // trang hồ sơ (>= 16 tuổi, kiểm tra ở FormRequest)
             $table->string('google_id', 191)->nullable()->unique(); // "Tiếp tục với Google"
-            $table->enum('role', ['admin', 'staff', 'customer'])->default('customer');
+            $table->enum('role', ['admin', 'staff', 'customer', 'ctv', 'pending_ctv'])->default('customer');
             $table->boolean('status')->default(true);
             $table->rememberToken();
             $table->timestamps();

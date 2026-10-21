@@ -32,8 +32,8 @@
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->phone ?? '—' }}</td>
                 <td>
-                    <span class="badge {{ ['admin'=>'danger','staff'=>'warning','customer'=>'info'][$user->role] ?? 'info' }}">
-                        {{ ['admin'=>'Quản trị viên','staff'=>'Nhân viên','customer'=>'Khách hàng'][$user->role] ?? $user->role }}
+                    <span class="badge {{ ['admin'=>'danger','staff'=>'warning','ctv'=>'success','pending_ctv'=>'warning','customer'=>'info'][$user->role] ?? 'info' }}">
+                        {{ ['admin'=>'Quản trị viên','staff'=>'Nhân viên','ctv'=>'Cộng tác viên','pending_ctv'=>'Chờ duyệt CTV','customer'=>'Khách hàng'][$user->role] ?? $user->role }}
                     </span>
                 </td>
                 <td>

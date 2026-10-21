@@ -32,7 +32,7 @@ class UserRequest extends FormRequest
             ],
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'birthday' => 'nullable|date|before_or_equal:'.now()->subYears(16)->format('Y-m-d'),
-            'role' => 'required|in:admin,staff,customer',
+            'role' => 'required|in:admin,staff,customer,ctv,pending_ctv',
             'status' => 'required|boolean',
         ];
 
