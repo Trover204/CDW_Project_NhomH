@@ -11,14 +11,32 @@ class PlanCheckoutTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_plans_index_page_loads_active_plans()
+    {
+        $plan = Plan::factory()->create(['status' => true, 'name' => 'Active Plan']);
+        $inactivePlan = Plan::factory()->create(['status' => false, 'name' => 'Inactive Plan']);
+
+        $response = $this->get(route('plans.index'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Active Plan');
+        $response->assertDontSee('Inactive Plan');
+    }
+
+    public function test_checkout_page_requires_authentication()
+    {
+        $plan = Plan::factory()->create();
+
+        $response = $this->get(route('plans.checkout', $plan->id));
+
+        $response->assertRedirect(route('login'));
+    }
+
     public function test_checkout_page_loads_with_payment_options()
     {
         $user = User::factory()->create();
-        $plan = Plan::create([
+        $plan = Plan::factory()->create([
             'name' => 'Premium Plan',
-            'price' => 100000,
-            'duration_days' => 30,
-            'discount_percent' => 10,
             'status' => true,
         ]);
 
@@ -31,14 +49,48 @@ class PlanCheckoutTest extends TestCase
         $response->assertSee('PayPal');
     }
 
+    public function test_subscribe_requires_authentication()
+    {
+        $plan = Plan::factory()->create();
+
+        $response = $this->post(route('plans.subscribe', $plan->id), [
+            'payment_method' => 'momo',
+        ]);
+
+        $response->assertRedirect(route('login'));
+    }
+
+    public function test_subscription_fails_with_missing_payment_method()
+    {
+        $user = User::factory()->create();
+        $plan = Plan::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('plans.subscribe', $plan->id), []);
+
+        $response->assertSessionHasErrors(['payment_method']);
+        $this->assertDatabaseCount('subscriptions', 0);
+    }
+
+    public function test_subscription_fails_with_invalid_payment_method()
+    {
+        $user = User::factory()->create();
+        $plan = Plan::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('plans.subscribe', $plan->id), [
+            'payment_method' => 'cash',
+        ]);
+
+        $response->assertSessionHasErrors(['payment_method']);
+        $this->assertDatabaseCount('subscriptions', 0);
+    }
+
     public function test_subscription_created_with_valid_payment_method()
     {
         $user = User::factory()->create();
-        $plan = Plan::create([
+        $plan = Plan::factory()->create([
             'name' => 'Premium Plan',
             'price' => 100000,
             'duration_days' => 30,
-            'discount_percent' => 10,
             'status' => true,
         ]);
 
@@ -54,7 +106,14 @@ class PlanCheckoutTest extends TestCase
             'plan_id' => $plan->id,
             'payment_method' => 'momo',
             'status' => 1,
+            'amount_paid' => 100000,
         ]);
+
+        $subscription = \App\Models\Subscription::first();
+        $this->assertNotNull($subscription->starts_at);
+        $this->assertNotNull($subscription->expires_at);
+        $this->assertEquals(30, $subscription->starts_at->diffInDays($subscription->expires_at));
+        $this->assertStringStartsWith('TXN_', $subscription->transaction_code);
 
         $this->assertDatabaseCount('subscriptions', 1);
     }
