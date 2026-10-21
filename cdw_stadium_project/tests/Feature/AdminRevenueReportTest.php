@@ -56,7 +56,7 @@ class AdminRevenueReportTest extends TestCase
         $response = $this->actingAs($this->admin)->get(route('admin.reports.revenue'));
 
         $response->assertStatus(200);
-        $response->assertViewIs('admin.reports.revenue');
+        $response->assertViewIs('admin.report');
         $response->assertSee('Báo cáo doanh thu');
         $response->assertSee('Tổng doanh thu');
         $response->assertSee('Số đơn hoàn thành');

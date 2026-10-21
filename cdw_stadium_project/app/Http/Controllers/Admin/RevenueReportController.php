@@ -18,7 +18,7 @@ class RevenueReportController extends Controller
     {
         $data = $this->prepareReportData($request);
 
-        return view('admin.reports.revenue', $data);
+        return view('admin.report', $data);
     }
 
     public function exportExcel(RevenueReportRequest $request): StreamedResponse

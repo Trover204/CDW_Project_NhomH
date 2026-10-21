@@ -67,16 +67,16 @@ class BookingSeeder extends Seeder
 
 
 
-        // Fake 20 additional bookings
+        // Fake 40 additional bookings
         $faker = \Faker\Factory::create('vi_VN');
         $allCustomers = DB::table('users')->where('role', 'customer')->get();
         $allCourts = DB::table('courts')->pluck('id')->toArray();
 
-        for ($i = 1; $i <= 20; $i++) {
+        for ($i = 1; $i <= 40; $i++) {
             $user = $faker->randomElement($allCustomers);
             $courtId = $faker->randomElement($allCourts);
             $sub = DB::table('subscriptions')->where('user_id', $user->id)->value('id');
-            $date = $faker->dateTimeBetween('-30 days', '+30 days')->format('Y-m-d');
+            $date = $faker->dateTimeBetween('-6 months', '+1 months')->format('Y-m-d');
 
             // To avoid unique constraint on (court_id, booking_date, start_time, slot_lock),
             // ensure start_time is unique by iterating over hours starting from 6 + i
