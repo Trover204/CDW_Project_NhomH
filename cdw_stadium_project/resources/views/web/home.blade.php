@@ -215,12 +215,5 @@
             </div>
         </div>
     </section>
-
-    {{-- =====================================================
-         FOOTER
-    ====================================================== --}}
-    @include('layouts.footer')
-
-    <script src="{{ asset('js/theme-toggle.js') }}"></script>
-</body>
+@endsection
 

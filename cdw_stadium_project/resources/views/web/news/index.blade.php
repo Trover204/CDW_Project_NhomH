@@ -72,7 +72,7 @@
             left: 12px;
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(4px);
-            color: var(--turf-dark);
+            color: #0D382E;
             font-size: 12px;
             font-weight: 600;
             padding: 4px 12px;
@@ -162,7 +162,7 @@
             </div>
 
             @if($news->isEmpty())
-            <div style="text-align: center; padding: 40px; background: #fff; border-radius: 12px; color: var(--ink-soft);">
+            <div style="text-align: center; padding: 40px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; color: var(--ink-soft);">
                 Chưa có bài viết nào được đăng.
             </div>
             @else
@@ -204,12 +204,5 @@
 
         </div>
     </section>
-
-    {{-- =====================================================
-         FOOTER
-    ====================================================== --}}
-    @include('layouts.footer')
-
-    <script src="{{ asset('js/theme-toggle.js') }}"></script>
-</body>
+@endsection
 

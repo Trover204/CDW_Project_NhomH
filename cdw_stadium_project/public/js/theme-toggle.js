@@ -6,13 +6,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initial icon state (Theme is already applied in <head>)
     if (currentTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
         updateIcons('dark');
     } else {
+        document.documentElement.removeAttribute('data-theme');
         updateIcons('light');
     }
 
     // Toggle event
     themeToggleBtns.forEach(btn => {
+        if (btn.dataset.themeBound === 'true') {
+            return;
+        }
+        btn.dataset.themeBound = 'true';
+
         btn.addEventListener('click', () => {
             let theme = document.documentElement.getAttribute('data-theme');
             if (theme === 'dark') {

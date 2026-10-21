@@ -24,6 +24,7 @@
     /* Clean Body & Surface */
     --bg-page: #F6F8F6;
     --bg-white: #FFFFFF;
+    --surface: #FFFFFF;
 
     /* Ink & Typography */
     --ink: #11201B;
@@ -34,6 +35,7 @@
     /* Lines & Borders */
     --line: #E3ECE6;
     --line-light: #EEF4F0;
+    --border-color: #E3ECE6;
 
     /* Badges & Tags */
     --badge-bg: #E8F7EE;
@@ -48,6 +50,7 @@
 [data-theme="dark"] {
     --bg-page: #111111;
     --bg-white: #1a1a1a;
+    --surface: #1a1a1a;
     --ink: #ffffff;
     --ink-dark: #f3f4f6;
     --ink-soft: #d1d5db;
@@ -55,6 +58,7 @@
     --nav-bg: rgba(26, 26, 26, 0.95);
     --line: #374151;
     --line-light: #4b5563;
+    --border-color: #374151;
     --turf-dark: #ffffff;
 }
 
@@ -200,7 +204,7 @@ header {
 .btn-ghost:hover {
     border-color: var(--turf-teal);
     color: var(--turf-teal);
-    background: #FFFFFF;
+    background: var(--bg-white);
 }
 
 .btn-solid {
@@ -653,6 +657,22 @@ section.list {
 .cta .btn-solid:hover {
     background: var(--turf-forest);
     border-color: var(--turf-forest);
+}
+
+[data-theme="dark"] .cta {
+    background: linear-gradient(135deg, #132a23 0%, #0d1f1a 100%);
+    border-color: #23473b;
+}
+
+[data-theme="dark"] .cta .btn-solid {
+    background: var(--turf-teal);
+    border-color: var(--turf-teal);
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .cta .btn-solid:hover {
+    background: var(--turf-teal-hover);
+    border-color: var(--turf-teal-hover);
 }
 
 /* =====================================================
