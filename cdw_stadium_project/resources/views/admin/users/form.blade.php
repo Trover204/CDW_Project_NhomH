@@ -56,7 +56,7 @@
 <div class="form-group">
     <label class="form-label">Vai trò *</label>
     <select name="role" class="form-control">
-        @foreach (['customer' => 'Khách hàng', 'staff' => 'Nhân viên', 'admin' => 'Quản trị viên'] as $val => $text)
+        @foreach (['customer' => 'Khách hàng', 'pending_ctv' => 'Chờ duyệt CTV', 'ctv' => 'Cộng tác viên', 'staff' => 'Nhân viên', 'admin' => 'Quản trị viên'] as $val => $text)
             <option value="{{ $val }}" @selected(old('role', $user->role ?? 'customer') === $val)>{{ $text }}</option>
         @endforeach
     </select>

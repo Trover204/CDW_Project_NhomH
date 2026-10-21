@@ -179,7 +179,7 @@
                         </p>
                     </div>
 
-                    <a href="#" class="btn btn-solid" style="padding:12px 28px;">
+                    <a href="{{ route('partnership.index') }}" class="btn btn-solid" style="padding:12px 28px;">
                         Đăng ký làm đối tác
                     </a>
                 </div>
