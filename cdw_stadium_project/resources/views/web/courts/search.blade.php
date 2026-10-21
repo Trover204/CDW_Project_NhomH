@@ -12,56 +12,29 @@
             {{-- TITLE --}}
             <div class="section-head">
                 <div>
-                    <h2>Kết quả tìm kiếm</h2>
+                    <h2>Kết quả tìm kiếm cho "{{ $keyword }}"</h2>
                 </div>
             </div>
 
             {{-- SEARCH BAR --}}
             <form action="{{ route('courts.search') }}" method="GET" class="search-card" style="margin-bottom: 30px;">
 
-                {{-- LOẠI SÂN --}}
+                {{-- TỪ KHÓA TÌM KIẾM --}}
                 <div class="field">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="9"/>
-                        <path d="M12 3v18M3 12h18"/>
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.3-4.3"/>
                     </svg>
-                    <select name="sport_type">
-                        <option value="">Loại sân</option>
-                        @foreach($sportTypes as $sportType)
-                            <option value="{{ $sportType->id }}" {{ request('sport_type') == $sportType->id ? 'selected' : '' }}>{{ $sportType->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                {{-- KHU VỰC --}}
-                <div class="field">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/>
-                        <circle cx="12" cy="10" r="2.5"/>
-                    </svg>
-                    <select name="location">
-                        <option value="">Khu vực</option>
-                        @foreach($locations as $location)
-                            <option value="{{ $location->district }}" {{ request('location') == $location->district ? 'selected' : '' }}>{{ $location->district }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                {{-- NGÀY --}}
-                <div class="field">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="5" width="18" height="16" rx="2"/>
-                        <path d="M3 10h18M8 3v4M16 3v4"/>
-                    </svg>
-                    <input type="date" name="date" value="{{ request('date', date('Y-m-d')) }}">
+                    <input type="text" name="q" value="{{ $keyword ?? request('q') }}" placeholder="Tìm kiếm sân thể thao hoặc tin tức...">
                 </div>
 
                 {{-- BUTTON --}}
                 <button type="submit" class="search-btn">
-                    Tìm sân
+                    Tìm kiếm
                 </button>
             </form>
 
+            <h3 style="margin: 20px 0 15px; font-size: 22px; color: var(--turf-dark);">Sân thể thao ({{ $courts->total() }})</h3>
             <div class="grid">
                 @forelse ($courts as $court)
                     <div class="court-card" onclick="window.location.href='{{ route('courts.show', $court->id) }}'" style="cursor: pointer;">
@@ -121,13 +94,62 @@
                         </div>
                     </div>
                 @empty
-                    <p>Không tìm thấy sân nào phù hợp với tiêu chí tìm kiếm.</p>
+                    <p style="color: var(--ink-soft);">Không tìm thấy sân nào phù hợp với từ khóa "{{ $keyword }}".</p>
                 @endforelse
             </div>
 
             <div style="margin-top: 20px;">
                 {{ $courts->links() }}
             </div>
+
+            {{-- NEWS SEARCH RESULTS --}}
+            @if(isset($news))
+                <h3 style="margin: 40px 0 15px; font-size: 22px; color: var(--turf-dark);">Tin tức & Bài viết ({{ $news->total() }})</h3>
+                <div class="grid">
+                    @forelse ($news as $item)
+                        <a href="{{ route('news.show', $item->slug) }}" class="court-card" style="text-decoration: none; color: inherit;">
+                            @if($item->category)
+                                <span class="court-tag">
+                                    {{ $item->category }}
+                                </span>
+                            @endif
+
+                            <div class="court-media" style="display: flex; align-items: center; justify-content: center; background: #EEF7F2;">
+                                @if($item->image)
+                                    <img src="{{ Storage::url($item->image) }}" alt="{{ $item->title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                @else
+                                    <i class="ti ti-news" style="font-size: 40px; color: var(--turf-teal);"></i>
+                                @endif
+                            </div>
+
+                            <div class="court-body">
+                                <div class="court-name">
+                                    {{ $item->title }}
+                                </div>
+
+                                <div class="court-loc" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                    <span>{{ $item->summary }}</span>
+                                </div>
+
+                                <div class="court-foot">
+                                    <span style="font-size: 12px; color: var(--ink-muted);">
+                                        {{ $item->created_at->format('d/m/Y') }}
+                                    </span>
+                                    <span class="btn-book">
+                                        Đọc tin
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    @empty
+                        <p style="color: var(--ink-soft);">Không tìm thấy bài viết tin tức nào phù hợp với từ khóa "{{ $keyword }}".</p>
+                    @endforelse
+                </div>
+
+                <div style="margin-top: 20px;">
+                    {{ $news->links() }}
+                </div>
+            @endif
         </div>
     </div>
 </section>

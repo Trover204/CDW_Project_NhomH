@@ -3,71 +3,70 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SearchRequest;
 use App\Models\Court;
-use Illuminate\Http\Request;
+use App\Models\Facility;
+use App\Models\News;
+use App\Models\SportType;
 
 class CourtController extends Controller
 {
-    public function index()
+    public function index(SearchRequest $request)
     {
-        $sportTypes = \App\Models\SportType::where('status', 1)->get();
+        $keyword = $request->keyword();
+        $sportTypes = SportType::where('status', 1)->get();
 
-        $courts = collect();
-        foreach ($sportTypes as $sportType) {
-            $typeCourts = Court::with(['facility', 'sportType'])
-                ->where('status', '!=', 'inactive')
-                ->where('sport_type_id', $sportType->id)
-                ->take(4)
-                ->get();
-            $courts = $courts->merge($typeCourts);
+        if ($keyword !== '') {
+            $courts = Court::search($keyword)
+                ->query(fn ($query) => $query->with(['facility', 'sportType'])->where('status', '!=', 'inactive'))
+                ->paginate(12)
+                ->appends($request->query());
+        } else {
+            $courts = collect();
+            foreach ($sportTypes as $sportType) {
+                $typeCourts = Court::with(['facility', 'sportType'])
+                    ->where('status', '!=', 'inactive')
+                    ->where('sport_type_id', $sportType->id)
+                    ->take(4)
+                    ->get();
+                $courts = $courts->merge($typeCourts);
+            }
         }
 
-        $locations = \App\Models\Facility::where('status', 1)
+        $locations = Facility::where('status', 1)
             ->select('district')
             ->whereNotNull('district')
             ->distinct()
             ->get();
 
-        return view('web.courts.index', compact('courts', 'sportTypes', 'locations'));
+        return view('web.courts.index', compact('courts', 'sportTypes', 'locations', 'keyword'));
     }
 
-    public function search(Request $request)
+    public function search(SearchRequest $request)
     {
-        $sportTypeId = $request->input('sport_type');
-        $location = $request->input('location');
-        $date = $request->input('date');
+        $keyword = $request->keyword();
 
-        if (empty($sportTypeId) && empty($location)) {
+        if ($keyword === '') {
             return redirect()->route('courts.index');
         }
 
-        $query = Court::with(['facility', 'sportType'])->where('status', '!=', 'inactive');
+        $courts = Court::search($keyword)
+            ->query(fn ($query) => $query->with(['facility', 'sportType'])->where('status', '!=', 'inactive'))
+            ->paginate(12)
+            ->appends($request->query());
 
-        if (!empty($sportTypeId)) {
-            $query->where('sport_type_id', $sportTypeId);
-        }
+        $news = News::search($keyword)
+            ->query(fn ($query) => $query->where('status', 'published')->with('user:id,name')->latest())
+            ->paginate(6, 'news_page')
+            ->appends($request->query());
 
-        if (!empty($location)) {
-            $query->whereHas('facility', function ($q) use ($location) {
-                $q->where('district', $location);
-            });
-        }
-
-        $courts = $query->paginate(12)->appends(request()->query());
-
-        $sportTypes = \App\Models\SportType::where('status', 1)->get();
-        $locations = \App\Models\Facility::where('status', 1)
-            ->select('district')
-            ->whereNotNull('district')
-            ->distinct()
-            ->get();
-
-        return view('web.courts.search', compact('courts', 'sportTypes', 'locations', 'sportTypeId', 'location', 'date'));
+        return view('web.courts.search', compact('courts', 'news', 'keyword'));
     }
 
     public function show(Court $court)
     {
         $court->load(['facility', 'sportType', 'images', 'reviews.user']);
+
         return view('web.courts.show', compact('court'));
     }
 }

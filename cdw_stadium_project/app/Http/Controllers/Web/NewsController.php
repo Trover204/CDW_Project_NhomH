@@ -3,18 +3,28 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SearchRequest;
 use App\Models\News;
 
 class NewsController extends Controller
 {
-    public function index()
+    public function index(SearchRequest $request)
     {
-        $news = News::where('status', 'published')
-            ->with('user:id,name')
-            ->latest()
-            ->paginate(12);
+        $keyword = $request->keyword();
 
-        return view('web.news.index', compact('news'));
+        if ($keyword !== '') {
+            $news = News::search($keyword)
+                ->query(fn ($query) => $query->where('status', 'published')->with('user:id,name')->latest())
+                ->paginate(12)
+                ->appends($request->query());
+        } else {
+            $news = News::where('status', 'published')
+                ->with('user:id,name')
+                ->latest()
+                ->paginate(12);
+        }
+
+        return view('web.news.index', compact('news', 'keyword'));
     }
 
     public function show($slug)

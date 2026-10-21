@@ -40,46 +40,18 @@
                     {{-- SEARCH BAR (PASTEL LIME PILL) --}}
                     <form action="{{ route('courts.search') }}" method="GET" class="search-card">
 
-                        {{-- LOẠI SÂN --}}
+                        {{-- TỪ KHÓA TÌM KIẾM --}}
                         <div class="field">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="9"/>
-                                <path d="M12 3v18M3 12h18"/>
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="m21 21-4.3-4.3"/>
                             </svg>
-                            <select name="sport_type">
-                                <option value="">Loại sân</option>
-                                @foreach($sportTypes as $sportType)
-                                    <option value="{{ $sportType->id }}">{{ $sportType->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        {{-- KHU VỰC --}}
-                        <div class="field">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/>
-                                <circle cx="12" cy="10" r="2.5"/>
-                            </svg>
-                            <select name="location">
-                                <option value="">Khu vực</option>
-                                @foreach($locations as $location)
-                                    <option value="{{ $location->district }}">{{ $location->district }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        {{-- NGÀY --}}
-                        <div class="field">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="5" width="18" height="16" rx="2"/>
-                                <path d="M3 10h18M8 3v4M16 3v4"/>
-                            </svg>
-                            <input type="date" name="date" value="{{ date('Y-m-d') }}">
+                            <input type="text" name="q" value="{{ request('q') }}" placeholder="Tìm kiếm sân thể thao hoặc tin tức...">
                         </div>
 
                         {{-- BUTTON --}}
                         <button type="submit" class="search-btn">
-                            Tìm sân
+                            Tìm kiếm
                         </button>
                     </form>
 
