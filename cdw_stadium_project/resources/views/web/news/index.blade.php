@@ -159,6 +159,20 @@
             <div class="news-header">
                 <h1>Tin tức & Mẹo thể thao</h1>
                 <p>Cập nhật thông tin khuyến mãi, mẹo chơi thể thao và các hoạt động mới nhất tại Sân Nhóm H.</p>
+
+                <form action="{{ route('news.index') }}" method="GET" class="search-card" style="max-width: 680px; margin: 28px auto 0;">
+                    <div class="field">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.3-4.3"/>
+                        </svg>
+                        <input type="text" name="q" value="{{ $keyword ?? request('q') }}" placeholder="Tìm kiếm bài viết, mẹo thể thao, danh mục...">
+                    </div>
+
+                    <button type="submit" class="search-btn">
+                        Tìm kiếm
+                    </button>
+                </form>
             </div>
 
             @if($news->isEmpty())
