@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ActivityLog extends Model
 {
     use HasFactory;
-
     protected $fillable = [
         'user_id',
         'action',

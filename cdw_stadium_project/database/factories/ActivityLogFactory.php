@@ -19,10 +19,10 @@ class ActivityLogFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
-            'action' => fake()->randomElement(['created_booking', 'updated_profile', 'logged_in', 'logged_out', 'deleted_review']),
-            'description' => fake('vi_VN')->sentence(),
-            'ip_address' => fake()->ipv4(),
+            'user_id' => \App\Models\User::factory(),
+            'action' => $this->faker->word(),
+            'description' => $this->faker->sentence(),
+            'ip_address' => $this->faker->ipv4(),
         ];
     }
 }
