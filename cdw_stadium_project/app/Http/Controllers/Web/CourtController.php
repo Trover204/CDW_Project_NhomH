@@ -38,7 +38,7 @@ class CourtController extends Controller
                 $typeCourts = Court::with(['facility', 'sportType'])
                     ->where('status', '!=', 'inactive')
                     ->where('sport_type_id', $sportType->id)
-                    ->take(4)
+                    ->take(3)
                     ->get();
                 $courts = $courts->merge($typeCourts);
             }
