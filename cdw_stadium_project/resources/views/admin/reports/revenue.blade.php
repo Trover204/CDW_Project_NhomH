@@ -563,4 +563,64 @@
         </div>
     @endif
 </div>
+
+{{-- Bảng chi tiết đơn bán hàng trong kỳ --}}
+<div class="card" style="padding: 0; overflow: hidden; margin-bottom: 20px;">
+    <div style="padding: 16px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text);">Danh sách đơn bán hàng phát sinh doanh thu</h3>
+        <span style="font-size: 12px; color: var(--muted);">Hiển thị {{ isset($sales) ? $sales->count() : 0 }} / {{ $totalSalesCount ?? 0 }} đơn</span>
+    </div>
+    @if (isset($sales) && $sales->count() > 0)
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th>Mã đơn</th>
+                    <th>Khách hàng</th>
+                    <th>Sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Ngày bán</th>
+                    <th style="text-align: right;">Tổng tiền</th>
+                    <th>Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($sales as $s)
+                    <tr>
+                        <td style="font-weight: 600; color: var(--primary);">
+                            #SL-{{ str_pad($s->id, 5, '0', STR_PAD_LEFT) }}
+                        </td>
+                        <td>
+                            <div style="font-weight: 600; color: var(--text);">
+                                {{ $s->user ? $s->user->name : ($s->customer_name ?? 'Khách lẻ') }}
+                            </div>
+                            @if(!$s->user && $s->customer_phone)
+                                <small style="color: var(--muted);">{{ $s->customer_phone }}</small>
+                            @endif
+                        </td>
+                        <td>
+                            <div>{{ $s->product ? $s->product->name : 'N/A' }}</div>
+                        </td>
+                        <td>{{ $s->quantity }}</td>
+                        <td>{{ \Carbon\Carbon::parse($s->sale_date)->format('d/m/Y') }}</td>
+                        <td style="text-align: right; font-weight: 700; color: var(--text);">
+                            {{ number_format($s->total_price, 0, ',', '.') }}đ
+                        </td>
+                        <td>
+                            <span class="badge {{ $s->status === 'completed' ? 'success' : 'warning' }}">
+                                {{ $s->status === 'completed' ? 'Hoàn thành' : $s->status }}
+                            </span>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+        <div style="padding: 12px 18px;">
+            {{ $sales->links() }}
+        </div>
+    @else
+        <div style="text-align: center; padding: 36px 10px; color: var(--muted); font-size: 13px;">
+            Không có đơn bán hàng nào trong kỳ này.
+        </div>
+    @endif
+</div>
 @endsection
