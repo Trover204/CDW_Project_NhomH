@@ -11,16 +11,27 @@ use App\Models\SportType;
 
 class CourtController extends Controller
 {
-    public function index(SearchRequest $request)
+            public function index(SearchRequest $request)
     {
         $keyword = $request->keyword();
         $sportTypes = SportType::where('status', 1)->get();
+        $selectedSportTypes = $request->input('sport_types', []);
 
-        if ($keyword !== '') {
-            $courts = Court::search($keyword)
-                ->query(fn ($query) => $query->with(['facility', 'sportType'])->where('status', '!=', 'inactive'))
-                ->paginate(12)
-                ->appends($request->query());
+        if ($keyword !== '' || !empty($selectedSportTypes)) {
+            if ($keyword !== '') {
+                $courts = Court::search($keyword)
+                    ->query(function ($query) use ($selectedSportTypes) {
+                        $query->with(['facility', 'sportType'])->where('status', '!=', 'inactive');
+                        if (!empty($selectedSportTypes)) {
+                            $query->whereIn('sport_type_id', $selectedSportTypes);
+                        }
+                    });
+            } else {
+                $courts = Court::with(['facility', 'sportType'])
+                    ->where('status', '!=', 'inactive')
+                    ->whereIn('sport_type_id', $selectedSportTypes);
+            }
+            $courts = $courts->paginate(12)->appends($request->query());
         } else {
             $courts = collect();
             foreach ($sportTypes as $sportType) {
