@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ActivityLogController;
+use App\Http\Controllers\Admin\AdController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\CourtController;
@@ -26,6 +27,7 @@ Route::resource('users', UserController::class);
 Route::resource('bookings', BookingController::class);
 Route::resource('payments', PaymentController::class);
 Route::resource('news', NewsController::class);
+Route::resource('ads', AdController::class);
 Route::resource('activity-logs', ActivityLogController::class);
 
 // Báo cáo & Thống kê doanh thu theo tháng
