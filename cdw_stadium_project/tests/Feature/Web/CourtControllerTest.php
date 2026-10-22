@@ -29,6 +29,25 @@ class CourtControllerTest extends TestCase
         $response->assertViewHas('courts');
     }
 
+    public function test_index_filters_by_sport_types()
+    {
+        $sportType1 = SportType::factory()->create(['status' => 1]);
+        $sportType2 = SportType::factory()->create(['status' => 1]);
+        $facility = Facility::factory()->create(['status' => 1]);
+
+        $court1 = Court::factory()->create(['sport_type_id' => $sportType1->id, 'facility_id' => $facility->id, 'status' => 'available']);
+        $court2 = Court::factory()->create(['sport_type_id' => $sportType2->id, 'facility_id' => $facility->id, 'status' => 'available']);
+
+        $response = $this->get(route('courts.index', ['sport_types' => [$sportType1->id]]));
+
+        $response->assertStatus(200);
+        $response->assertViewIs('web.courts.index');
+
+        $courts = $response->original->getData()['courts'];
+        $this->assertTrue($courts->contains($court1));
+        $this->assertFalse($courts->contains($court2));
+    }
+
     public function test_show_displays_court_details()
     {
         $court = Court::factory()->create();

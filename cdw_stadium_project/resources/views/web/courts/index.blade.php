@@ -7,7 +7,35 @@
 
 <section class="list" id="courts-section" style="padding-top: 40px; min-height: 80vh;">
     <div class="wrap">
-        <div class="panel">
+        <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+
+            {{-- SIDEBAR --}}
+            <aside style="width: 250px; flex-shrink: 0;" class="sidebar-desktop">
+                <div class="panel" style="padding: 24px;">
+                    <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 18px; color: var(--turf-dark);">Danh mục</h3>
+                    <form id="filter-form" action="{{ route('courts.index') }}" method="GET">
+                        @if(request('q'))
+                            <input type="hidden" name="q" value="{{ request('q') }}">
+                        @endif
+
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            @foreach($sportTypes as $type)
+                                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                    <input type="checkbox" name="sport_types[]" value="{{ $type->id }}"
+                                           {{ in_array($type->id, request('sport_types', [])) ? 'checked' : '' }}
+                                           onchange="document.getElementById('filter-form').submit();"
+                                           style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--turf-teal);">
+                                    <span style="font-size: 15px; color: var(--ink);">{{ $type->name }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                    </form>
+                </div>
+            </aside>
+
+            {{-- MAIN CONTENT --}}
+            <div style="flex: 1; min-width: 0;">
+                <div class="panel">
 
             {{-- TITLE --}}
             <div class="section-head">
@@ -21,6 +49,9 @@
 
                 {{-- TỪ KHÓA TÌM KIẾM --}}
                 <div class="field">
+                    @foreach(request('sport_types', []) as $st)
+                        <input type="hidden" name="sport_types[]" value="{{ $st }}">
+                    @endforeach
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="11" cy="11" r="8"/>
                         <path d="m21 21-4.3-4.3"/>
@@ -97,7 +128,17 @@
                     {{ $courts->links() }}
                 @endif
             </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
+
+<style>
+    @media (max-width: 768px) {
+        .sidebar-desktop {
+            width: 100% !important;
+        }
+    }
+</style>
 @endsection
