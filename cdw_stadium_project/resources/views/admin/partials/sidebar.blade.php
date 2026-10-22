@@ -4,6 +4,7 @@
         ['Cơ sở',              'ti-building',       'admin.facilities.index',  'admin.facilities.*'],
         ['Loại môn thể thao', 'ti-ball-football',  'admin.sport-types.index', 'admin.sport-types.*'],
         ['Sân thể thao',       'ti-layout-grid',    'admin.courts.index',      'admin.courts.*'],
+        ['Sản phẩm',           'ti-shopping-cart',  'admin.products.index',    'admin.products.*'],
         ['Bình luận',          'ti-message-circle', 'admin.comments.index',    'admin.comments.*'],
         ['Đơn đặt sân',        'ti-calendar-event', 'admin.bookings.index',    'admin.bookings.*'],
         ['Người dùng',         'ti-users',          'admin.users.index',       'admin.users.*'],
