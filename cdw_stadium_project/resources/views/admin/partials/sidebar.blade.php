@@ -8,6 +8,7 @@
         ['Đơn đặt sân',        'ti-calendar-event', 'admin.bookings.index',    'admin.bookings.*'],
         ['Người dùng',         'ti-users',          'admin.users.index',       'admin.users.*'],
         ['Nội dung',           'ti-news',           'admin.news.index',        'admin.news.*'],
+        ['Quảng cáo',          'ti-photo',          'admin.ads.index',         'admin.ads.*'],
         ['Báo cáo',            'ti-report',         'admin.reports.revenue',   'admin.reports.*'],
     ];
 @endphp

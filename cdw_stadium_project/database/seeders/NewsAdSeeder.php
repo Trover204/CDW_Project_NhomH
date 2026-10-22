@@ -72,16 +72,8 @@ class NewsAdSeeder extends Seeder
                 'is_active' => 1, 'created_at' => $now, 'updated_at' => $now,
             ]);
         }
+
         // Fake 20 additional ads
-        for ($i = 1; $i <= 20; $i++) {
-            DB::table('ads')->insert([
-                'name' => $faker->realText(30),
-                'link_url' => '/ad-' . $i,
-                'description' => $faker->realText(50),
-                'is_active' => 1,
-                'created_at' => $now,
-                'updated_at' => $now,
-            ]);
-        }
+        \App\Models\Ad::factory()->count(20)->create();
     }
 }
