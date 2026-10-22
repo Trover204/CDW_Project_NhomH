@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             BookingSeeder::class,
             SubscriptionSeeder::class,
             ReviewSeeder::class,
+            ProductSeeder::class,
         ]);
     }
 }
