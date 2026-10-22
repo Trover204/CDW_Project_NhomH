@@ -8,6 +8,7 @@ use App\Models\Booking;
 use App\Models\Court;
 use App\Models\Facility;
 use App\Models\SportType;
+use App\Models\Sale;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -182,13 +183,29 @@ class RevenueReportController extends Controller
         };
 
         $currentBookingsQuery = $buildBookingQuery($startDate, $endDate);
-        $totalRevenue = (float) (clone $currentBookingsQuery)->sum('total_price');
+        $bookingRevenue = (float) (clone $currentBookingsQuery)->sum('total_price');
+
+        // Sales Query
+        $buildSaleQuery = function ($start, $end) {
+            return Sale::query()
+                ->whereBetween('sale_date', [$start->toDateString(), $end->toDateString()])
+                ->where('status', 'completed');
+        };
+        $currentSalesQuery = $buildSaleQuery($startDate, $endDate);
+        $saleRevenue = (float) (clone $currentSalesQuery)->sum('total_price');
+
+        $totalRevenue = $bookingRevenue + $saleRevenue;
+
         $completedBookingsCount = (clone $currentBookingsQuery)->where('status', 'completed')->count();
         $totalBookingsCount = (clone $currentBookingsQuery)->count();
+        $totalSalesCount = (clone $currentSalesQuery)->count();
         $averageOrderValue = $completedBookingsCount > 0 ? round($totalRevenue / $completedBookingsCount) : 0;
 
         $prevBookingsQuery = $buildBookingQuery($prevStartDate, $prevEndDate);
-        $prevRevenue = (float) (clone $prevBookingsQuery)->sum('total_price');
+        $prevBookingRevenue = (float) (clone $prevBookingsQuery)->sum('total_price');
+        $prevSalesQuery = $buildSaleQuery($prevStartDate, $prevEndDate);
+        $prevSaleRevenue = (float) (clone $prevSalesQuery)->sum('total_price');
+        $prevRevenue = $prevBookingRevenue + $prevSaleRevenue;
         $growthRate = null;
         if ($prevRevenue > 0) {
             $growthRate = round((($totalRevenue - $prevRevenue) / $prevRevenue) * 100, 1);
@@ -207,6 +224,13 @@ class RevenueReportController extends Controller
             ->get()
             ->keyBy('b_date');
 
+        $saleDateExpr = $isSqlite ? 'date(sale_date)' : 'DATE(sale_date)';
+        $dailySalesRaw = (clone $currentSalesQuery)
+            ->selectRaw("{$saleDateExpr} as s_date, SUM(total_price) as revenue, COUNT(*) as s_count")
+            ->groupBy('s_date')
+            ->get()
+            ->keyBy('s_date');
+
         $daysInMonth = [];
         $curr = $startDate->copy();
         $maxDailyRevenue = 0;
@@ -219,8 +243,11 @@ class RevenueReportController extends Controller
         while ($curr->lte($chartEnd)) {
             $dateStr = $curr->toDateString();
             $item = $dailyRaw->get($dateStr);
-            $rev = $item ? (float) $item->revenue : 0;
-            $count = $item ? (int) $item->b_count : 0;
+            $saleItem = $dailySalesRaw->get($dateStr);
+            $revBooking = $item ? (float) $item->revenue : 0;
+            $revSale = $saleItem ? (float) $saleItem->revenue : 0;
+            $rev = $revBooking + $revSale;
+            $count = ($item ? (int) $item->b_count : 0) + ($saleItem ? (int) $saleItem->s_count : 0);
 
             if ($rev > $maxDailyRevenue) {
                 $maxDailyRevenue = $rev;
@@ -252,14 +279,30 @@ class RevenueReportController extends Controller
             ->get()
             ->keyBy('month_num');
 
+        $saleMonthExpr = $isSqlite ? "CAST(strftime('%m', sale_date) AS INTEGER)" : 'MONTH(sale_date)';
+        $monthlySalesStats = $buildSaleQuery($yearlyStart, $yearlyEnd)
+            ->selectRaw("{$saleMonthExpr} as month_num, SUM(total_price) as revenue, COUNT(*) as total_count")
+            ->groupBy('month_num')
+            ->get()
+            ->keyBy('month_num');
+
         $monthlyBreakdown = [];
         $maxMonthlyRevenue = 0;
         $prevMonthRev = null;
         for ($m = 1; $m <= 12; $m++) {
             $item = $monthlyStats->get($m);
-            $rev = $item ? (float) $item->revenue : 0;
-            $count = $item ? (int) $item->total_count : 0;
-            $completed = $item ? (int) $item->completed_count : 0;
+            $saleItem = $monthlySalesStats->get($m);
+
+            $revBooking = $item ? (float) $item->revenue : 0;
+            $revSale = $saleItem ? (float) $saleItem->revenue : 0;
+            $rev = $revBooking + $revSale;
+
+            $countBooking = $item ? (int) $item->total_count : 0;
+            $countSale = $saleItem ? (int) $saleItem->total_count : 0;
+            $count = $countBooking + $countSale;
+
+            $completedBooking = $item ? (int) $item->completed_count : 0;
+            $completed = $completedBooking + $countSale;
             $aov = $completed > 0 ? round($rev / $completed) : 0;
 
             if ($rev > $maxMonthlyRevenue) {
@@ -344,9 +387,19 @@ class RevenueReportController extends Controller
             ->latest('booking_date')
             ->get();
 
+        $sales = (clone $currentSalesQuery)
+            ->with(['product', 'user'])
+            ->latest('sale_date')
+            ->paginate(5, ['*'], 'sales_page')
+            ->appends($request->query());
+
         $facilities = Facility::all();
 
         return [
+            'bookingRevenue' => $bookingRevenue,
+            'saleRevenue' => $saleRevenue,
+            'totalSalesCount' => $totalSalesCount,
+            'sales' => $sales,
             'period' => $period,
             'selectedMonth' => $selectedMonth,
             'selectedYear' => $selectedYear,

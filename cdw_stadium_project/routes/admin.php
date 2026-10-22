@@ -31,6 +31,7 @@ Route::resource('news', NewsController::class);
 Route::resource('ads', AdController::class);
 Route::resource('activity-logs', ActivityLogController::class);
 Route::resource('products', ProductController::class);
+Route::resource('sales', App\Http\Controllers\Admin\SaleController::class);
 
 // Báo cáo & Thống kê doanh thu theo tháng
 Route::get('reports/revenue', [RevenueReportController::class, 'index'])->name('reports.revenue');
