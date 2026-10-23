@@ -10,6 +10,7 @@ use App\Http\Controllers\Web\NewsController;
 use App\Http\Controllers\Web\PageController;
 use App\Http\Controllers\Web\PartnershipController;
 use App\Http\Controllers\Web\PlanController;
+use App\Http\Controllers\Web\ProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -22,6 +23,7 @@ Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{slug}', [NewsController::class, 'show'])->name('news.show');
 
 Route::get('/plans', [PlanController::class, 'index'])->name('plans.index');
+Route::get('/merch', [ProductController::class, 'index'])->name('products.index');
 Route::get('/partnership', [PartnershipController::class, 'index'])->name('partnership.index');
 
 Route::middleware('guest')->group(function () {
@@ -40,6 +42,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/plans/{plan}/checkout', [PlanController::class, 'checkout'])->name('plans.checkout');
     Route::post('/plans/{plan}/subscribe', [PlanController::class, 'subscribe'])->name('plans.subscribe');
+
+    Route::get('/merch/{product}/checkout', [ProductController::class, 'checkout'])->name('products.checkout');
+    Route::post('/merch/{product}/purchase', [ProductController::class, 'purchase'])->name('products.purchase');
 
     Route::get('/partnership/checkout', [PartnershipController::class, 'checkout'])->name('partnership.checkout');
     Route::post('/partnership/process', [PartnershipController::class, 'process'])->name('partnership.process');
