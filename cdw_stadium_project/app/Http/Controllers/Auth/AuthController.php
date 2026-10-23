@@ -22,6 +22,14 @@ class AuthController extends Controller
     }
 
     /**
+     * Show the forgot password view.
+     */
+    public function forgotPasswordForm()
+    {
+        return view('web.forgot-password');
+    }
+
+    /**
      * Handle user login.
      */
     public function login(LoginRequest $request)

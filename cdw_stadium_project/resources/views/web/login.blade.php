@@ -6,108 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Đăng nhập / Đăng ký - Sân Nhóm H</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
-    <style>
-        body {
-            background-color: #f4f7f5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        .container {
-            border: 0.5px solid #E1E8E3;
-            border-radius: 12px;
-            overflow: hidden;
-            display: flex;
-            background: #FFFFFF;
-            width: 100%;
-            max-width: 800px;
-            min-height: 400px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-        }
-        .left-panel {
-            flex: 1;
-            background: #0F5C33;
-            padding: 40px 30px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            color: #FFFFFF;
-        }
-        .right-panel {
-            flex: 1.2;
-            padding: 40px 40px;
-        }
-        .tabs {
-            display: flex;
-            gap: 20px;
-            border-bottom: 0.5px solid #E1E8E3;
-            margin-bottom: 24px;
-        }
-        .tab {
-            padding-bottom: 10px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            color: #6B7A70;
-        }
-        .tab.active {
-            color: #178A4C;
-            border-bottom: 2px solid #178A4C;
-        }
-        .form-group {
-            margin-bottom: 16px;
-        }
-        .form-group label {
-            display: block;
-            font-size: 12px;
-            color: #3A453E;
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
-        .form-group input {
-            width: 100%;
-            height: 40px;
-            border-radius: 8px;
-            border: 1px solid #C7D3CA;
-            padding: 0 12px;
-            font-size: 14px;
-            box-sizing: border-box;
-            outline: none;
-        }
-        .form-group input:focus {
-            border-color: #178A4C;
-        }
-        .btn-submit {
-            width: 100%;
-            height: 42px;
-            border-radius: 8px;
-            background: #F97316;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: #FFFFFF;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            margin-bottom: 16px;
-        }
-        .btn-submit:hover {
-            background: #ea660d;
-        }
-        .text-error {
-            color: #e3342f;
-            font-size: 11px;
-            margin-top: 4px;
-            display: block;
-        }
-        .hidden {
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
 </head>
 <body>
 
@@ -155,7 +54,7 @@
             </div>
 
             <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
-                <a href="#" style="font-size:12px;color:#178A4C;text-decoration:none;">Quên mật khẩu?</a>
+                <a href="{{ route('password.request') }}" style="font-size:12px;color:#178A4C;text-decoration:none;">Quên mật khẩu?</a>
             </div>
 
             <button type="submit" class="btn-submit">Đăng nhập</button>
