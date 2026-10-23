@@ -31,6 +31,8 @@ class SaleRequest extends FormRequest
             'total_price' => 'required|numeric|min:0',
             'status' => 'required|in:pending,completed,cancelled',
             'sale_date' => 'nullable|date',
+            'payment_method' => 'nullable|string|max:50',
+            'payment_status' => 'nullable|in:pending,paid,failed,refunded',
         ];
     }
 

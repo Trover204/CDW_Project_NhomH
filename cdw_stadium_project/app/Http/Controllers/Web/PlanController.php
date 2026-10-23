@@ -3,16 +3,21 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Web\SubscribePlanRequest;
 use App\Models\Plan;
 use App\Models\Subscription;
-use Illuminate\Http\Request;
+use App\Services\PaymentService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PlanController extends Controller
 {
+    public function __construct(protected PaymentService $paymentService) {}
+
     public function index()
     {
         $plans = Plan::where('status', true)->get();
+
         return view('web.plans.index', compact('plans'));
     }
 
@@ -21,32 +26,34 @@ class PlanController extends Controller
         return view('web.plans.checkout', compact('plan'));
     }
 
-    public function subscribe(Request $request, Plan $plan)
+    public function subscribe(SubscribePlanRequest $request, Plan $plan)
     {
-        $validated = $request->validate([
-            'payment_method' => 'required|in:momo,visa,paypal',
-        ]);
-
+        $validated = $request->validated();
         $user = Auth::user();
-
-        // Optional logic: Check if user already has an active subscription to this plan, etc.
-        // Or deactivate old subscriptions, but for now we just create a new one.
 
         $startsAt = now();
         $expiresAt = now()->addDays($plan->duration_days);
-        $amountPaid = $plan->price; // you could apply discounts here based on user
+        $price = $plan->price;
 
-        $subscription = Subscription::create([
-            'user_id' => $user->id,
-            'plan_id' => $plan->id,
-            'starts_at' => $startsAt,
-            'expires_at' => $expiresAt,
-            'status' => true,
-            'amount_paid' => $amountPaid,
-            'payment_method' => $validated['payment_method'],
-            'transaction_code' => strtoupper(uniqid('TXN_')),
-        ]);
+        DB::transaction(function () use ($user, $plan, $startsAt, $expiresAt, $price, $validated) {
+            $subscription = Subscription::create([
+                'user_id' => $user->id,
+                'plan_id' => $plan->id,
+                'starts_at' => $startsAt,
+                'expires_at' => $expiresAt,
+                'status' => true,
+                'price' => $price,
+            ]);
 
-        return redirect()->route('home')->with('success', 'Bạn đã đăng ký thành công gói ' . $plan->name . ' (Thanh toán qua ' . ucfirst($validated['payment_method']) . ')');
+            $this->paymentService->syncFromPayable(
+                $subscription,
+                paymentMethod: $validated['payment_method'],
+                status: 'paid',
+                transactionCode: strtoupper(uniqid('TXN_')),
+                paidAt: $startsAt,
+            );
+        });
+
+        return redirect()->route('home')->with('success', 'Bạn đã đăng ký thành công gói '.$plan->name.' (Thanh toán qua '.ucfirst($validated['payment_method']).')');
     }
 }

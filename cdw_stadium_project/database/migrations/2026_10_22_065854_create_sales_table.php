@@ -18,10 +18,13 @@ return new class extends Migration
             $table->string('customer_name')->nullable();
             $table->string('customer_phone')->nullable();
             $table->integer('quantity')->default(1);
-            $table->decimal('total_price', 15, 2)->default(0);
+            // Giá trị đơn hàng (VNĐ). Thông tin thanh toán được lưu ở bảng payments (payable_type = 'sale').
+            $table->decimal('total_price', 12, 0)->default(0);
             $table->enum('status', ['pending', 'completed', 'cancelled'])->default('completed');
             $table->date('sale_date')->nullable();
             $table->timestamps();
+
+            $table->index(['status', 'sale_date']);
         });
     }
 

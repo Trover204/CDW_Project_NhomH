@@ -47,10 +47,6 @@
             gap: 6px;
         }
 
-        .btn-print:hover {
-            background: #08432E;
-        }
-
         .header {
             display: flex;
             justify-content: space-between;
@@ -92,11 +88,10 @@
             margin: 0;
         }
 
-        /* KPI cards */
         .kpi-row {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
             margin-bottom: 24px;
         }
 
@@ -104,7 +99,7 @@
             background: #F0FDF4;
             border: 1px solid #BBF7D0;
             border-radius: 8px;
-            padding: 14px 16px;
+            padding: 12px 14px;
         }
 
         .kpi-box-title {
@@ -116,7 +111,7 @@
         }
 
         .kpi-box-val {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 800;
             color: #0D5C40;
         }
@@ -220,13 +215,11 @@
             &larr; Quay lại trang báo cáo
         </a>
         <button onclick="window.print()" class="btn-print">
-            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/><path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/></svg>
             In báo cáo / Lưu PDF
         </button>
     </div>
 
     <div class="pdf-container">
-        {{-- Header --}}
         <div class="header">
             <div>
                 <h1 class="brand-title">HỆ THỐNG SÂN THỂ THAO NHÓM H</h1>
@@ -240,39 +233,63 @@
             </div>
         </div>
 
-        {{-- 3 KPI Blocks --}}
+        {{-- KPI Blocks: Tổng và 3 phần --}}
         <div class="kpi-row">
             <div class="kpi-box">
                 <div class="kpi-box-title">Tổng doanh thu</div>
                 <div class="kpi-box-val">{{ number_format($totalRevenue, 0, ',', '.') }}đ</div>
-                <div class="kpi-box-sub">
-                    @if($growthRate !== null)
-                        Tăng trưởng: {{ $growthRate >= 0 ? "+{$growthRate}%" : "{$growthRate}%" }}
-                    @else
-                        Kỳ trước: chưa có dữ liệu
-                    @endif
-                </div>
+                <div class="kpi-box-sub">{{ $paidPaymentsCount ?? $completedBookingsCount }} giao dịch thành công</div>
             </div>
             <div class="kpi-box">
-                <div class="kpi-box-title">Số đơn hoàn thành</div>
-                <div class="kpi-box-val">{{ number_format($completedBookingsCount, 0, ',', '.') }}</div>
-                <div class="kpi-box-sub">Tổng {{ $totalBookingsCount }} lượt đặt trong kỳ</div>
+                <div class="kpi-box-title">Đặt sân (Booking)</div>
+                <div class="kpi-box-val">{{ number_format($bookingRevenue ?? 0, 0, ',', '.') }}đ</div>
+                <div class="kpi-box-sub">{{ $bookingPaymentsCount ?? 0 }} giao dịch</div>
             </div>
             <div class="kpi-box">
-                <div class="kpi-box-title">Giá trị đơn trung bình</div>
-                <div class="kpi-box-val">{{ number_format($averageOrderValue, 0, ',', '.') }}đ</div>
-                <div class="kpi-box-sub">Bình quân / đơn hoàn thành</div>
+                <div class="kpi-box-title">Bán hàng (Sale)</div>
+                <div class="kpi-box-val">{{ number_format($saleRevenue ?? 0, 0, ',', '.') }}đ</div>
+                <div class="kpi-box-sub">{{ $salePaymentsCount ?? 0 }} giao dịch</div>
+            </div>
+            <div class="kpi-box">
+                <div class="kpi-box-title">Gói thành viên</div>
+                <div class="kpi-box-val">{{ number_format($subscriptionRevenue ?? 0, 0, ',', '.') }}đ</div>
+                <div class="kpi-box-sub">{{ $subscriptionPaymentsCount ?? 0 }} giao dịch</div>
             </div>
         </div>
 
+        {{-- Cơ cấu theo nguồn thanh toán --}}
+        <div class="section-title">1. CƠ CẤU DOANH THU THEO NGUỒN THANH TOÁN</div>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 40px;" class="text-center">STT</th>
+                    <th>Nguồn doanh thu</th>
+                    <th class="text-center" style="width: 100px;">Số GD</th>
+                    <th class="text-right" style="width: 150px;">Doanh thu (VNĐ)</th>
+                    <th class="text-right" style="width: 90px;">Tỷ trọng</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($sourcesBreakdown as $idx => $src)
+                    <tr>
+                        <td class="text-center">{{ $idx + 1 }}</td>
+                        <td><strong>{{ $src['name'] }}</strong></td>
+                        <td class="text-center">{{ $src['count'] }}</td>
+                        <td class="text-right"><strong>{{ number_format($src['revenue'], 0, ',', '.') }}đ</strong></td>
+                        <td class="text-right">{{ $src['percent'] }}%</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+
         {{-- Doanh thu theo loại sân --}}
-        <div class="section-title">1. DOANH THU THEO LOẠI MÔN THỂ THAO / SÂN</div>
+        <div class="section-title">2. DOANH THU THEO LOẠI MÔN THỂ THAO / SÂN</div>
         <table>
             <thead>
                 <tr>
                     <th style="width: 40px;" class="text-center">STT</th>
                     <th>Loại môn / Sân</th>
-                    <th class="text-center" style="width: 100px;">Số đơn</th>
+                    <th class="text-center" style="width: 100px;">Số GD</th>
                     <th class="text-right" style="width: 140px;">Doanh thu (VNĐ)</th>
                     <th class="text-right" style="width: 90px;">Tỷ trọng</th>
                 </tr>
@@ -294,16 +311,17 @@
             </tbody>
         </table>
 
-        {{-- Thống kê theo 12 tháng trong năm --}}
-        <div class="section-title">2. TỔNG HỢP DOANH THU 12 THÁNG TRONG NĂM {{ $selectedYear }}</div>
+        {{-- Thống kê theo 12 tháng --}}
+        <div class="section-title">3. TỔNG HỢP DOANH THU 12 THÁNG TRONG NĂM {{ $selectedYear }}</div>
         <table>
             <thead>
                 <tr>
                     <th>Tháng</th>
-                    <th class="text-center">Số đơn</th>
-                    <th class="text-center">Đơn hoàn thành</th>
-                    <th class="text-right">Doanh thu (VNĐ)</th>
-                    <th class="text-right">Đơn TB (VNĐ)</th>
+                    <th class="text-center">Số GD</th>
+                    <th class="text-right">Đặt sân</th>
+                    <th class="text-right">Bán hàng</th>
+                    <th class="text-right">Gói TV</th>
+                    <th class="text-right">Tổng doanh thu</th>
                     <th class="text-right">Tăng trưởng</th>
                 </tr>
             </thead>
@@ -312,9 +330,10 @@
                     <tr style="{{ $m['month_key'] === $selectedMonth ? 'background: #DCFCE7; font-weight: bold;' : '' }}">
                         <td>{{ $m['month_label'] }}</td>
                         <td class="text-center">{{ $m['count'] }}</td>
-                        <td class="text-center">{{ $m['completed'] }}</td>
+                        <td class="text-right">{{ number_format($m['booking_revenue'] ?? 0, 0, ',', '.') }}đ</td>
+                        <td class="text-right">{{ number_format($m['sale_revenue'] ?? 0, 0, ',', '.') }}đ</td>
+                        <td class="text-right">{{ number_format($m['subscription_revenue'] ?? 0, 0, ',', '.') }}đ</td>
                         <td class="text-right">{{ number_format($m['revenue'], 0, ',', '.') }}đ</td>
-                        <td class="text-right">{{ number_format($m['aov'], 0, ',', '.') }}đ</td>
                         <td class="text-right">
                             @if($m['growth'] !== null)
                                 {{ $m['growth'] >= 0 ? '+' : '' }}{{ $m['growth'] }}%
@@ -327,40 +346,39 @@
             </tbody>
         </table>
 
-        {{-- Danh sách đơn đặt --}}
-        <div class="section-title">3. CHI TIẾT CÁC ĐƠN ĐẶT TRONG KỲ</div>
+        {{-- Danh sách giao dịch thanh toán --}}
+        <div class="section-title">4. CHI TIẾT CÁC GIAO DỊCH THANH TOÁN TRONG KỲ</div>
         <table>
             <thead>
                 <tr>
+                    <th>Mã GD</th>
+                    <th>Nguồn</th>
                     <th>Mã đơn</th>
                     <th>Khách hàng</th>
-                    <th>Sân</th>
-                    <th>Ngày đặt</th>
-                    <th>Khung giờ</th>
-                    <th class="text-right">Tổng tiền</th>
-                    <th class="text-center">Trạng thái</th>
+                    <th>Nội dung</th>
+                    <th>Phương thức</th>
+                    <th class="text-right">Số tiền</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse ($allBookings as $b)
+                @forelse ($allPayments as $p)
                     <tr>
-                        <td>#BK-{{ str_pad($b->id, 5, '0', STR_PAD_LEFT) }}</td>
-                        <td>{{ $b->customer_name }}</td>
-                        <td>{{ $b->court ? $b->court->name : 'N/A' }}</td>
-                        <td>{{ \Carbon\Carbon::parse($b->booking_date)->format('d/m/Y') }}</td>
-                        <td>{{ substr($b->start_time, 0, 5) }} - {{ substr($b->end_time, 0, 5) }}</td>
-                        <td class="text-right"><strong>{{ number_format($b->total_price, 0, ',', '.') }}đ</strong></td>
-                        <td class="text-center">{{ $b->status }}</td>
+                        <td>{{ $p->transaction_code ?? ('#PAY-' . $p->id) }}</td>
+                        <td>{{ $p->type_label }}</td>
+                        <td>{{ $p->reference }}</td>
+                        <td>{{ $p->customer_name }}</td>
+                        <td>{{ $p->description }}</td>
+                        <td>{{ $p->method_label }}</td>
+                        <td class="text-right"><strong>{{ number_format($p->amount, 0, ',', '.') }}đ</strong></td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="text-center">Không có đơn đặt nào trong kỳ này</td>
+                        <td colspan="7" class="text-center">Không có giao dịch nào trong kỳ này</td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
 
-        {{-- Signatures --}}
         <div class="signatures">
             <div class="sign-col">
                 <div class="sign-title">NGƯỜI LẬP BÁO CÁO</div>
@@ -376,7 +394,6 @@
             </div>
         </div>
 
-        {{-- Footer --}}
         <div class="footer">
             <span>Hệ thống quản lý sân thể thao Nhóm H — Xuất tự động lúc {{ now()->format('d/m/Y H:i:s') }}</span>
             <span>Trang 1/1</span>

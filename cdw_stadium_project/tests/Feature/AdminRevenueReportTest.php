@@ -5,7 +5,12 @@ namespace Tests\Feature;
 use App\Models\Booking;
 use App\Models\Court;
 use App\Models\Facility;
+use App\Models\Payment;
+use App\Models\Plan;
+use App\Models\Product;
+use App\Models\Sale;
 use App\Models\SportType;
+use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -59,13 +64,14 @@ class AdminRevenueReportTest extends TestCase
         $response->assertViewIs('admin.report');
         $response->assertSee('Báo cáo doanh thu');
         $response->assertSee('Tổng doanh thu');
-        $response->assertSee('Số đơn hoàn thành');
-        $response->assertSee('Giá trị đơn TB');
+        $response->assertSee('Doanh thu Đặt sân (Booking)');
+        $response->assertSee('Doanh thu Bán hàng (Sale)');
+        $response->assertSee('Doanh thu Gói thành viên (Subscription)');
     }
 
-    public function test_revenue_report_calculates_monthly_kpis(): void
+    public function test_revenue_report_calculates_monthly_kpis_from_payments(): void
     {
-        // 2 completed bookings in October 2026
+        // 2 completed bookings in October 2026 (BookingFactory auto-creates paid Payment)
         Booking::factory()->create([
             'court_id' => $this->footballCourt->id,
             'booking_date' => '2026-10-05',
@@ -80,7 +86,7 @@ class AdminRevenueReportTest extends TestCase
             'status' => 'completed',
         ]);
 
-        // 1 cancelled booking in October 2026 (should not be counted in revenue)
+        // 1 cancelled booking in October 2026 (payment status = failed -> not counted in revenue)
         Booking::factory()->create([
             'court_id' => $this->footballCourt->id,
             'booking_date' => '2026-10-20',
@@ -102,8 +108,66 @@ class AdminRevenueReportTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertViewHas('totalRevenue', 500000.0);
+        $response->assertViewHas('bookingRevenue', 500000.0);
         $response->assertViewHas('completedBookingsCount', 2);
         $response->assertViewHas('averageOrderValue', 250000.0);
+    }
+
+    public function test_revenue_report_breaks_down_total_and_parts_from_payment_sources(): void
+    {
+        // Booking payment: 300,000
+        Booking::factory()->create([
+            'court_id' => $this->footballCourt->id,
+            'booking_date' => '2026-10-08',
+            'total_price' => 300000,
+            'status' => 'completed',
+        ]);
+
+        // Sale payment: 150,000
+        $product = Product::factory()->create(['cost_price' => 150000]);
+        Sale::factory()->create([
+            'product_id' => $product->id,
+            'quantity' => 1,
+            'total_price' => 150000,
+            'status' => 'completed',
+            'sale_date' => '2026-10-10',
+        ]);
+
+        // Subscription payment: 500,000
+        $plan = Plan::factory()->create(['price' => 500000, 'duration_days' => 30]);
+        Subscription::factory()->create([
+            'plan_id' => $plan->id,
+            'starts_at' => '2026-10-12 09:00:00',
+            'expires_at' => '2026-11-11 09:00:00',
+            'status' => true,
+            'price' => 500000,
+        ]);
+
+        // Pending payment should NOT be counted in paid revenue
+        $pendingSale = Sale::factory()->create([
+            'product_id' => $product->id,
+            'quantity' => 1,
+            'total_price' => 999000,
+            'status' => 'pending',
+            'sale_date' => '2026-10-14',
+        ]);
+        $this->assertEquals('pending', $pendingSale->payment->status);
+
+        $response = $this->actingAs($this->admin)->get(route('admin.reports.revenue', [
+            'month' => '2026-10',
+        ]));
+
+        $response->assertStatus(200);
+        $response->assertViewHas('bookingRevenue', 300000.0);
+        $response->assertViewHas('saleRevenue', 150000.0);
+        $response->assertViewHas('subscriptionRevenue', 500000.0);
+        $response->assertViewHas('totalRevenue', 950000.0);
+        $response->assertViewHas('paidPaymentsCount', 3);
+
+        $sources = collect($response->viewData('sourcesBreakdown'))->keyBy('type');
+        $this->assertEquals(300000.0, $sources[Payment::TYPE_BOOKING]['revenue']);
+        $this->assertEquals(150000.0, $sources[Payment::TYPE_SALE]['revenue']);
+        $this->assertEquals(500000.0, $sources[Payment::TYPE_SUBSCRIPTION]['revenue']);
     }
 
     public function test_revenue_report_calculates_growth_rate_compared_to_previous_month(): void
@@ -177,8 +241,9 @@ class AdminRevenueReportTest extends TestCase
         $this->assertStringContainsString('bao-cao-doanh-thu-2026-10.csv', $response->headers->get('Content-Disposition'));
 
         $content = $response->streamedContent();
-        $this->assertStringContainsString('BÁO CÁO DOANH THU - SÂN NHÓM H', $content);
+        $this->assertStringContainsString('BÁO CÁO DOANH THU', $content);
         $this->assertStringContainsString('TỔNG QUAN CHỈ SỐ DOANH THU', $content);
+        $this->assertStringContainsString('CƠ CẤU DOANH THU THEO NGUỒN THANH TOÁN', $content);
         $this->assertStringContainsString('DOANH THU THEO LOẠI SÂN', $content);
     }
 
