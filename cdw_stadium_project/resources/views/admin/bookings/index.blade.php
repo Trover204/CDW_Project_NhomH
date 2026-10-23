@@ -19,6 +19,7 @@
                 <th>Sân</th>
                 <th>Thời gian</th>
                 <th>Tổng tiền</th>
+                <th>Thanh toán</th>
                 <th>Trạng thái</th>
                 <th style="text-align: right;">Thao tác</th>
             </tr>
@@ -30,6 +31,17 @@
                 <td>{{ $b->court->name ?? '—' }}</td>
                 <td>{{ $b->booking_date }} <br><small>{{ $b->start_time }} - {{ $b->end_time }}</small></td>
                 <td>{{ number_format($b->total_price) }} đ</td>
+                <td>
+                    @if ($b->payment)
+                        <a href="{{ route('admin.payments.show', $b->payment) }}" style="text-decoration: none;">
+                            <span class="badge {{ $b->payment->status_badge }}">
+                                {{ $b->payment->method_label }}: {{ $b->payment->status_label }}
+                            </span>
+                        </a>
+                    @else
+                        <span class="badge warning">Chưa xuất TT</span>
+                    @endif
+                </td>
                 <td>
                     <span class="badge {{ ['confirmed'=>'success','pending'=>'warning','cancelled'=>'danger', 'checked_in' => 'info', 'completed' => 'success', 'rejected' => 'danger'][$b->status] ?? 'info' }}">
                         {{ ['confirmed'=>'Đã xác nhận','pending'=>'Chờ xử lý','cancelled'=>'Đã hủy', 'checked_in' => 'Đã check-in', 'completed' => 'Hoàn thành', 'rejected' => 'Bị từ chối'][$b->status] ?? $b->status }}

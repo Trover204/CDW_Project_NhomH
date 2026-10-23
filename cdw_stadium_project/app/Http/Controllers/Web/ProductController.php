@@ -3,14 +3,17 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Web\PurchaseProductRequest;
 use App\Models\Product;
 use App\Models\Sale;
-use Illuminate\Http\Request;
+use App\Services\PaymentService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
+    public function __construct(protected PaymentService $paymentService) {}
+
     public function index()
     {
         $products = Product::where('is_active', true)
@@ -22,24 +25,20 @@ class ProductController extends Controller
 
     public function checkout(Product $product)
     {
-        if (!$product->is_active || !$product->is_in_stock) {
+        if (! $product->is_active || ! $product->is_in_stock) {
             return redirect()->route('products.index')->with('error', 'Sản phẩm này hiện không khả dụng.');
         }
 
         return view('web.products.checkout', compact('product'));
     }
 
-    public function purchase(Request $request, Product $product)
+    public function purchase(PurchaseProductRequest $request, Product $product)
     {
-        if (!$product->is_active || !$product->is_in_stock) {
+        if (! $product->is_active || ! $product->is_in_stock) {
             return redirect()->route('products.index')->with('error', 'Sản phẩm này hiện không khả dụng.');
         }
 
-        $validated = $request->validate([
-            'payment_method' => 'required|in:momo,visa,paypal',
-            'quantity' => 'required|integer|min:1|max:' . $product->stock_quantity,
-        ]);
-
+        $validated = $request->validated();
         $user = Auth::user();
 
         try {
@@ -55,8 +54,15 @@ class ProductController extends Controller
                 'quantity' => $validated['quantity'],
                 'total_price' => $totalPrice,
                 'status' => 'completed',
-                'sale_date' => now(),
+                'sale_date' => now()->toDateString(),
             ]);
+
+            $this->paymentService->syncFromPayable(
+                $sale,
+                paymentMethod: $validated['payment_method'],
+                status: 'paid',
+                paidAt: now(),
+            );
 
             $product->stock_quantity -= $validated['quantity'];
             if ($product->stock_quantity <= 0) {
@@ -66,10 +72,10 @@ class ProductController extends Controller
 
             DB::commit();
 
-            return redirect()->route('home')->with('success', 'Bạn đã mua thành công ' . $validated['quantity'] . ' x ' . $product->name . ' (Thanh toán qua ' . ucfirst($validated['payment_method']) . ')');
-
+            return redirect()->route('home')->with('success', 'Bạn đã mua thành công '.$validated['quantity'].' x '.$product->name.' (Thanh toán qua '.ucfirst($validated['payment_method']).')');
         } catch (\Exception $e) {
             DB::rollBack();
+
             return back()->with('error', 'Có lỗi xảy ra, vui lòng thử lại sau.');
         }
     }

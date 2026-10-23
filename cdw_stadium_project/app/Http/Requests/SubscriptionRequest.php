@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class SubscriptionRequest extends FormRequest
 {
@@ -13,15 +14,25 @@ class SubscriptionRequest extends FormRequest
 
     public function rules(): array
     {
+        $subscription = $this->route('subscription');
+        $paymentId = $subscription?->payment?->id;
+
         return [
             'user_id' => 'required|exists:users,id',
             'plan_id' => 'required|exists:plans,id',
             'starts_at' => 'required|date',
             'expires_at' => 'required|date|after:starts_at',
             'status' => 'boolean',
-            'payment_method' => 'nullable|string|max:191',
+            'price' => 'nullable|numeric|min:0',
             'amount_paid' => 'nullable|numeric|min:0',
-            'transaction_code' => 'nullable|string|max:191|unique:subscriptions,transaction_code,'.($this->route('subscription') ? $this->route('subscription')->id : 'NULL'),
+            'payment_method' => 'nullable|string|max:50',
+            'payment_status' => 'nullable|in:pending,paid,failed,refunded',
+            'transaction_code' => [
+                'nullable',
+                'string',
+                'max:191',
+                Rule::unique('payments', 'transaction_code')->ignore($paymentId),
+            ],
         ];
     }
 }

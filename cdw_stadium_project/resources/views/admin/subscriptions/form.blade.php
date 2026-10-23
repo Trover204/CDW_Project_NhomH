@@ -29,7 +29,7 @@
         <option value="">-- Chọn plan --</option>
         @foreach ($plans as $p)
             <option value="{{ $p->id }}" @selected(old('plan_id', $subscription->plan_id ?? '') == $p->id)>
-                {{ $p->name }}
+                {{ $p->name }} @if(isset($p->price)) ({{ number_format($p->price, 0, ',', '.') }}đ) @endif
             </option>
         @endforeach
     </select>
@@ -49,25 +49,29 @@
 </div>
 
 <div class="form-group">
-    <label class="form-label">Phương thức thanh toán</label>
-    <input type="text" name="payment_method" value="{{ old('payment_method', $subscription->payment_method ?? '') }}" class="form-control">
+    <label class="form-label">Giá gói đăng ký (VNĐ)</label>
+    <input type="number" name="price" value="{{ old('price', isset($subscription) ? (int) $subscription->price : 0) }}" class="form-control" min="0" step="1">
+    @error('price') <div class="form-error">{{ $message }}</div> @enderror
+</div>
+
+<div class="form-group">
+    <label class="form-label">Phương thức thanh toán (đồng bộ sang Payment)</label>
+    <select name="payment_method" class="form-control">
+        @foreach (\App\Models\Payment::METHODS as $mKey => $mText)
+            <option value="{{ $mKey }}" @selected(old('payment_method', $subscription->payment->payment_method ?? 'vnpay') === $mKey)>{{ $mText }}</option>
+        @endforeach
+    </select>
     @error('payment_method') <div class="form-error">{{ $message }}</div> @enderror
 </div>
 
 <div class="form-group">
-    <label class="form-label">Số tiền đã trả</label>
-    <input type="number" name="amount_paid" value="{{ old('amount_paid', $subscription->amount_paid ?? '0') }}" class="form-control" min="0" step="any">
-    @error('amount_paid') <div class="form-error">{{ $message }}</div> @enderror
-</div>
-
-<div class="form-group">
-    <label class="form-label">Mã giao dịch</label>
-    <input type="text" name="transaction_code" value="{{ old('transaction_code', $subscription->transaction_code ?? '') }}" class="form-control">
+    <label class="form-label">Mã giao dịch (Để trống sẽ tự sinh ở bảng Payment)</label>
+    <input type="text" name="transaction_code" value="{{ old('transaction_code', $subscription->payment->transaction_code ?? '') }}" class="form-control">
     @error('transaction_code') <div class="form-error">{{ $message }}</div> @enderror
 </div>
 
 <div class="form-group">
-    <label class="form-label">Trạng thái</label>
+    <label class="form-label">Trạng thái gói</label>
     <select name="status" class="form-control">
         <option value="1" @selected(old('status', $subscription->status ?? true) == true)>Đang hoạt động</option>
         <option value="0" @selected(old('status', $subscription->status ?? true) == false)>Hết hạn/Hủy</option>

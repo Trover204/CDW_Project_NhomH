@@ -8,9 +8,14 @@ use App\Models\Booking;
 use App\Models\Court;
 use App\Models\Subscription;
 use App\Models\User;
+use App\Services\PaymentService;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class BookingController extends Controller
 {
+    public function __construct(protected PaymentService $paymentService) {}
+
     public function index()
     {
         $bookings = Booking::with(['user', 'court', 'subscription', 'payment'])->latest()->paginate(10);
@@ -29,9 +34,19 @@ class BookingController extends Controller
 
     public function store(BookingRequest $request)
     {
-        Booking::create($request->validated());
+        $validated = $request->validated();
 
-        return redirect()->route('admin.bookings.index')->with('success', 'Đã thêm đặt sân.');
+        DB::transaction(function () use ($validated) {
+            $booking = Booking::create(Arr::except($validated, ['payment_method', 'payment_status']));
+
+            $this->paymentService->syncFromPayable(
+                $booking,
+                paymentMethod: $validated['payment_method'] ?? null,
+                status: $validated['payment_status'] ?? null,
+            );
+        });
+
+        return redirect()->route('admin.bookings.index')->with('success', 'Đã thêm đặt sân và đồng bộ thanh toán.');
     }
 
     public function show(Booking $booking)
@@ -41,6 +56,8 @@ class BookingController extends Controller
 
     public function edit(Booking $booking)
     {
+        $booking->load('payment');
+
         return view('admin.bookings.edit', [
             'booking' => $booking,
             'users' => User::select('id', 'name', 'email')->orderBy('name')->get(),
@@ -51,9 +68,19 @@ class BookingController extends Controller
 
     public function update(BookingRequest $request, Booking $booking)
     {
-        $booking->update($request->validated());
+        $validated = $request->validated();
 
-        return redirect()->route('admin.bookings.index')->with('success', 'Đã cập nhật đặt sân.');
+        DB::transaction(function () use ($booking, $validated) {
+            $booking->update(Arr::except($validated, ['payment_method', 'payment_status']));
+
+            $this->paymentService->syncFromPayable(
+                $booking,
+                paymentMethod: $validated['payment_method'] ?? null,
+                status: $validated['payment_status'] ?? null,
+            );
+        });
+
+        return redirect()->route('admin.bookings.index')->with('success', 'Đã cập nhật đặt sân và thanh toán.');
     }
 
     public function destroy(Booking $booking)

@@ -15,12 +15,13 @@ class DatabaseSeeder extends Seeder
             CourtSeeder::class,
             PriceRuleSeeder::class,
             PlanSeeder::class,
+            SubscriptionSeeder::class,
             NewsAdSeeder::class,
             BookingSeeder::class,
-            SubscriptionSeeder::class,
             ReviewSeeder::class,
             ProductSeeder::class,
             SaleSeeder::class,
+            PaymentSeeder::class,
         ]);
     }
 }

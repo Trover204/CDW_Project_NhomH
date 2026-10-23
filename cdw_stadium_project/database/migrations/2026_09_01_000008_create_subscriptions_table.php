@@ -16,9 +16,9 @@ return new class extends Migration
             $table->timestamp('starts_at');
             $table->timestamp('expires_at');
             $table->boolean('status')->default(true);
-            $table->string('payment_method', 191)->nullable();
-            $table->decimal('amount_paid', 12, 0)->default(0);
-            $table->string('transaction_code', 191)->nullable()->unique();
+            // Giá gói tại thời điểm đăng ký. Thông tin thanh toán (phương thức, mã giao dịch, trạng thái)
+            // được lưu ở bảng payments (payable_type = 'subscription').
+            $table->decimal('price', 12, 0)->default(0);
             $table->timestamps();
 
             $table->index(['user_id', 'status', 'expires_at']);

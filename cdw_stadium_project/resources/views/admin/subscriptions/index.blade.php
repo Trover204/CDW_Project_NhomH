@@ -20,7 +20,8 @@
                 <th>Plan</th>
                 <th>Ngày bắt đầu</th>
                 <th>Ngày hết hạn</th>
-                <th>Số tiền đã trả</th>
+                <th>Giá gói</th>
+                <th>Thanh toán</th>
                 <th>Trạng thái</th>
                 <th style="width: 130px; text-align: right;">Thao tác</th>
             </tr>
@@ -28,12 +29,23 @@
         <tbody>
         @forelse ($subscriptions as $s)
             <tr>
-                <td>{{ $s->id }}</td>
+                <td>#SUB-{{ str_pad($s->id, 5, '0', STR_PAD_LEFT) }}</td>
                 <td style="font-weight: 600; color: var(--text);">{{ $s->user->name ?? '—' }}</td>
                 <td>{{ $s->plan->name ?? '—' }}</td>
                 <td>{{ $s->starts_at->format('d/m/Y H:i') }}</td>
                 <td>{{ $s->expires_at->format('d/m/Y H:i') }}</td>
-                <td>{{ number_format($s->amount_paid, 0, ',', '.') }} VNĐ</td>
+                <td>{{ number_format($s->price, 0, ',', '.') }} VNĐ</td>
+                <td>
+                    @if ($s->payment)
+                        <a href="{{ route('admin.payments.show', $s->payment) }}" style="text-decoration: none;">
+                            <span class="badge {{ $s->payment->status_badge }}">
+                                {{ $s->payment->method_label }}: {{ $s->payment->status_label }}
+                            </span>
+                        </a>
+                    @else
+                        <span class="badge warning">Chưa xuất TT</span>
+                    @endif
+                </td>
                 <td>
                     <span class="badge {{ $s->status ? 'success' : 'danger' }}">
                         {{ $s->status ? 'Đang hoạt động' : 'Hết hạn/Hủy' }}
@@ -50,7 +62,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="8" style="padding: 24px; text-align: center; color: var(--muted);">Chưa có subscription nào.</td>
+                <td colspan="9" style="padding: 24px; text-align: center; color: var(--muted);">Chưa có subscription nào.</td>
             </tr>
         @endforelse
         </tbody>

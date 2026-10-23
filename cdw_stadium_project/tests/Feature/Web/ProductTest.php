@@ -68,6 +68,14 @@ class ProductTest extends TestCase
             'total_price' => 200000,
         ]);
 
+        $this->assertDatabaseHas('payments', [
+            'payable_type' => 'sale',
+            'user_id' => $user->id,
+            'amount' => 200000,
+            'payment_method' => 'momo',
+            'status' => 'paid',
+        ]);
+
         $this->assertDatabaseHas('products', [
             'id' => $product->id,
             'stock_quantity' => 8,

@@ -22,6 +22,7 @@
                     <th>Khách hàng</th>
                     <th>Số lượng</th>
                     <th>Tổng tiền</th>
+                    <th>Thanh toán</th>
                     <th>Trạng thái</th>
                     <th>Ngày bán</th>
                     <th>Thao tác</th>
@@ -30,7 +31,7 @@
             <tbody>
                 @forelse($sales as $sale)
                     <tr>
-                        <td>{{ $sale->id }}</td>
+                        <td>#SL-{{ str_pad($sale->id, 5, '0', STR_PAD_LEFT) }}</td>
                         <td>{{ $sale->product ? $sale->product->name : 'N/A' }}</td>
                         <td>
                             @if($sale->user)
@@ -42,6 +43,17 @@
                         </td>
                         <td>{{ $sale->quantity }}</td>
                         <td>{{ number_format($sale->total_price, 0, ',', '.') }}đ</td>
+                        <td>
+                            @if($sale->payment)
+                                <a href="{{ route('admin.payments.show', $sale->payment) }}" style="text-decoration: none;">
+                                    <span class="badge {{ $sale->payment->status_badge }}">
+                                        {{ $sale->payment->method_label }}: {{ $sale->payment->status_label }}
+                                    </span>
+                                </a>
+                            @else
+                                <span class="badge warning">Chưa xuất TT</span>
+                            @endif
+                        </td>
                         <td>
                             <span class="badge {{ $sale->status === 'completed' ? 'success' : ($sale->status === 'pending' ? 'warning' : 'danger') }}">
                                 {{ ucfirst($sale->status) }}
