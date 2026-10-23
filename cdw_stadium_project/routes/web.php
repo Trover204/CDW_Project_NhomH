@@ -30,6 +30,7 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
     Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+    Route::get('/forgot-password', [AuthController::class, 'forgotPasswordForm'])->name('password.request');
 });
 
 Route::middleware('auth')->group(function () {
