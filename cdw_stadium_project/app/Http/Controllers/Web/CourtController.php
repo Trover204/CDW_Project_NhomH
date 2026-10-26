@@ -20,6 +20,9 @@ class CourtController extends Controller
         if ($keyword !== '' || ! empty($selectedSportTypes)) {
             if ($keyword !== '') {
                 $courts = Court::search($keyword)
+                    ->when(! empty($selectedSportTypes), function ($search) use ($selectedSportTypes) {
+                        $search->whereIn('sport_type_id', array_map('intval', $selectedSportTypes));
+                    })
                     ->query(function ($query) use ($selectedSportTypes) {
                         $query->with(['facility', 'sportType', 'images'])->where('status', '!=', 'inactive');
                         if (! empty($selectedSportTypes)) {

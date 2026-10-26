@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -67,12 +68,36 @@ class Court extends Model
         return $this->hasMany(Review::class);
     }
 
+    public function shouldBeSearchable(): bool
+    {
+        return $this->status !== 'inactive';
+    }
+
+    protected function makeAllSearchableUsing(Builder $query): Builder
+    {
+        return $query->with(['facility', 'sportType']);
+    }
+
     public function toSearchableArray(): array
     {
-        return [
-            'id' => $this->id,
+        $array = [
+            'id' => (int) $this->id,
             'name' => $this->name,
             'description' => $this->description,
         ];
+
+        if (config('scout.driver') === 'meilisearch') {
+            $array['facility_id'] = (int) $this->facility_id;
+            $array['sport_type_id'] = (int) $this->sport_type_id;
+            $array['capacity'] = (int) $this->capacity;
+            $array['status'] = $this->status;
+            $array['facility_name'] = $this->facility?->name;
+            $array['district'] = $this->facility?->district;
+            $array['address'] = $this->facility?->address;
+            $array['sport_type_name'] = $this->sportType?->name;
+            $array['created_at'] = $this->created_at?->timestamp;
+        }
+
+        return $array;
     }
 }

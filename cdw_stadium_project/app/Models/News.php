@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -46,14 +47,34 @@ class News extends Model
         return Storage::url($this->image);
     }
 
+    public function shouldBeSearchable(): bool
+    {
+        return $this->status === 'published';
+    }
+
+    protected function makeAllSearchableUsing(Builder $query): Builder
+    {
+        return $query->with('user');
+    }
+
     public function toSearchableArray(): array
     {
-        return [
-            'id' => $this->id,
+        $array = [
+            'id' => (int) $this->id,
             'title' => $this->title,
             'summary' => $this->summary,
             'content' => $this->content,
             'category' => $this->category,
         ];
+
+        if (config('scout.driver') === 'meilisearch') {
+            $array['slug'] = $this->slug;
+            $array['status'] = $this->status;
+            $array['views'] = (int) $this->views;
+            $array['author_name'] = $this->user?->name;
+            $array['created_at'] = $this->created_at?->timestamp;
+        }
+
+        return $array;
     }
 }
