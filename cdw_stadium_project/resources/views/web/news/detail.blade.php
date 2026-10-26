@@ -215,7 +215,7 @@
                 </div>
 
                 @if($newsItem->image)
-                    <img src="{{ Storage::url($newsItem->image) }}" alt="{{ $newsItem->title }}" class="news-featured-image">
+                    <img src="{{ $newsItem->image_url }}" alt="{{ $newsItem->title }}" class="news-featured-image">
                 @endif
 
                 @if($newsItem->summary)
@@ -238,7 +238,7 @@
                         @foreach($relatedNews as $related)
                             <a href="{{ route('news.show', $related->slug) }}" class="related-card">
                                 @if($related->image)
-                                    <img src="{{ Storage::url($related->image) }}" alt="{{ $related->title }}" class="related-img">
+                                    <img src="{{ $related->image_url }}" alt="{{ $related->title }}" class="related-img">
                                 @else
                                     <div class="related-img" style="display:flex; align-items:center; justify-content:center; color:var(--turf-teal);">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">

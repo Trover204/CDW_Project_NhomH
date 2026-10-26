@@ -13,7 +13,7 @@ class FacilityFactory extends Factory
     {
         return [
             'name' => 'Cơ sở '.$this->faker->unique()->city(),
-            'district' => 'Quận ' . $this->faker->numberBetween(1, 12),
+            'district' => 'Quận '.$this->faker->numberBetween(1, 12),
             'address' => $this->faker->address(),
             'phone' => '09'.$this->faker->numerify('########'),
             'open_time' => '06:00:00',

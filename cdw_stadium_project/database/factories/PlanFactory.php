@@ -18,7 +18,7 @@ class PlanFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => 'Gói ' . $this->faker->numberBetween(1, 12) . ' Tháng',
+            'name' => 'Gói '.$this->faker->numberBetween(1, 12).' Tháng',
             'duration_days' => $this->faker->numberBetween(30, 365),
             'price' => $this->faker->numberBetween(100000, 1000000),
             'discount_percent' => $this->faker->numberBetween(0, 50),

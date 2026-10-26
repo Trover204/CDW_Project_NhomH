@@ -13,6 +13,7 @@ class SaleController extends Controller
     public function index()
     {
         $sales = Sale::with(['product', 'user'])->latest()->paginate(10);
+
         return view('admin.sales.index', compact('sales'));
     }
 
@@ -20,6 +21,7 @@ class SaleController extends Controller
     {
         $products = Product::where('is_active', true)->get();
         $users = User::all();
+
         return view('admin.sales.create', compact('products', 'users'));
     }
 
@@ -30,6 +32,7 @@ class SaleController extends Controller
             $validated['sale_date'] = now()->toDateString();
         }
         Sale::create($validated);
+
         return redirect()->route('admin.sales.index')->with('success', 'Đơn hàng bán đã được tạo thành công.');
     }
 
@@ -37,6 +40,7 @@ class SaleController extends Controller
     {
         $products = Product::where('is_active', true)->get();
         $users = User::all();
+
         return view('admin.sales.edit', compact('sale', 'products', 'users'));
     }
 
@@ -47,12 +51,14 @@ class SaleController extends Controller
             $validated['sale_date'] = now()->toDateString();
         }
         $sale->update($validated);
+
         return redirect()->route('admin.sales.index')->with('success', 'Đơn hàng bán đã được cập nhật thành công.');
     }
 
     public function destroy(Sale $sale)
     {
         $sale->delete();
+
         return redirect()->route('admin.sales.index')->with('success', 'Đơn hàng bán đã được xóa thành công.');
     }
 }

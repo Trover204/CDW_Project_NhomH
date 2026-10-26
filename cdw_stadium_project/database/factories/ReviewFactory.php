@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Court;
 use App\Models\Review;
 use App\Models\User;
-use App\Models\Court;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

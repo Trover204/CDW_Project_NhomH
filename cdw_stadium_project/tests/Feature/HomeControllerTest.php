@@ -6,7 +6,6 @@ use App\Models\Court;
 use App\Models\Facility;
 use App\Models\SportType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class HomeControllerTest extends TestCase

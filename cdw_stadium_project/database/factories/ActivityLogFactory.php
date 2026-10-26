@@ -19,7 +19,7 @@ class ActivityLogFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => \App\Models\User::factory(),
+            'user_id' => User::factory(),
             'action' => $this->faker->word(),
             'description' => $this->faker->sentence(),
             'ip_address' => $this->faker->ipv4(),

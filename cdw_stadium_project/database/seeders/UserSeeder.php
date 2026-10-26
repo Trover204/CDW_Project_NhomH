@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Faker\Factory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -44,10 +45,10 @@ class UserSeeder extends Seeder
             ['Trương Thị Ánh', 'anh@example.com',   '12345678', '0900000024', 'customer', '2001-03-27'],
             ['Nguyễn Văn Sơn', 'son@example.com',   '12345678', '0900000025', 'customer', '1994-09-03'],
             ['Trần Thị Tuyết', 'tuyet@example.com', '12345678', '0900000026', 'customer', '1999-11-11'],
-            ['Lê Văn Đạt',     'dat@example.com',   '12345678', '0900000027', 'customer', '2002-06-22']
+            ['Lê Văn Đạt',     'dat@example.com',   '12345678', '0900000027', 'customer', '2002-06-22'],
         ];
 
-        $faker = \Faker\Factory::create('vi_VN');
+        $faker = Factory::create('vi_VN');
         for ($i = 1; $i <= 20; $i++) {
             $users[] = [
                 $faker->name,
@@ -55,7 +56,7 @@ class UserSeeder extends Seeder
                 '12345678',
                 $faker->numerify('09########'),
                 'customer',
-                $faker->date('Y-m-d', '2005-01-01')
+                $faker->date('Y-m-d', '2005-01-01'),
             ];
         }
         // LƯU Ý DÒNG NÀY: Phải có đủ 6 biến (thêm $plainPassword vào vị trí thứ 3)

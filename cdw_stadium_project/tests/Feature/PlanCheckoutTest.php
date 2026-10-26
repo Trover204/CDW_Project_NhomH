@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Plan;
+use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -109,7 +110,7 @@ class PlanCheckoutTest extends TestCase
             'amount_paid' => 100000,
         ]);
 
-        $subscription = \App\Models\Subscription::first();
+        $subscription = Subscription::first();
         $this->assertNotNull($subscription->starts_at);
         $this->assertNotNull($subscription->expires_at);
         $this->assertEquals(30, $subscription->starts_at->diffInDays($subscription->expires_at));

@@ -36,7 +36,7 @@ class BookingServiceTest extends TestCase
             ['sport_type_id' => $sportType->id, 'day_type' => 'weekday', 'start_time' => '22:00:00', 'end_time' => '23:00:00', 'price' => 100000, 'status' => 1, 'court_id' => null],
         ]);
 
-        $service = new BookingService();
+        $service = new BookingService;
 
         // Warm up and simple correctness check
         $price = $service->calculatePrice($court, '2026-09-01', '06:00', '10:00'); // 4 hours at 100k

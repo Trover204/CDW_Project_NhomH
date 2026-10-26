@@ -21,7 +21,7 @@
     <input type="file" name="image" class="form-control">
     @if(isset($news) && $news->image)
         <div style="margin-top: 10px;">
-            <img src="{{ Storage::url($news->image) }}" alt="image" style="width: 100px; height: 100px; object-fit: cover; border-radius: 4px;">
+            <img src="{{ $news->image_url }}" alt="image" style="width: 100px; height: 100px; object-fit: cover; border-radius: 4px;">
         </div>
     @endif
     @error('image') <div class="form-error">{{ $message }}</div> @enderror

@@ -2,12 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use App\Models\Court;
 use App\Models\Facility;
 use App\Models\SportType;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class CommentControllerCreatePerformanceTest extends TestCase
@@ -23,11 +22,11 @@ class CommentControllerCreatePerformanceTest extends TestCase
         $sportType = SportType::factory()->create();
 
         $courts = [];
-        for($i=0; $i<1000; $i++) {
+        for ($i = 0; $i < 1000; $i++) {
             $courts[] = [
                 'facility_id' => $facility->id,
                 'sport_type_id' => $sportType->id,
-                'name' => 'Sân ' . $i,
+                'name' => 'Sân '.$i,
                 'capacity' => 10,
                 'description' => 'Mô tả',
                 'status' => 'available',
@@ -39,7 +38,7 @@ class CommentControllerCreatePerformanceTest extends TestCase
         $start = microtime(true);
 
         $response = $this->actingAs($admin)
-                         ->get(route('admin.comments.create'));
+            ->get(route('admin.comments.create'));
 
         $end = microtime(true);
         $time = $end - $start;

@@ -83,8 +83,15 @@
                             </span>
 
                             {{-- ICON / MEDIA --}}
-                            <div class="court-media" style="display: flex; align-items: center; justify-content: center; background: #E6F0FA;">
-                                <i class="ti ti-ball-football" style="font-size: 40px; color: #2563EB;"></i>
+                            <div class="court-media" style="display: flex; align-items: center; justify-content: center; background: #E6F0FA; overflow: hidden;">
+                                @if($court->images && $court->images->isNotEmpty())
+                                    @php
+                                        $primaryImg = $court->images->firstWhere('is_primary', true) ?? $court->images->first();
+                                    @endphp
+                                    <img src="{{ asset($primaryImg->image_path) }}" alt="{{ $court->name }}" style="width:100%;height:100%;object-fit:cover;">
+                                @else
+                                    <i class="ti ti-ball-football" style="font-size: 40px; color: #2563EB;"></i>
+                                @endif
                             </div>
 
                             {{-- INFORMATION --}}
