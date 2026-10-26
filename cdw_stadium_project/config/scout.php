@@ -116,10 +116,97 @@ return [
         'host' => env('MEILISEARCH_HOST', 'http://localhost:7700'),
         'key' => env('MEILISEARCH_KEY'),
         'index-settings' => [
-            // 'users' => [
-            //     'filterableAttributes' => ['id', 'name', 'email'],
-            //     'sortableAttributes' => ['created_at'],
-            // ],
+            'courts' => [
+                'searchableAttributes' => [
+                    'name',
+                    'sport_type_name',
+                    'facility_name',
+                    'district',
+                    'address',
+                    'description',
+                ],
+                'filterableAttributes' => [
+                    'id',
+                    'facility_id',
+                    'sport_type_id',
+                    'status',
+                    'district',
+                ],
+                'sortableAttributes' => [
+                    'id',
+                    'capacity',
+                    'created_at',
+                ],
+            ],
+            'news' => [
+                'searchableAttributes' => [
+                    'title',
+                    'summary',
+                    'content',
+                    'category',
+                    'author_name',
+                ],
+                'filterableAttributes' => [
+                    'id',
+                    'category',
+                    'status',
+                ],
+                'sortableAttributes' => [
+                    'id',
+                    'views',
+                    'created_at',
+                ],
+            ],
+            'products' => [
+                'searchableAttributes' => [
+                    'name',
+                    'team',
+                    'season',
+                    'description',
+                ],
+                'filterableAttributes' => [
+                    'id',
+                    'team',
+                    'season',
+                    'is_in_stock',
+                    'is_active',
+                ],
+                'sortableAttributes' => [
+                    'id',
+                    'cost_price',
+                    'created_at',
+                ],
+            ],
+            'facilities' => [
+                'searchableAttributes' => [
+                    'name',
+                    'district',
+                    'address',
+                    'phone',
+                ],
+                'filterableAttributes' => [
+                    'id',
+                    'district',
+                    'status',
+                ],
+                'sortableAttributes' => [
+                    'id',
+                    'created_at',
+                ],
+            ],
+            'sport_types' => [
+                'searchableAttributes' => [
+                    'name',
+                    'description',
+                ],
+                'filterableAttributes' => [
+                    'id',
+                    'status',
+                ],
+                'sortableAttributes' => [
+                    'id',
+                ],
+            ],
         ],
     ],
 

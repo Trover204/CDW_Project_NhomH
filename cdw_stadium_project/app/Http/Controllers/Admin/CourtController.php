@@ -61,6 +61,9 @@ class CourtController extends Controller
             return redirect()->back()->with('error', 'Dữ liệu này vừa được một quản trị viên khác cập nhật. Vui lòng tải lại trang để xem dữ liệu mới nhất.');
         }
 
+        $court->refresh();
+        $court->shouldBeSearchable() ? $court->searchable() : $court->unsearchable();
+
         return redirect()->route('admin.courts.index')->with('success', 'Đã cập nhật sân.');
     }
 

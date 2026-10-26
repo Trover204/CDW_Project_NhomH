@@ -3,7 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\Court;
+use App\Models\Facility;
 use App\Models\News;
+use App\Models\Product;
+use App\Models\SportType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -109,5 +112,58 @@ class ScoutSearchTest extends TestCase
         $response->assertSee('Kỹ thuật đập cầu lông chuẩn xác');
         $response->assertDontSee('Bản nháp kỹ thuật đập cầu lông');
         $response->assertDontSee('Lịch thi đấu bóng đá cuối tuần');
+    }
+
+    public function test_searchable_models_configure_meilisearch_attributes_and_visibility(): void
+    {
+        $facility = Facility::factory()->create([
+            'name' => 'Cơ sở Quận 7',
+            'district' => 'Quận 7',
+            'address' => '123 Nguyễn Thị Thập',
+            'status' => true,
+        ]);
+
+        $sportType = SportType::factory()->create([
+            'name' => 'Pickleball',
+            'status' => true,
+        ]);
+
+        $activeCourt = Court::factory()->create([
+            'facility_id' => $facility->id,
+            'sport_type_id' => $sportType->id,
+            'name' => 'Sân VIP 1',
+            'status' => 'available',
+        ]);
+
+        $inactiveCourt = Court::factory()->create([
+            'facility_id' => $facility->id,
+            'sport_type_id' => $sportType->id,
+            'name' => 'Sân Bảo Trì',
+            'status' => 'inactive',
+        ]);
+
+        $product = Product::factory()->create([
+            'name' => 'Áo đấu Đội tuyển',
+            'team' => 'Việt Nam',
+            'season' => '2026',
+            'is_active' => true,
+        ]);
+
+        config(['scout.driver' => 'meilisearch']);
+
+        $this->assertTrue($activeCourt->shouldBeSearchable());
+        $this->assertFalse($inactiveCourt->shouldBeSearchable());
+        $this->assertTrue($facility->shouldBeSearchable());
+        $this->assertTrue($sportType->shouldBeSearchable());
+        $this->assertTrue($product->shouldBeSearchable());
+
+        $courtArray = $activeCourt->fresh(['facility', 'sportType'])->toSearchableArray();
+        $this->assertSame('Cơ sở Quận 7', $courtArray['facility_name']);
+        $this->assertSame('Quận 7', $courtArray['district']);
+        $this->assertSame('Pickleball', $courtArray['sport_type_name']);
+
+        $productArray = $product->toSearchableArray();
+        $this->assertSame('Áo đấu Đội tuyển', $productArray['name']);
+        $this->assertSame('Việt Nam', $productArray['team']);
     }
 }

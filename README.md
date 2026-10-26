@@ -24,3 +24,5 @@ CDW Stadium Project
             DB_DATABASE=laravel13
             DB_USERNAME=root
             DB_PASSWORD=root
+
+docker exec laravel_app php artisan scout:import "App\Models\TenModel"
