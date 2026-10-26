@@ -136,4 +136,28 @@ class ProfileTest extends TestCase
         $response->assertStatus(200);
         $response->assertDontSee(route('admin.dashboard'), false);
     }
+
+    public function test_user_can_view_booking_history_in_profile(): void
+    {
+        $user = User::factory()->create();
+
+        $court = \App\Models\Court::factory()->create([
+            'name' => 'Sân Cầu Lông Số 1',
+        ]);
+
+        $booking = \App\Models\Booking::factory()->create([
+            'user_id' => $user->id,
+            'court_id' => $court->id,
+            'total_price' => 120000,
+            'status' => 'completed',
+        ]);
+
+        $response = $this->actingAs($user)->get(route('profile.edit'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Lịch sử đặt sân');
+        $response->assertSee('Sân Cầu Lông Số 1');
+        $response->assertSee('120.000đ');
+        $response->assertSee('Đã hoàn thành');
+    }
 }
