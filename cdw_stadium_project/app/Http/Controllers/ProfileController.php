@@ -31,7 +31,10 @@ class ProfileController extends Controller
         $favoritesCount = $user->favoriteCourts()->count();
         $bookingsCount = $user->bookings()->count();
 
-        return view('web.profile', compact('user', 'activeSubscription', 'favoritesCount', 'bookingsCount'));
+        // Lấy lịch sử đặt sân
+        $bookingHistory = $user->bookings()->with('court')->latest()->paginate(10);
+
+        return view('web.profile', compact('user', 'activeSubscription', 'favoritesCount', 'bookingsCount', 'bookingHistory'));
     }
 
     /**

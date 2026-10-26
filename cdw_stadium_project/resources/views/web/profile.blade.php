@@ -588,6 +588,11 @@
                         <span>Đổi mật khẩu</span>
                     </button>
 
+                    <button type="button" class="menu-item {{ session('active_tab') == 'history' ? 'active' : '' }}" onclick="switchTab('history', this)">
+                        <i class="ti ti-history"></i>
+                        <span>Lịch sử đặt sân</span>
+                    </button>
+
                     <a href="{{ route('plans.index') }}" class="menu-item">
                         <i class="ti ti-award"></i>
                         <span>Gói hội viên</span>
@@ -861,6 +866,62 @@
                             </a>
                         </div>
                     </form>
+                </div>
+
+                {{-- TAB 4: LỊCH SỬ ĐẶT SÂN --}}
+                <div id="tab-history" class="tab-pane {{ session('active_tab') == 'history' ? '' : 'style-none' }}" style="{{ session('active_tab') == 'history' ? '' : 'display:none;' }}">
+                    <div class="section-header">
+                        <h2 class="section-title">Lịch sử đặt sân</h2>
+                        <p class="section-desc">Danh sách các sân bạn đã đặt và trạng thái tương ứng.</p>
+                    </div>
+
+                    @if($bookingHistory->isEmpty())
+                        <div style="text-align: center; padding: 40px; color: #5E726A;">
+                            <i class="ti ti-calendar-cancel" style="font-size: 48px; color: #E1E8E3; margin-bottom: 16px;"></i>
+                            <p>Bạn chưa có lịch sử đặt sân nào.</p>
+                        </div>
+                    @else
+                        <div class="table-responsive" style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+                                <thead>
+                                    <tr style="border-bottom: 1px solid #E1E8E3;">
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #178A4C;">Mã ĐS</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #178A4C;">Sân</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #178A4C;">Ngày</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #178A4C;">Thời gian</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #178A4C;">Tổng tiền</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #178A4C;">Trạng thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($bookingHistory as $booking)
+                                        <tr style="border-bottom: 1px solid #F1F4F2;">
+                                            <td style="padding: 12px 8px; font-weight: 500;">#{{ $booking->id }}</td>
+                                            <td style="padding: 12px 8px;">{{ $booking->court->name ?? 'N/A' }}</td>
+                                            <td style="padding: 12px 8px;">{{ \Carbon\Carbon::parse($booking->booking_date)->format('d/m/Y') }}</td>
+                                            <td style="padding: 12px 8px;">{{ \Carbon\Carbon::parse($booking->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($booking->end_time)->format('H:i') }}</td>
+                                            <td style="padding: 12px 8px; font-weight: 600;">{{ number_format($booking->total_price, 0, ',', '.') }}đ</td>
+                                            <td style="padding: 12px 8px;">
+                                                @if($booking->status === 'completed' || $booking->status === 'checked_in')
+                                                    <span style="background: #E8F5E9; color: #2E7D32; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Đã hoàn thành</span>
+                                                @elseif($booking->status === 'pending')
+                                                    <span style="background: #FFF3E0; color: #EF6C00; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Chờ xử lý</span>
+                                                @elseif($booking->status === 'cancelled' || $booking->status === 'rejected')
+                                                    <span style="background: #FFEBEE; color: #C62828; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Đã hủy</span>
+                                                @else
+                                                    <span style="background: #F5F5F5; color: #616161; padding: 4px 8px; border-radius: 4px; font-size: 12px;">{{ ucfirst($booking->status) }}</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div style="margin-top: 24px;">
+                            {{ $bookingHistory->links() }}
+                        </div>
+                    @endif
                 </div>
 
                 {{-- TAB 3: GÓI HỘI VIÊN --}}
