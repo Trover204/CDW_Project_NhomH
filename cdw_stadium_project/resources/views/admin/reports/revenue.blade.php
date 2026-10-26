@@ -630,7 +630,7 @@
                 @endforeach
             </tbody>
         </table>
-        <div style="padding: 12px 18px;">
+        <div class="pagination-wrap" style="padding: 12px 18px;">
             {{ $payments->links() }}
         </div>
     @else

@@ -79,7 +79,7 @@
     </div>
 
     @if($sales->hasPages())
-        <div class="card-footer pb-0">
+        <div class="pagination-wrap">
             {{ $sales->links() }}
         </div>
     @endif
