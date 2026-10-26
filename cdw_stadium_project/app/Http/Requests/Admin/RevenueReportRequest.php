@@ -30,6 +30,7 @@ class RevenueReportRequest extends FormRequest
             'to_date' => ['nullable', 'date', 'after_or_equal:from_date'],
             'sport_type_id' => ['nullable', 'integer', 'exists:sport_types,id'],
             'facility_id' => ['nullable', 'integer', 'exists:facilities,id'],
+            'payable_type' => ['nullable', 'string', 'in:booking,sale,subscription'],
         ];
     }
 

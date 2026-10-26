@@ -28,6 +28,8 @@ class BookingRequest extends FormRequest
             'total_price' => 'required|numeric|min:0',
             'note' => 'nullable|string',
             'status' => 'required|in:pending,confirmed,checked_in,completed,cancelled,rejected',
+            'payment_method' => 'nullable|string|max:50',
+            'payment_status' => 'nullable|in:pending,paid,failed,refunded',
         ];
     }
 }

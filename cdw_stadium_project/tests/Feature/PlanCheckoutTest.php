@@ -105,16 +105,28 @@ class PlanCheckoutTest extends TestCase
         $this->assertDatabaseHas('subscriptions', [
             'user_id' => $user->id,
             'plan_id' => $plan->id,
-            'payment_method' => 'momo',
             'status' => 1,
-            'amount_paid' => 100000,
+            'price' => 100000,
         ]);
 
-        $subscription = Subscription::first();
+        $subscription = Subscription::with('payment')->first();
         $this->assertNotNull($subscription->starts_at);
         $this->assertNotNull($subscription->expires_at);
         $this->assertEquals(30, $subscription->starts_at->diffInDays($subscription->expires_at));
+        $this->assertNotNull($subscription->payment);
+        $this->assertEquals('momo', $subscription->payment->payment_method);
+        $this->assertEquals(100000, $subscription->payment->amount);
+        $this->assertEquals('paid', $subscription->payment->status);
         $this->assertStringStartsWith('TXN_', $subscription->transaction_code);
+
+        $this->assertDatabaseHas('payments', [
+            'payable_type' => 'subscription',
+            'payable_id' => $subscription->id,
+            'user_id' => $user->id,
+            'amount' => 100000,
+            'payment_method' => 'momo',
+            'status' => 'paid',
+        ]);
 
         $this->assertDatabaseCount('subscriptions', 1);
     }

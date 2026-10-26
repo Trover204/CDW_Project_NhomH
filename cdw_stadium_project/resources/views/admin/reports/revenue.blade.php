@@ -90,6 +90,13 @@
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 16px;
+        margin-bottom: 16px;
+    }
+
+    .source-kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
         margin-bottom: 20px;
     }
 
@@ -204,7 +211,6 @@
         white-space: nowrap;
     }
 
-    /* Tooltip */
     .chart-bar-item:hover::after {
         content: attr(data-tooltip);
         position: absolute;
@@ -222,16 +228,15 @@
         box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
 
-    /* Grid Layout for Sport Breakdown & Yearly */
     .two-col-grid {
         display: grid;
-        grid-template-columns: 1fr 1.5fr;
+        grid-template-columns: 1fr 1fr;
         gap: 20px;
         margin-bottom: 20px;
     }
 
     @media (max-width: 900px) {
-        .kpi-grid {
+        .kpi-grid, .source-kpi-grid {
             grid-template-columns: 1fr;
         }
         .two-col-grid {
@@ -239,7 +244,6 @@
         }
     }
 
-    /* Custom Table Styling */
     .report-table {
         width: 100%;
         border-collapse: separate;
@@ -288,7 +292,7 @@
 <div class="topbar">
     <div>
         <h1 class="page-title">Báo cáo doanh thu</h1>
-        <small style="color: var(--muted); font-size: 12px;">Thống kê tổng hợp doanh thu và đơn đặt sân theo tháng</small>
+        <small style="color: var(--muted); font-size: 12px;">Thống kê doanh thu thực thu từ bảng Thanh toán (Payment): Tổng hợp & phân tách theo Đặt sân, Bán hàng, Gói thành viên</small>
     </div>
     <div class="right">
         <a href="{{ route('admin.reports.revenue.excel', request()->all()) }}" class="btn-action btn-excel">
@@ -306,6 +310,18 @@
         <div style="display: flex; align-items: center; gap: 6px;">
             <label for="month-picker" style="font-size: 12.5px; font-weight: 600; color: var(--text-secondary);">Tháng:</label>
             <input type="month" id="month-picker" name="month" class="filter-input" value="{{ $selectedMonth }}">
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 6px;">
+            <label for="source-picker" style="font-size: 12.5px; font-weight: 600; color: var(--text-secondary);">Nguồn:</label>
+            <select id="source-picker" name="payable_type" class="filter-input">
+                <option value="">Tất cả nguồn doanh thu</option>
+                @foreach (\App\Models\Payment::TYPES as $typeKey => $typeLabel)
+                    <option value="{{ $typeKey }}" {{ request('payable_type') === $typeKey ? 'selected' : '' }}>
+                        {{ $typeLabel }}
+                    </option>
+                @endforeach
+            </select>
         </div>
 
         <div style="display: flex; align-items: center; gap: 6px;">
@@ -336,7 +352,7 @@
             <i class="ti ti-filter"></i> Lọc báo cáo
         </button>
 
-        @if(request()->hasAny(['month', 'sport_type_id', 'facility_id']))
+        @if(request()->hasAny(['month', 'payable_type', 'sport_type_id', 'facility_id']))
             <a href="{{ route('admin.reports.revenue') }}" style="font-size: 12px; color: var(--muted); text-decoration: underline; margin-left: 4px;">
                 Đặt lại
             </a>
@@ -348,7 +364,7 @@
     </div>
 </div>
 
-{{-- 3 Thẻ chỉ số (KPI cards) theo mục 4.15 --}}
+{{-- Hàng 1: 3 Thẻ chỉ số tổng quan --}}
 <div class="kpi-grid">
     <div class="kpi-card">
         <div class="kpi-label">Tổng doanh thu</div>
@@ -370,7 +386,7 @@
         <div class="kpi-label">Số đơn hoàn thành</div>
         <div class="kpi-value">{{ number_format($completedBookingsCount, 0, ',', '.') }}</div>
         <div class="kpi-trend neutral">
-            <span>Tổng {{ $totalBookingsCount }} lượt đặt trong kỳ</span>
+            <span>Tổng {{ $totalBookingsCount }} giao dịch thanh toán trong kỳ</span>
         </div>
     </div>
 
@@ -378,22 +394,49 @@
         <div class="kpi-label">Giá trị đơn TB</div>
         <div class="kpi-value">{{ number_format($averageOrderValue, 0, ',', '.') }}đ</div>
         <div class="kpi-trend neutral">
-            <span>Doanh thu bình quân / đơn thành công</span>
+            <span>Doanh thu bình quân / giao dịch đã thu</span>
         </div>
     </div>
 </div>
 
-{{-- Biểu đồ Doanh thu theo ngày trong tháng --}}
+{{-- Hàng 2: Phân rã doanh thu theo 3 phần (Đặt sân, Bán hàng, Gói thành viên) --}}
+<div class="source-kpi-grid">
+    <div class="kpi-card" style="border-left: 4px solid #178A4C;">
+        <div class="kpi-label">Doanh thu Đặt sân (Booking)</div>
+        <div class="kpi-value" style="font-size: 20px; color: #178A4C;">{{ number_format($bookingRevenue ?? 0, 0, ',', '.') }}đ</div>
+        <div class="kpi-trend neutral">
+            <span>{{ $bookingPaymentsCount ?? 0 }} giao dịch ({{ $totalRevenue > 0 ? round((($bookingRevenue ?? 0) / $totalRevenue) * 100, 1) : 0 }}%)</span>
+        </div>
+    </div>
+
+    <div class="kpi-card" style="border-left: 4px solid #F59E0B;">
+        <div class="kpi-label">Doanh thu Bán hàng (Sale)</div>
+        <div class="kpi-value" style="font-size: 20px; color: #D97706;">{{ number_format($saleRevenue ?? 0, 0, ',', '.') }}đ</div>
+        <div class="kpi-trend neutral">
+            <span>{{ $salePaymentsCount ?? 0 }} giao dịch ({{ $totalRevenue > 0 ? round((($saleRevenue ?? 0) / $totalRevenue) * 100, 1) : 0 }}%)</span>
+        </div>
+    </div>
+
+    <div class="kpi-card" style="border-left: 4px solid #3B82F6;">
+        <div class="kpi-label">Doanh thu Gói thành viên (Subscription)</div>
+        <div class="kpi-value" style="font-size: 20px; color: #2563EB;">{{ number_format($subscriptionRevenue ?? 0, 0, ',', '.') }}đ</div>
+        <div class="kpi-trend neutral">
+            <span>{{ $subscriptionPaymentsCount ?? 0 }} giao dịch ({{ $totalRevenue > 0 ? round((($subscriptionRevenue ?? 0) / $totalRevenue) * 100, 1) : 0 }}%)</span>
+        </div>
+    </div>
+</div>
+
+{{-- Biểu đồ Doanh thu theo ngày trong kỳ --}}
 <div class="chart-panel">
     <div class="chart-panel-header">
-        <h2 class="chart-panel-title">Doanh thu theo ngày trong {{ $periodLabel }}</h2>
+        <h2 class="chart-panel-title">Doanh thu theo ngày trong {{ $periodLabel }} (từ Payment đã thanh toán)</h2>
         <small style="color: var(--muted); font-size: 11px;">(Cột màu xanh đậm thể hiện ngày đạt doanh thu cao nhất)</small>
     </div>
 
     @if ($totalRevenue > 0)
         <div class="chart-bars-wrap">
             @foreach ($daysInMonth as $d)
-                <div class="chart-bar-item" data-tooltip="{{ $d['label'] }}: {{ number_format($d['revenue'], 0, ',', '.') }}đ ({{ $d['count'] }} đơn)">
+                <div class="chart-bar-item" data-tooltip="{{ $d['label'] }}: {{ number_format($d['revenue'], 0, ',', '.') }}đ ({{ $d['count'] }} GD)">
                     <div class="chart-bar-pillar {{ $d['is_max'] ? 'max' : '' }}"
                          style="height: {{ $d['height_percent'] }}%;"></div>
                     <div class="chart-bar-label">{{ $d['day'] }}</div>
@@ -408,8 +451,49 @@
     @endif
 </div>
 
-{{-- Khối 2 cột: Doanh thu theo loại sân & Thống kê 12 tháng --}}
+{{-- Khối 2 cột: Cơ cấu theo nguồn thanh toán & Doanh thu theo loại sân --}}
 <div class="two-col-grid">
+    {{-- Cơ cấu theo nguồn thanh toán --}}
+    <div class="card" style="padding: 0; overflow: hidden;">
+        <div style="padding: 16px 18px; border-bottom: 1px solid var(--border);">
+            <h3 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text);">Cơ cấu doanh thu theo nguồn thanh toán</h3>
+        </div>
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th>Nguồn doanh thu</th>
+                    <th style="text-align: center;">Số GD</th>
+                    <th style="text-align: right;">Doanh thu</th>
+                    <th style="text-align: right;">Tỷ trọng</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($sourcesBreakdown as $src)
+                    <tr>
+                        <td style="font-weight: 600; color: var(--text);">
+                            <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: {{ $src['color'] }}; margin-right: 6px;"></span>
+                            {{ $src['name'] }}
+                        </td>
+                        <td style="text-align: center;">{{ $src['count'] }}</td>
+                        <td style="text-align: right; font-weight: 600;">{{ number_format($src['revenue'], 0, ',', '.') }}đ</td>
+                        <td style="text-align: right;">
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: {{ $src['percent'] }}%; background: {{ $src['color'] }};"></div>
+                            </div>
+                            <span style="font-size: 11px; font-weight: 600;">{{ $src['percent'] }}%</span>
+                        </td>
+                    </tr>
+                @endforeach
+                <tr style="background: var(--surface-alt); font-weight: 700;">
+                    <td style="color: var(--text);">Tổng cộng</td>
+                    <td style="text-align: center; color: var(--text);">{{ $paidPaymentsCount ?? 0 }}</td>
+                    <td style="text-align: right; color: var(--primary);">{{ number_format($totalRevenue, 0, ',', '.') }}đ</td>
+                    <td style="text-align: right; color: var(--text);">100%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
     {{-- Doanh thu theo loại sân --}}
     <div class="card" style="padding: 0; overflow: hidden;">
         <div style="padding: 16px 18px; border-bottom: 1px solid var(--border);">
@@ -420,7 +504,7 @@
                 <thead>
                     <tr>
                         <th>Loại sân</th>
-                        <th style="text-align: center;">Số đơn</th>
+                        <th style="text-align: center;">Số GD</th>
                         <th style="text-align: right;">Doanh thu</th>
                         <th style="text-align: right;">Tỷ trọng</th>
                     </tr>
@@ -450,176 +534,108 @@
             </div>
         @endif
     </div>
+</div>
 
-    {{-- Thống kê doanh thu theo 12 tháng trong năm --}}
-    <div class="card" style="padding: 0; overflow: hidden;">
-        <div style="padding: 16px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text);">Thống kê 12 tháng năm {{ $selectedYear }}</h3>
-            <span style="font-size: 11px; color: var(--muted);">Doanh thu theo tháng</span>
-        </div>
+{{-- Thống kê doanh thu theo 12 tháng trong năm (gồm tổng & từng phần) --}}
+<div class="card" style="padding: 0; overflow: hidden; margin-bottom: 20px;">
+    <div style="padding: 16px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text);">Thống kê 12 tháng năm {{ $selectedYear }} (Tổng & từng phần)</h3>
+        <span style="font-size: 11px; color: var(--muted);">Đơn vị: VNĐ</span>
+    </div>
+    <table class="report-table">
+        <thead>
+            <tr>
+                <th>Tháng</th>
+                <th style="text-align: center;">Số GD</th>
+                <th style="text-align: right;">Đặt sân</th>
+                <th style="text-align: right;">Bán hàng</th>
+                <th style="text-align: right;">Gói thành viên</th>
+                <th style="text-align: right;">Tổng doanh thu</th>
+                <th style="text-align: right;">Tăng trưởng</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($monthlyBreakdown as $m)
+                <tr style="{{ $m['month_key'] === $selectedMonth ? 'background: #F0FDF4; font-weight: 600;' : '' }}">
+                    <td>
+                        <a href="{{ route('admin.reports.revenue', ['month' => $m['month_key']]) }}" style="color: inherit; text-decoration: none;">
+                            {{ $m['month_label'] }}
+                            @if($m['month_key'] === $selectedMonth)
+                                <span style="font-size: 9.5px; background: #DCFCE7; color: #16A34A; padding: 2px 6px; border-radius: 10px; margin-left: 4px;">Đang xem</span>
+                            @endif
+                        </a>
+                    </td>
+                    <td style="text-align: center;">{{ $m['count'] }}</td>
+                    <td style="text-align: right;">{{ number_format($m['booking_revenue'] ?? 0, 0, ',', '.') }}đ</td>
+                    <td style="text-align: right;">{{ number_format($m['sale_revenue'] ?? 0, 0, ',', '.') }}đ</td>
+                    <td style="text-align: right;">{{ number_format($m['subscription_revenue'] ?? 0, 0, ',', '.') }}đ</td>
+                    <td style="text-align: right; font-weight: 700; color: var(--text);">{{ number_format($m['revenue'], 0, ',', '.') }}đ</td>
+                    <td style="text-align: right; font-size: 11.5px;">
+                        @if ($m['growth'] !== null)
+                            <span style="color: {{ $m['growth'] >= 0 ? '#16A34A' : '#DC2626' }};">
+                                {{ $m['growth'] >= 0 ? '+' : '' }}{{ $m['growth'] }}%
+                            </span>
+                        @else
+                            <span style="color: var(--muted);">-</span>
+                        @endif
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
+
+{{-- Bảng chi tiết các giao dịch thanh toán trong kỳ --}}
+<div class="card" style="padding: 0; overflow: hidden; margin-bottom: 20px;">
+    <div style="padding: 16px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text);">Danh sách giao dịch thanh toán ghi nhận doanh thu</h3>
+        <span style="font-size: 12px; color: var(--muted);">Hiển thị {{ isset($payments) ? $payments->count() : 0 }} / {{ $paidPaymentsCount ?? 0 }} giao dịch</span>
+    </div>
+    @if (isset($payments) && $payments->count() > 0)
         <table class="report-table">
             <thead>
                 <tr>
-                    <th>Tháng</th>
-                    <th style="text-align: center;">Số đơn</th>
-                    <th style="text-align: right;">Doanh thu</th>
-                    <th style="text-align: right;">Đơn TB</th>
-                    <th style="text-align: right;">Tăng trưởng</th>
+                    <th>Mã GD</th>
+                    <th>Nguồn</th>
+                    <th>Mã đơn</th>
+                    <th>Khách hàng</th>
+                    <th>Nội dung</th>
+                    <th>Phương thức</th>
+                    <th>Thời gian TT</th>
+                    <th style="text-align: right;">Số tiền</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($monthlyBreakdown as $m)
-                    <tr style="{{ $m['month_key'] === $selectedMonth ? 'background: #F0FDF4; font-weight: 600;' : '' }}">
-                        <td>
-                            <a href="{{ route('admin.reports.revenue', ['month' => $m['month_key']]) }}" style="color: inherit; text-decoration: none;">
-                                {{ $m['month_label'] }}
-                                @if($m['month_key'] === $selectedMonth)
-                                    <span style="font-size: 9.5px; background: #DCFCE7; color: #16A34A; padding: 2px 6px; border-radius: 10px; margin-left: 4px;">Đang xem</span>
-                                @endif
+                @foreach ($payments as $p)
+                    <tr>
+                        <td style="font-weight: 600; color: var(--primary);">
+                            <a href="{{ route('admin.payments.show', $p) }}" style="color: inherit; text-decoration: none;">
+                                {{ $p->transaction_code ?? ('#PAY-' . $p->id) }}
                             </a>
                         </td>
-                        <td style="text-align: center;">{{ $m['count'] }}</td>
-                        <td style="text-align: right; color: var(--text);">{{ number_format($m['revenue'], 0, ',', '.') }}đ</td>
-                        <td style="text-align: right; font-size: 12px; color: var(--muted);">{{ number_format($m['aov'], 0, ',', '.') }}đ</td>
-                        <td style="text-align: right; font-size: 11.5px;">
-                            @if ($m['growth'] !== null)
-                                <span style="color: {{ $m['growth'] >= 0 ? '#16A34A' : '#DC2626' }};">
-                                    {{ $m['growth'] >= 0 ? '+' : '' }}{{ $m['growth'] }}%
-                                </span>
-                            @else
-                                <span style="color: var(--muted);">-</span>
-                            @endif
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-</div>
-
-{{-- Bảng chi tiết đơn đặt trong kỳ --}}
-<div class="card" style="padding: 0; overflow: hidden; margin-bottom: 20px;">
-    <div style="padding: 16px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
-        <h3 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text);">Danh sách đơn đặt phát sinh doanh thu</h3>
-        <span style="font-size: 12px; color: var(--muted);">Hiển thị {{ $bookings->count() }} / {{ $totalBookingsCount }} đơn</span>
-    </div>
-    @if ($bookings->count() > 0)
-        <table class="report-table">
-            <thead>
-                <tr>
-                    <th>Mã đơn</th>
-                    <th>Khách hàng</th>
-                    <th>Sân</th>
-                    <th>Ngày đặt</th>
-                    <th>Khung giờ</th>
-                    <th style="text-align: right;">Tổng tiền</th>
-                    <th>Thanh toán</th>
-                    <th>Trạng thái</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($bookings as $b)
-                    <tr>
-                        <td style="font-weight: 600; color: var(--primary);">
-                            #BK-{{ str_pad($b->id, 5, '0', STR_PAD_LEFT) }}
-                        </td>
                         <td>
-                            <div style="font-weight: 600; color: var(--text);">{{ $b->customer_name }}</div>
-                            <small style="color: var(--muted);">{{ $b->customer_phone }}</small>
-                        </td>
-                        <td>
-                            <div>{{ $b->court ? $b->court->name : 'N/A' }}</div>
-                            <small style="color: var(--muted);">{{ $b->court && $b->court->sportType ? $b->court->sportType->name : '' }}</small>
-                        </td>
-                        <td>{{ \Carbon\Carbon::parse($b->booking_date)->format('d/m/Y') }}</td>
-                        <td>{{ substr($b->start_time, 0, 5) }} - {{ substr($b->end_time, 0, 5) }}</td>
-                        <td style="text-align: right; font-weight: 700; color: var(--text);">
-                            {{ number_format($b->total_price, 0, ',', '.') }}đ
-                        </td>
-                        <td>
-                            @if ($b->payment)
-                                <span class="badge {{ $b->payment->status === 'paid' ? 'success' : 'warning' }}">
-                                    {{ strtoupper($b->payment->payment_method) }}: {{ $b->payment->status === 'paid' ? 'Đã thu' : 'Chưa thu' }}
-                                </span>
-                            @else
-                                <span style="color: var(--muted); font-size: 12px;">Chưa có</span>
-                            @endif
-                        </td>
-                        <td>
-                            <span class="badge {{ $b->status === 'completed' ? 'success' : ($b->status === 'confirmed' ? 'primary' : 'warning') }}">
-                                {{ $b->status === 'completed' ? 'Hoàn thành' : ($b->status === 'confirmed' ? 'Đã xác nhận' : $b->status) }}
+                            <span class="badge" style="background: {{ $p->type_color }}1a; color: {{ $p->type_color }};">
+                                {{ $p->type_label }}
                             </span>
+                        </td>
+                        <td style="font-weight: 600;">{{ $p->reference }}</td>
+                        <td>{{ $p->customer_name }}</td>
+                        <td>{{ $p->description }}</td>
+                        <td>{{ $p->method_label }}</td>
+                        <td>{{ optional($p->paid_at ?? $p->created_at)->format('d/m/Y H:i') }}</td>
+                        <td style="text-align: right; font-weight: 700; color: var(--text);">
+                            {{ number_format($p->amount, 0, ',', '.') }}đ
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
         <div style="padding: 12px 18px;">
-            {{ $bookings->links() }}
+            {{ $payments->links() }}
         </div>
     @else
         <div style="text-align: center; padding: 36px 10px; color: var(--muted); font-size: 13px;">
-            Không có đơn đặt nào trong kỳ này.
-        </div>
-    @endif
-</div>
-
-{{-- Bảng chi tiết đơn bán hàng trong kỳ --}}
-<div class="card" style="padding: 0; overflow: hidden; margin-bottom: 20px;">
-    <div style="padding: 16px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
-        <h3 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text);">Danh sách đơn bán hàng phát sinh doanh thu</h3>
-        <span style="font-size: 12px; color: var(--muted);">Hiển thị {{ isset($sales) ? $sales->count() : 0 }} / {{ $totalSalesCount ?? 0 }} đơn</span>
-    </div>
-    @if (isset($sales) && $sales->count() > 0)
-        <table class="report-table">
-            <thead>
-                <tr>
-                    <th>Mã đơn</th>
-                    <th>Khách hàng</th>
-                    <th>Sản phẩm</th>
-                    <th>Số lượng</th>
-                    <th>Ngày bán</th>
-                    <th style="text-align: right;">Tổng tiền</th>
-                    <th>Trạng thái</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($sales as $s)
-                    <tr>
-                        <td style="font-weight: 600; color: var(--primary);">
-                            #SL-{{ str_pad($s->id, 5, '0', STR_PAD_LEFT) }}
-                        </td>
-                        <td>
-                            <div style="font-weight: 600; color: var(--text);">
-                                {{ $s->user ? $s->user->name : ($s->customer_name ?? 'Khách lẻ') }}
-                            </div>
-                            @if(!$s->user && $s->customer_phone)
-                                <small style="color: var(--muted);">{{ $s->customer_phone }}</small>
-                            @endif
-                        </td>
-                        <td>
-                            <div>{{ $s->product ? $s->product->name : 'N/A' }}</div>
-                        </td>
-                        <td>{{ $s->quantity }}</td>
-                        <td>{{ \Carbon\Carbon::parse($s->sale_date)->format('d/m/Y') }}</td>
-                        <td style="text-align: right; font-weight: 700; color: var(--text);">
-                            {{ number_format($s->total_price, 0, ',', '.') }}đ
-                        </td>
-                        <td>
-                            <span class="badge {{ $s->status === 'completed' ? 'success' : 'warning' }}">
-                                {{ $s->status === 'completed' ? 'Hoàn thành' : $s->status }}
-                            </span>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-        <div style="padding: 12px 18px;">
-            {{ $sales->links() }}
-        </div>
-    @else
-        <div style="text-align: center; padding: 36px 10px; color: var(--muted); font-size: 13px;">
-            Không có đơn bán hàng nào trong kỳ này.
+            Không có giao dịch thanh toán nào trong kỳ này.
         </div>
     @endif
 </div>
