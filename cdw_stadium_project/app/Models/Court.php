@@ -42,6 +42,26 @@ class Court extends Model
         return $this->hasMany(CourtImage::class);
     }
 
+    public function priceRules(): HasMany
+    {
+        return $this->hasMany(PriceRule::class);
+    }
+
+    public function getPriceAttribute(): ?int
+    {
+        $rule = PriceRule::where('status', 1)
+            ->where(function ($q) {
+                $q->where('court_id', $this->id)
+                    ->orWhere(function ($sub) {
+                        $sub->whereNull('court_id')->where('sport_type_id', $this->sport_type_id);
+                    });
+            })
+            ->orderByRaw('court_id IS NULL')
+            ->first();
+
+        return $rule ? (int) $rule->price : null;
+    }
+
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);

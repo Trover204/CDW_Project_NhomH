@@ -106,7 +106,7 @@ class AdCrudTest extends TestCase
         $path = $file->store('ads', 'public');
 
         $ad = Ad::factory()->create([
-            'image' => $path
+            'image' => $path,
         ]);
 
         Storage::disk('public')->assertExists($path);

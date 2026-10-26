@@ -30,7 +30,7 @@
                 <td>{{ $item->id }}</td>
                 <td>
                     @if ($item->image)
-                        <img src="{{ Storage::url($item->image) }}" alt="image" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
+                        <img src="{{ $item->image_url }}" alt="image" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
                     @else
                         <span style="color: var(--muted); font-size: 12px;">Không có</span>
                     @endif

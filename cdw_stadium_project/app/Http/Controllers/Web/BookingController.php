@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Models\Court;
 use App\Models\Booking;
+use App\Models\Court;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,8 +30,8 @@ class BookingController extends Controller
 
         // Simple subtotal calculation (assuming 1 hour = 120000)
         // Ideally we fetch from court price rules, but simplify for now
-        $startTime = \Carbon\Carbon::parse($validated['start_time']);
-        $endTime = \Carbon\Carbon::parse($validated['end_time']);
+        $startTime = Carbon::parse($validated['start_time']);
+        $endTime = Carbon::parse($validated['end_time']);
         $hours = $endTime->diffInMinutes($startTime) / 60;
 
         $subtotal = 120000 * $hours;

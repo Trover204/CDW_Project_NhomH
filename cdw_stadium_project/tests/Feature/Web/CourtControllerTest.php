@@ -19,7 +19,7 @@ class CourtControllerTest extends TestCase
         $court = Court::factory()->create([
             'sport_type_id' => $sportType->id,
             'facility_id' => $facility->id,
-            'status' => 'available'
+            'status' => 'available',
         ]);
 
         $response = $this->get(route('courts.index'));

@@ -13,6 +13,7 @@ class PlanController extends Controller
     public function index()
     {
         $plans = Plan::where('status', true)->get();
+
         return view('web.plans.index', compact('plans'));
     }
 
@@ -47,6 +48,6 @@ class PlanController extends Controller
             'transaction_code' => strtoupper(uniqid('TXN_')),
         ]);
 
-        return redirect()->route('home')->with('success', 'Bạn đã đăng ký thành công gói ' . $plan->name . ' (Thanh toán qua ' . ucfirst($validated['payment_method']) . ')');
+        return redirect()->route('home')->with('success', 'Bạn đã đăng ký thành công gói '.$plan->name.' (Thanh toán qua '.ucfirst($validated['payment_method']).')');
     }
 }

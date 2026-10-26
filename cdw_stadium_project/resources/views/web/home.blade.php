@@ -119,8 +119,15 @@
                             </span>
 
                             {{-- ICON / MEDIA --}}
-                            <div class="court-media">
-                                <i class="ti ti-ball-football" style="font-size:48px;color:#178A4C;" aria-hidden="true"></i>
+                            <div class="court-media" style="overflow: hidden;">
+                                @if($court->images && $court->images->isNotEmpty())
+                                    @php
+                                        $primaryImg = $court->images->firstWhere('is_primary', true) ?? $court->images->first();
+                                    @endphp
+                                    <img src="{{ asset($primaryImg->image_path) }}" alt="{{ $court->name }}" style="width:100%;height:100%;object-fit:cover;">
+                                @else
+                                    <i class="ti ti-ball-football" style="font-size:48px;color:#178A4C;" aria-hidden="true"></i>
+                                @endif
                             </div>
 
                             {{-- INFORMATION --}}

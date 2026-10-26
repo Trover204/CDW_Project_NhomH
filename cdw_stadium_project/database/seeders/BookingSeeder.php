@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Faker\Factory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -65,10 +66,8 @@ class BookingSeeder extends Seeder
             }
         }
 
-
-
         // Fake 40 additional bookings
-        $faker = \Faker\Factory::create('vi_VN');
+        $faker = Factory::create('vi_VN');
         $allCustomers = DB::table('users')->where('role', 'customer')->get();
         $allCourts = DB::table('courts')->pluck('id')->toArray();
 
@@ -83,8 +82,8 @@ class BookingSeeder extends Seeder
             $startHour = 6 + ($i % 15);
             $endHour = $startHour + 1;
 
-            $start = str_pad($startHour, 2, '0', STR_PAD_LEFT) . ':00';
-            $end = str_pad($endHour, 2, '0', STR_PAD_LEFT) . ':00';
+            $start = str_pad($startHour, 2, '0', STR_PAD_LEFT).':00';
+            $end = str_pad($endHour, 2, '0', STR_PAD_LEFT).':00';
             $subtotal = $faker->numberBetween(100, 1000) * 1000;
             $discount = $sub ? $faker->numberBetween(10, 50) * 1000 : 0;
             $status = $faker->randomElement(['pending', 'confirmed', 'completed', 'cancelled']);
@@ -96,7 +95,7 @@ class BookingSeeder extends Seeder
                     'user_id' => $user->id, 'court_id' => $courtId,
                     'subscription_id' => $discount > 0 ? $sub : null,
                     'customer_name' => $user->name, 'customer_phone' => $user->phone, 'customer_email' => $user->email,
-                    'booking_date' => $date, 'start_time' => $start . ':00', 'end_time' => $end . ':00',
+                    'booking_date' => $date, 'start_time' => $start.':00', 'end_time' => $end.':00',
                     'subtotal' => $subtotal, 'discount_amount' => $discount, 'total_price' => $subtotal - $discount,
                     'note' => $faker->realText(50), 'status' => $status,
                     'created_at' => $now, 'updated_at' => $now,

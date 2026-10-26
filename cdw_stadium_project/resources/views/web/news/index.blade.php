@@ -189,7 +189,7 @@
                         @endif
 
                         @if($item->image)
-                        <img src="{{ Storage::url($item->image) }}" alt="{{ $item->title }}">
+                        <img src="{{ $item->image_url }}" alt="{{ $item->title }}">
                         @else
                         {{-- Placeholder icon if no image --}}
                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="color: var(--turf-teal);">

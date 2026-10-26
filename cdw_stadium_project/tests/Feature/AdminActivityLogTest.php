@@ -28,7 +28,7 @@ class AdminActivityLogTest extends TestCase
         // Check if pagination is working (default 20 per page)
         $activityLogs = $response->viewData('activityLogs');
         $this->assertEquals(20, $activityLogs->count());
-        $this->assertEquals(\App\Models\ActivityLog::count(), $activityLogs->total());
+        $this->assertEquals(ActivityLog::count(), $activityLogs->total());
     }
 
     public function test_staff_can_view_activity_logs_index(): void

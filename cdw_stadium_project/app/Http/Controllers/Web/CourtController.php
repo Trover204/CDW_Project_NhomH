@@ -11,23 +11,23 @@ use App\Models\SportType;
 
 class CourtController extends Controller
 {
-            public function index(SearchRequest $request)
+    public function index(SearchRequest $request)
     {
         $keyword = $request->keyword();
         $sportTypes = SportType::where('status', 1)->get();
         $selectedSportTypes = $request->input('sport_types', []);
 
-        if ($keyword !== '' || !empty($selectedSportTypes)) {
+        if ($keyword !== '' || ! empty($selectedSportTypes)) {
             if ($keyword !== '') {
                 $courts = Court::search($keyword)
                     ->query(function ($query) use ($selectedSportTypes) {
-                        $query->with(['facility', 'sportType'])->where('status', '!=', 'inactive');
-                        if (!empty($selectedSportTypes)) {
+                        $query->with(['facility', 'sportType', 'images'])->where('status', '!=', 'inactive');
+                        if (! empty($selectedSportTypes)) {
                             $query->whereIn('sport_type_id', $selectedSportTypes);
                         }
                     });
             } else {
-                $courts = Court::with(['facility', 'sportType'])
+                $courts = Court::with(['facility', 'sportType', 'images'])
                     ->where('status', '!=', 'inactive')
                     ->whereIn('sport_type_id', $selectedSportTypes);
             }
@@ -35,7 +35,7 @@ class CourtController extends Controller
         } else {
             $courts = collect();
             foreach ($sportTypes as $sportType) {
-                $typeCourts = Court::with(['facility', 'sportType'])
+                $typeCourts = Court::with(['facility', 'sportType', 'images'])
                     ->where('status', '!=', 'inactive')
                     ->where('sport_type_id', $sportType->id)
                     ->take(3)
@@ -62,7 +62,7 @@ class CourtController extends Controller
         }
 
         $courts = Court::search($keyword)
-            ->query(fn ($query) => $query->with(['facility', 'sportType'])->where('status', '!=', 'inactive'))
+            ->query(fn ($query) => $query->with(['facility', 'sportType', 'images'])->where('status', '!=', 'inactive'))
             ->paginate(12)
             ->appends($request->query());
 

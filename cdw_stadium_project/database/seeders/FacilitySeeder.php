@@ -34,7 +34,7 @@ class FacilitySeeder extends Seeder
             ['Sân Nhóm H - Hóc Môn',   'Hóc Môn', '200 Tô Ký, Hóc Môn, TP.HCM',              '0281111020'],
             ['Sân Nhóm H - Củ Chi',    'Củ Chi', '210 Tỉnh Lộ 8, Củ Chi, TP.HCM',            '0281111021'],
             ['Sân Nhóm H - Nhà Bè',    'Nhà Bè', '220 Huỳnh Tấn Phát, Nhà Bè, TP.HCM',       '0281111022'],
-            ['Sân Nhóm H - Bình Chánh','Bình Chánh', '230 Quốc Lộ 50, Bình Chánh, TP.HCM',   '0281111023'],
+            ['Sân Nhóm H - Bình Chánh', 'Bình Chánh', '230 Quốc Lộ 50, Bình Chánh, TP.HCM',   '0281111023'],
             ['Sân Nhóm H - Cần Giờ',   'Cần Giờ', '240 Duyên Hải, Cần Giờ, TP.HCM',          '0281111024'],
             ['Sân Nhóm H - Dĩ An',     'Dĩ An', '250 DT743, Dĩ An, Bình Dương',              '0281111025'],
         ];

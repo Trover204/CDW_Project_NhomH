@@ -41,13 +41,33 @@
       <div style="padding:18px 20px;display:grid;grid-template-columns:1.6fr 1fr;gap:20px;">
         <div>
           <div style="font-size:10.5px;color:#6B7A70;margin-bottom:10px;">Trang chủ &gt; {{ $court->sportType->name ?? 'Sân' }} &gt; {{ $court->name }}</div>
-          <div style="height:150px;border-radius:10px;background:#E6F0FA;display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><i class="ti ti-ball-badminton" style="font-size:36px;color:#2563EB;" aria-hidden="true"></i></div>
-          <div style="display:flex;gap:8px;margin-bottom:16px;">
-            <div style="width:52px;height:38px;border-radius:6px;background:#E6F0FA;border:0.5px solid #C7D3CA;"></div>
-            <div style="width:52px;height:38px;border-radius:6px;background:#E6F5EB;border:0.5px solid #C7D3CA;"></div>
-            <div style="width:52px;height:38px;border-radius:6px;background:#FBEFE3;border:0.5px solid #C7D3CA;"></div>
-            <div style="width:52px;height:38px;border-radius:6px;background:#F3EAF8;border:0.5px solid #C7D3CA;"></div>
-          </div>
+          @php
+              $primaryImg = $court->images->firstWhere('is_primary', true) ?? $court->images->first();
+          @endphp
+          @if($primaryImg)
+              <div style="height:250px;border-radius:10px;overflow:hidden;margin-bottom:8px;background:#16241C;">
+                  <img id="main-court-img" src="{{ asset($primaryImg->image_path) }}" alt="{{ $court->name }}" style="width:100%;height:100%;object-fit:cover;">
+              </div>
+              @if($court->images->count() > 1)
+                  <div style="display:flex;gap:8px;margin-bottom:16px;">
+                      @foreach($court->images as $img)
+                          <div onclick="document.getElementById('main-court-img').src='{{ asset($img->image_path) }}'"
+                               style="width:52px;height:38px;border-radius:6px;overflow:hidden;border:1px solid #C7D3CA;cursor:pointer;">
+                              <img src="{{ asset($img->image_path) }}" alt="" style="width:100%;height:100%;object-fit:cover;">
+                          </div>
+                      @endforeach
+                  </div>
+              @else
+                  <div style="margin-bottom:16px;"></div>
+              @endif
+          @else
+              <div style="height:150px;border-radius:10px;background:#E6F0FA;display:flex;align-items:center;justify-content:center;margin-bottom:8px;">
+                  <i class="ti ti-ball-football" style="font-size:36px;color:#2563EB;" aria-hidden="true"></i>
+              </div>
+              <div style="display:flex;gap:8px;margin-bottom:16px;">
+                  <div style="width:52px;height:38px;border-radius:6px;background:#E6F0FA;border:0.5px solid #C7D3CA;"></div>
+              </div>
+          @endif
 
           <div style="font-size:16px;font-weight:700;color:#16241C;margin-bottom:4px;">{{ $court->name }}</div>
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
@@ -107,8 +127,8 @@
             </div>
 
             <div style="border-top:0.5px solid #E1E8E3;padding-top:10px;margin-bottom:14px;">
-              <div style="display:flex;justify-content:space-between;font-size:11.5px;color:#6B7A70;margin-bottom:6px;"><span>1 giờ x 120.000đ</span><span>120.000đ</span></div>
-              <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:#16241C;"><span>Tổng cộng</span><span style="color:#C2570A;">120.000đ</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:11.5px;color:#6B7A70;margin-bottom:6px;"><span>1 giờ x {{ number_format($court->price ?? 120000, 0, ',', '.') }}đ</span><span>{{ number_format($court->price ?? 120000, 0, ',', '.') }}đ</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:#16241C;"><span>Tổng cộng</span><span style="color:#C2570A;">{{ number_format($court->price ?? 120000, 0, ',', '.') }}đ</span></div>
             </div>
 
             <button type="submit" style="width:100%;border:none;cursor:pointer;height:36px;border-radius:8px;background:#F97316;display:flex;align-items:center;justify-content:center;font-size:12.5px;color:#FFFFFF;font-weight:600;">

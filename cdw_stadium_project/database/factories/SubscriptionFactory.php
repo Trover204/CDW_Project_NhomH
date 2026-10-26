@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Plan;
 use App\Models\Subscription;
 use App\Models\User;
-use App\Models\Plan;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -27,7 +27,7 @@ class SubscriptionFactory extends Factory
             'status' => true,
             'payment_method' => $this->faker->randomElement(['momo', 'visa', 'paypal']),
             'amount_paid' => $this->faker->numberBetween(100000, 1000000),
-            'transaction_code' => 'TXN_' . strtoupper($this->faker->unique()->bothify('?????#####')),
+            'transaction_code' => 'TXN_'.strtoupper($this->faker->unique()->bothify('?????#####')),
         ];
     }
 }

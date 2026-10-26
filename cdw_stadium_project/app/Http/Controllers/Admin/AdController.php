@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdRequest;
 use App\Models\Ad;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class AdController extends Controller
@@ -16,6 +15,7 @@ class AdController extends Controller
     public function index()
     {
         $ads = Ad::latest()->paginate(10);
+
         return view('admin.ads.index', compact('ads'));
     }
 
