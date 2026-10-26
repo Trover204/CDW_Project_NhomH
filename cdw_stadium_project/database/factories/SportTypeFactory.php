@@ -12,7 +12,7 @@ class SportTypeFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->unique()->randomElement(['Bóng đá', 'Cầu lông', 'Pickleball', 'Tennis', 'Bóng rổ']).' '.$this->faker->unique()->numberBetween(1, 9999),
+            'name' => $this->faker->randomElement(['Bóng đá', 'Cầu lông', 'Pickleball', 'Tennis', 'Bóng rổ', 'Bóng bàn', 'Bơi lội', 'Gym', 'Yoga']).' '.$this->faker->unique()->numberBetween(1, 999999),
             'image' => null,
             'description' => $this->faker->sentence(),
             'status' => true,
