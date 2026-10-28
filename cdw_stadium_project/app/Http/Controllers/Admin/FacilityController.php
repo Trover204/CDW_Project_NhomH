@@ -39,17 +39,8 @@ class FacilityController extends Controller
     public function update(FacilityRequest $request, Facility $facility)
     {
         $validated = $request->validated();
-        $currentVersion = $validated['version'];
 
-        // Loại bỏ version khỏi mảng data để tự xử lý tăng ++
-        unset($validated['version']);
-
-        // Query update với điều kiện version phải khớp
-        $affectedRows = Facility::where('id', $facility->id)
-            ->where('version', $currentVersion)
-            ->update(array_merge($validated, [
-                'version' => $currentVersion + 1,
-            ]));
+        $affectedRows = $facility->updateWithOptimisticLock($validated);
 
         // Nếu affectedRows = 0 nghĩa là version đã bị thay đổi bởi request khác
         if ($affectedRows === 0) {

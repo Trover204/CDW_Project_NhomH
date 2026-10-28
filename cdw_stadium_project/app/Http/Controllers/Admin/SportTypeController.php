@@ -56,17 +56,8 @@ class SportTypeController extends Controller
             $newImage = $this->files->store($request->file('image'), self::IMAGE_DIRECTORY);
             $validated['image'] = $newImage;
         }
-        $currentVersion = $validated['version'];
 
-        // Loại bỏ version khỏi mảng data để tự xử lý tăng ++
-        unset($validated['version']);
-
-        // Query update với điều kiện version phải khớp
-        $affectedRows = SportType::where('id', $sportType->id)
-            ->where('version', $currentVersion)
-            ->update(array_merge($validated, [
-                'version' => $currentVersion + 1,
-            ]));
+        $affectedRows = $sportType->updateWithOptimisticLock($validated);
 
         // Nếu affectedRows = 0 nghĩa là version đã bị thay đổi bởi request khác
         if ($affectedRows === 0) {
