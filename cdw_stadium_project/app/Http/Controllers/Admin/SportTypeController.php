@@ -5,10 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SportTypeRequest;
 use App\Models\SportType;
-use Illuminate\Support\Facades\Storage;
+use App\Services\SecureFileStorage;
 
 class SportTypeController extends Controller
 {
+    private const IMAGE_DIRECTORY = 'sport-types';
+
+    public function __construct(private readonly SecureFileStorage $files) {}
+
     public function index()
     {
         $sportTypes = SportType::latest()->paginate(10);
@@ -27,7 +31,7 @@ class SportTypeController extends Controller
         $data['status'] = $request->boolean('status');
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('sport-types', 'public');
+            $data['image'] = $this->files->store($request->file('image'), self::IMAGE_DIRECTORY);
         }
 
         SportType::create($data);
@@ -45,11 +49,12 @@ class SportTypeController extends Controller
     {
         $validated = $request->validated();
 
+        $oldImage = $sportType->image;
+        $newImage = null;
+
         if ($request->hasFile('image')) {
-            if ($sportType->image) {
-                Storage::disk('public')->delete($sportType->image);
-            }
-            $validated['image'] = $request->file('image')->store('sport-types', 'public');
+            $newImage = $this->files->store($request->file('image'), self::IMAGE_DIRECTORY);
+            $validated['image'] = $newImage;
         }
         $currentVersion = $validated['version'];
 
@@ -65,7 +70,14 @@ class SportTypeController extends Controller
 
         // Nếu affectedRows = 0 nghĩa là version đã bị thay đổi bởi request khác
         if ($affectedRows === 0) {
+            // Cập nhật thất bại: xóa file vừa tải lên, giữ nguyên ảnh cũ.
+            $this->files->delete($newImage, self::IMAGE_DIRECTORY);
+
             return redirect()->back()->with('error', 'Dữ liệu này vừa được một quản trị viên khác cập nhật. Vui lòng tải lại trang để xem dữ liệu mới nhất.');
+        }
+
+        if ($newImage !== null && $oldImage !== $newImage) {
+            $this->files->delete($oldImage, self::IMAGE_DIRECTORY);
         }
 
         return redirect()->route('admin.facilities.index')->with('success', 'Đã cập nhật loại sân.');
@@ -73,9 +85,7 @@ class SportTypeController extends Controller
 
     public function destroy(SportType $sportType)
     {
-        if ($sportType->image) {
-            Storage::disk('public')->delete($sportType->image);
-        }
+        $this->files->delete($sportType->image, self::IMAGE_DIRECTORY);
 
         $sportType->delete();
 

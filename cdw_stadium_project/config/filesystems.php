@@ -33,7 +33,8 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
-            'serve' => true,
+            // Không tự động public route /storage/{path} cho disk private (giảm bề mặt tấn công).
+            'serve' => (bool) env('FILESYSTEM_SERVE_PRIVATE', false),
             'throw' => false,
             'report' => false,
         ],

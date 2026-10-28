@@ -46,7 +46,7 @@
                 <td style="text-align: right; white-space: nowrap;">
                     <a href="{{ route('admin.sport-types.edit', $type) }}" class="action-link">Sửa</a>
                     <form action="{{ route('admin.sport-types.destroy', $type) }}" method="POST" style="display:inline;"
-                          onsubmit="return confirm('Xóa loại môn này?')">
+                          data-confirm="Xóa loại môn này?">
                         @csrf @method('DELETE')
                         <button type="submit" class="action-btn-danger">Xóa</button>
                     </form>

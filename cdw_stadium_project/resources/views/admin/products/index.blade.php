@@ -57,7 +57,7 @@
                 <td style="text-align: right; white-space: nowrap;">
                     <a href="{{ route('admin.products.edit', $product) }}" class="action-link">Sửa</a>
                     <form action="{{ route('admin.products.destroy', $product) }}" method="POST" style="display:inline;"
-                          onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
+                          data-confirm="Bạn có chắc muốn xóa sản phẩm này?">
                         @csrf @method('DELETE')
                         <button type="submit" class="action-btn-danger">Xóa</button>
                     </form>

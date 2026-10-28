@@ -62,7 +62,7 @@
                         <td>{{ $sale->sale_date ? \Carbon\Carbon::parse($sale->sale_date)->format('d/m/Y') : '' }}</td>
                         <td>
                             <a href="{{ route('admin.sales.edit', $sale) }}" class="btn btn-sm btn-outline-primary"><i class="ti ti-edit"></i> Sửa</a>
-                            <form action="{{ route('admin.sales.destroy', $sale) }}" method="POST" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?');">
+                            <form action="{{ route('admin.sales.destroy', $sale) }}" method="POST" class="d-inline" data-confirm="Bạn có chắc chắn muốn xóa đơn hàng này?">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-outline-danger"><i class="ti ti-trash"></i> Xóa</button>

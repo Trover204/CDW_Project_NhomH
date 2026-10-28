@@ -49,7 +49,7 @@
                 </td>
                 <td style="text-align: right; white-space: nowrap;">
                     <a href="{{ route('admin.bookings.edit', $b) }}" class="action-link">Sửa</a>
-                    <form method="POST" action="{{ route('admin.bookings.destroy', $b) }}" style="display:inline" onsubmit="return confirm('Xóa đặt sân này?')">
+                    <form method="POST" action="{{ route('admin.bookings.destroy', $b) }}" style="display:inline" data-confirm="Xóa đặt sân này?">
                         @csrf @method('DELETE')
                         <button type="submit" class="action-btn-danger">Xóa</button>
                     </form>

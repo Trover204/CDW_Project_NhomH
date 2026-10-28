@@ -51,7 +51,7 @@
               @if($court->images->count() > 1)
                   <div style="display:flex;gap:8px;margin-bottom:16px;">
                       @foreach($court->images as $img)
-                          <div onclick="document.getElementById('main-court-img').src='{{ asset($img->image_path) }}'"
+                          <div data-gallery-target="main-court-img" data-gallery-src="{{ asset($img->image_path) }}"
                                style="width:52px;height:38px;border-radius:6px;overflow:hidden;border:1px solid #C7D3CA;cursor:pointer;">
                               <img src="{{ asset($img->image_path) }}" alt="" style="width:100%;height:100%;object-fit:cover;">
                           </div>

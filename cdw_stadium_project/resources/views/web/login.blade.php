@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <script>if(localStorage.getItem("theme")==="dark") document.documentElement.setAttribute("data-theme", "dark");</script>
+    <script nonce="{{ $cspNonce ?? '' }}">if(localStorage.getItem("theme")==="dark") document.documentElement.setAttribute("data-theme", "dark");</script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Đăng nhập / Đăng ký - Sân Nhóm H</title>
@@ -28,8 +28,8 @@
 
     <div class="right-panel">
         <div class="tabs">
-            <div class="tab {{ old('form_type', 'login') == 'login' ? 'active' : '' }}" onclick="showForm('login')">Đăng nhập</div>
-            <div class="tab {{ old('form_type') == 'register' ? 'active' : '' }}" onclick="showForm('register')">Đăng ký</div>
+            <div class="tab {{ old('form_type', 'login') == 'login' ? 'active' : '' }}" data-auth-tab="login">Đăng nhập</div>
+            <div class="tab {{ old('form_type') == 'register' ? 'active' : '' }}" data-auth-tab="register">Đăng ký</div>
         </div>
 
         <!-- FORM ĐĂNG NHẬP -->
@@ -100,7 +100,7 @@
     </div>
 </div>
 
-<script>
+<script nonce="{{ $cspNonce ?? '' }}">
     function showForm(type) {
         document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
         document.getElementById('loginForm').classList.add('hidden');
@@ -114,6 +114,10 @@
             document.getElementById('registerForm').classList.remove('hidden');
         }
     }
+
+    document.querySelectorAll('[data-auth-tab]').forEach(tab => {
+        tab.addEventListener('click', () => showForm(tab.dataset.authTab));
+    });
 </script>
 
 </body>

@@ -578,17 +578,17 @@
 
                 {{-- NAVIGATION TABS --}}
                 <div class="profile-menu">
-                    <button type="button" class="menu-item {{ session('active_tab', 'profile') == 'profile' ? 'active' : '' }}" onclick="switchTab('profile', this)">
+                    <button type="button" class="menu-item {{ session('active_tab', 'profile') == 'profile' ? 'active' : '' }}" data-profile-tab="profile">
                         <i class="ti ti-user"></i>
                         <span>Thông tin cá nhân</span>
                     </button>
 
-                    <button type="button" class="menu-item {{ session('active_tab') == 'password' ? 'active' : '' }}" onclick="switchTab('password', this)">
+                    <button type="button" class="menu-item {{ session('active_tab') == 'password' ? 'active' : '' }}" data-profile-tab="password">
                         <i class="ti ti-shield-lock"></i>
                         <span>Đổi mật khẩu</span>
                     </button>
 
-                    <button type="button" class="menu-item {{ session('active_tab') == 'history' ? 'active' : '' }}" onclick="switchTab('history', this)">
+                    <button type="button" class="menu-item {{ session('active_tab') == 'history' ? 'active' : '' }}" data-profile-tab="history">
                         <i class="ti ti-history"></i>
                         <span>Lịch sử đặt sân</span>
                     </button>
@@ -653,7 +653,7 @@
                                 <label for="avatarInput" class="btn-upload-file">
                                     <i class="ti ti-upload"></i> Chọn ảnh đại diện mới
                                 </label>
-                                <input type="file" id="avatarInput" name="avatar" accept="image/png, image/jpeg, image/jpg" style="display: none;" onchange="previewSelectedAvatar(this)">
+                                <input type="file" id="avatarInput" name="avatar" accept="image/png, image/jpeg, image/jpg" style="display: none;">
                                 <div class="form-hint" style="margin-top: 6px;">Hỗ trợ ảnh JPG, PNG tối đa 2MB.</div>
                             </div>
                         </div>
@@ -992,7 +992,7 @@
 @endsection
 
 @push('scripts')
-<script>
+<script nonce="{{ $cspNonce ?? '' }}">
         function switchTab(tabName, btnElement) {
             // Ẩn tất cả tab pane
             const panes = document.querySelectorAll('.tab-pane');
@@ -1052,6 +1052,19 @@
                 };
                 reader.readAsDataURL(input.files[0]);
             }
+        }
+
+        document.querySelectorAll('[data-profile-tab]').forEach(btn => {
+            btn.addEventListener('click', function () {
+                switchTab(this.dataset.profileTab, this);
+            });
+        });
+
+        const avatarInput = document.getElementById('avatarInput');
+        if (avatarInput) {
+            avatarInput.addEventListener('change', function () {
+                previewSelectedAvatar(this);
+            });
         }
     </script>
 @endpush

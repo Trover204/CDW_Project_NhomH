@@ -21,5 +21,6 @@
             @yield('content')
         </main>
     </div>
+    <script src="{{ asset('js/theme-toggle.js') }}"></script>
 </body>
 </html>

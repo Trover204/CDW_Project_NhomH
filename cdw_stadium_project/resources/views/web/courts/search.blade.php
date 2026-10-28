@@ -37,7 +37,7 @@
             <h3 style="margin: 20px 0 15px; font-size: 22px; color: var(--turf-dark);">Sân thể thao ({{ $courts->total() }})</h3>
             <div class="grid">
                 @forelse ($courts as $court)
-                    <div class="court-card" onclick="window.location.href='{{ route('courts.show', $court->id) }}'" style="cursor: pointer;">
+                    <div class="court-card" data-href="{{ route('courts.show', $court->id) }}" style="cursor: pointer;">
                         {{-- TAG --}}
                         <span class="court-tag" style="display:flex; justify-content:space-between; width: calc(100% - 40px);">
                             <span>{{ $court->sportType->name ?? 'Thể thao' }}</span>
@@ -47,12 +47,12 @@
                                 @endphp
                                 <form action="{{ route('favorites.toggle', $court->id) }}" method="POST" style="margin:0;">
                                     @csrf
-                                    <button type="submit" style="background:none;border:none;cursor:pointer;padding:0;" onclick="event.stopPropagation();">
+                                    <button type="submit" style="background:none;border:none;cursor:pointer;padding:0;" data-stop-propagation>
                                         <i class="ti {{ $isFavorited ? 'ti-heart-filled' : 'ti-heart' }}" style="font-size:18px;color:{{ $isFavorited ? '#F97316' : '#6B7A70' }};" aria-hidden="true"></i>
                                     </button>
                                 </form>
                             @else
-                                <a href="{{ route('login') }}" style="background:none;border:none;cursor:pointer;padding:0;text-decoration:none;" onclick="event.stopPropagation();">
+                                <a href="{{ route('login') }}" style="background:none;border:none;cursor:pointer;padding:0;text-decoration:none;" data-stop-propagation>
                                     <i class="ti ti-heart" style="font-size:18px;color:#6B7A70;" aria-hidden="true"></i>
                                 </a>
                             @endauth

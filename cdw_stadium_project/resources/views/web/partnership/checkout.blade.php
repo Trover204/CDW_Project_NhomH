@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <form action="{{ route('partnership.process') }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn thanh toán đăng ký làm Cộng tác viên?');">
+        <form action="{{ route('partnership.process') }}" method="POST" data-confirm="Bạn có chắc chắn muốn thanh toán đăng ký làm Cộng tác viên?">
             @csrf
 
             <div style="margin-bottom: 24px;">

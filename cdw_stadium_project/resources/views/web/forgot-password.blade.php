@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <script>if(localStorage.getItem("theme")==="dark") document.documentElement.setAttribute("data-theme", "dark");</script>
+    <script nonce="{{ $cspNonce ?? '' }}">if(localStorage.getItem("theme")==="dark") document.documentElement.setAttribute("data-theme", "dark");</script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Quên mật khẩu - Sân Nhóm H</title>
@@ -28,8 +28,8 @@
 
     <div class="right-panel">
         <div class="tabs">
-            <div class="tab active" onclick="window.location.href='{{ route('login') }}'" style="color:#6B7A70; border:none;">Đăng nhập</div>
-            <div class="tab" onclick="window.location.href='{{ route('login') }}?form=register'" style="color:#6B7A70; border:none;">Đăng ký</div>
+            <a href="{{ route('login') }}" class="tab active" style="color:#6B7A70; border:none; text-decoration:none;">Đăng nhập</a>
+            <a href="{{ route('login') }}?form=register" class="tab" style="color:#6B7A70; border:none; text-decoration:none;">Đăng ký</a>
             <div class="tab active" style="color:#178A4C; border-bottom:2px solid #178A4C; cursor:default;">Quên mật khẩu</div>
         </div>
 

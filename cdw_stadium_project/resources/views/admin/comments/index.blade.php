@@ -42,7 +42,7 @@
                 <td style="text-align: right; white-space: nowrap;">
                     <a href="{{ route('admin.comments.edit', $c) }}" class="action-link">Sửa</a>
                     <form method="POST" action="{{ route('admin.comments.destroy', $c) }}"
-                          style="display:inline" onsubmit="return confirm('Xóa bình luận này?')">
+                          style="display:inline" data-confirm="Xóa bình luận này?">
                         @csrf @method('DELETE')
                         <button type="submit" class="action-btn-danger">Xóa</button>
                     </form>

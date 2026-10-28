@@ -5,11 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\NewsRequest;
 use App\Models\News;
-use Illuminate\Support\Facades\Storage;
+use App\Services\SecureFileStorage;
 use Illuminate\Support\Str;
 
 class NewsController extends Controller
 {
+    private const IMAGE_DIRECTORY = 'news';
+
+    public function __construct(private readonly SecureFileStorage $files) {}
+
     public function index()
     {
         $news = News::with('user:id,name')->latest()->paginate(10);
@@ -31,7 +35,7 @@ class NewsController extends Controller
         }
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('news', 'public');
+            $validated['image'] = $this->files->store($request->file('image'), self::IMAGE_DIRECTORY);
         }
 
         $validated['user_id'] = auth()->id();
@@ -55,10 +59,7 @@ class NewsController extends Controller
         }
 
         if ($request->hasFile('image')) {
-            if ($news->image) {
-                Storage::disk('public')->delete($news->image);
-            }
-            $validated['image'] = $request->file('image')->store('news', 'public');
+            $validated['image'] = $this->files->replace($request->file('image'), $news->image, self::IMAGE_DIRECTORY);
         }
 
         $news->update($validated);
@@ -68,9 +69,7 @@ class NewsController extends Controller
 
     public function destroy(News $news)
     {
-        if ($news->image) {
-            Storage::disk('public')->delete($news->image);
-        }
+        $this->files->delete($news->image, self::IMAGE_DIRECTORY);
 
         $news->delete();
 

@@ -214,7 +214,7 @@
         <a href="{{ route('admin.reports.revenue', request()->all()) }}" style="color: #0D5C40; text-decoration: none; font-weight: 600;">
             &larr; Quay lại trang báo cáo
         </a>
-        <button onclick="window.print()" class="btn-print">
+        <button type="button" id="btn-print-report" class="btn-print">
             In báo cáo / Lưu PDF
         </button>
     </div>
@@ -400,5 +400,8 @@
         </div>
     </div>
 
+    <script nonce="{{ $cspNonce ?? '' }}">
+        document.getElementById('btn-print-report')?.addEventListener('click', () => window.print());
+    </script>
 </body>
 </html>

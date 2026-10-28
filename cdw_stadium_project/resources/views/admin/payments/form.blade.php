@@ -119,7 +119,7 @@
     <a href="{{ route('admin.payments.index') }}" class="btn btn-secondary">Hủy</a>
 </div>
 
-<script>
+<script nonce="{{ $cspNonce ?? '' }}">
 document.addEventListener('DOMContentLoaded', function () {
     const typeSelect = document.getElementById('payable-type-select');
     const idSelect = document.getElementById('payable-id-select');

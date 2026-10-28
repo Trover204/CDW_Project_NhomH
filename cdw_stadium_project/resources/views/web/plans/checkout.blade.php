@@ -33,7 +33,7 @@
             </div>
         </div>
 
-        <form action="{{ route('plans.subscribe', $plan->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn mua gói này không?');">
+        <form action="{{ route('plans.subscribe', $plan->id) }}" method="POST" data-confirm="Bạn có chắc chắn muốn mua gói này không?">
             @csrf
 
             <div style="margin-bottom: 24px;">
