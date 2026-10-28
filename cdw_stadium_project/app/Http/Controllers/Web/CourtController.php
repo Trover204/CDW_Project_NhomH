@@ -36,15 +36,19 @@ class CourtController extends Controller
             }
             $courts = $courts->paginate(12)->appends($request->query());
         } else {
-            $courts = collect();
+            $query = null;
             foreach ($sportTypes as $sportType) {
-                $typeCourts = Court::with(['facility', 'sportType', 'images'])
-                    ->where('status', '!=', 'inactive')
+                $subQuery = Court::where('status', '!=', 'inactive')
                     ->where('sport_type_id', $sportType->id)
-                    ->take(3)
-                    ->get();
-                $courts = $courts->merge($typeCourts);
+                    ->take(3);
+
+                if ($query === null) {
+                    $query = $subQuery;
+                } else {
+                    $query->unionAll($subQuery);
+                }
             }
+            $courts = $query ? $query->with(['facility', 'sportType', 'images'])->get() : collect();
         }
 
         $locations = Facility::where('status', 1)
