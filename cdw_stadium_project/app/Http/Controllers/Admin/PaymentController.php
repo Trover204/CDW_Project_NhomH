@@ -18,15 +18,24 @@ class PaymentController extends Controller
 
     public function index(Request $request)
     {
-        $baseQuery = Payment::query();
+        $summaryData = Payment::toBase()
+            ->selectRaw("
+                SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) as total_paid,
+                SUM(CASE WHEN status = 'paid' AND payable_type = ? THEN amount ELSE 0 END) as booking_paid,
+                SUM(CASE WHEN status = 'paid' AND payable_type = ? THEN amount ELSE 0 END) as sale_paid,
+                SUM(CASE WHEN status = 'paid' AND payable_type = ? THEN amount ELSE 0 END) as subscription_paid,
+                SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_count,
+                COUNT(*) as total_count
+            ", [Payment::TYPE_BOOKING, Payment::TYPE_SALE, Payment::TYPE_SUBSCRIPTION])
+            ->first();
 
         $summary = [
-            'total_paid' => (float) (clone $baseQuery)->where('status', 'paid')->sum('amount'),
-            'booking_paid' => (float) (clone $baseQuery)->where('status', 'paid')->where('payable_type', Payment::TYPE_BOOKING)->sum('amount'),
-            'sale_paid' => (float) (clone $baseQuery)->where('status', 'paid')->where('payable_type', Payment::TYPE_SALE)->sum('amount'),
-            'subscription_paid' => (float) (clone $baseQuery)->where('status', 'paid')->where('payable_type', Payment::TYPE_SUBSCRIPTION)->sum('amount'),
-            'pending_count' => (int) (clone $baseQuery)->where('status', 'pending')->count(),
-            'total_count' => (int) (clone $baseQuery)->count(),
+            'total_paid' => (float) ($summaryData->total_paid ?? 0),
+            'booking_paid' => (float) ($summaryData->booking_paid ?? 0),
+            'sale_paid' => (float) ($summaryData->sale_paid ?? 0),
+            'subscription_paid' => (float) ($summaryData->subscription_paid ?? 0),
+            'pending_count' => (int) ($summaryData->pending_count ?? 0),
+            'total_count' => (int) ($summaryData->total_count ?? 0),
         ];
 
         $query = Payment::with(['user:id,name,email', 'payable'])->latest();
