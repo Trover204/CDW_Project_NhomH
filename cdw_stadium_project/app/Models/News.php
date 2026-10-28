@@ -36,6 +36,11 @@ class News extends Model
             return null;
         }
 
+        // Chặn đường dẫn chứa ký tự điều hướng thư mục (Path Traversal).
+        if (str_contains($this->image, '..') || str_contains($this->image, '\\') || str_contains($this->image, "\0")) {
+            return null;
+        }
+
         if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
             return $this->image;
         }

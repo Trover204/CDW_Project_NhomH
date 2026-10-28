@@ -42,7 +42,7 @@
             </div>
         </div>
 
-        <form action="{{ route('products.purchase', $product->id) }}" method="POST" id="purchase-form" onsubmit="return confirm('Bạn có chắc chắn muốn mua sản phẩm này không?');">
+        <form action="{{ route('products.purchase', $product->id) }}" method="POST" id="purchase-form" data-confirm="Bạn có chắc chắn muốn mua sản phẩm này không?">
             @csrf
 
             <div style="margin-bottom: 24px;">
@@ -93,7 +93,7 @@
     </div>
 </div>
 
-<script>
+<script nonce="{{ $cspNonce ?? '' }}">
     document.addEventListener('DOMContentLoaded', function() {
         const qtyInput = document.getElementById('quantity');
         const totalDisplay = document.getElementById('total-price-display');

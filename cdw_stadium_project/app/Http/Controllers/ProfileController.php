@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfilePasswordUpdateRequest;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Services\SecureFileStorage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -40,18 +40,13 @@ class ProfileController extends Controller
     /**
      * Cập nhật thông tin hồ sơ cá nhân.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request, SecureFileStorage $files): RedirectResponse
     {
         $user = $request->user();
         $validated = $request->validated();
 
         if ($request->hasFile('avatar')) {
-            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-                Storage::disk('public')->delete($user->avatar);
-            }
-
-            $path = $request->file('avatar')->store('avatars', 'public');
-            $validated['avatar'] = $path;
+            $validated['avatar'] = $files->replace($request->file('avatar'), $user->avatar, 'avatars');
         }
 
         $user->update($validated);

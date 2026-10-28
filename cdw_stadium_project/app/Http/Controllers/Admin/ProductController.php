@@ -6,10 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
-use Illuminate\Support\Facades\Storage;
+use App\Services\SecureFileStorage;
 
 class ProductController extends Controller
 {
+    private const IMAGE_DIRECTORY = 'products';
+
+    public function __construct(private readonly SecureFileStorage $files) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -39,7 +43,7 @@ class ProductController extends Controller
         $validated['is_active'] = $request->has('is_active');
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('products', 'public');
+            $validated['image'] = $this->files->store($request->file('image'), self::IMAGE_DIRECTORY);
         }
 
         Product::create($validated);
@@ -66,10 +70,7 @@ class ProductController extends Controller
         $validated['is_active'] = $request->has('is_active');
 
         if ($request->hasFile('image')) {
-            if ($product->image) {
-                Storage::disk('public')->delete($product->image);
-            }
-            $validated['image'] = $request->file('image')->store('products', 'public');
+            $validated['image'] = $this->files->replace($request->file('image'), $product->image, self::IMAGE_DIRECTORY);
         }
 
         $product->update($validated);
@@ -82,9 +83,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        if ($product->image) {
-            Storage::disk('public')->delete($product->image);
-        }
+        $this->files->delete($product->image, self::IMAGE_DIRECTORY);
         $product->delete();
 
         return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được xóa thành công.');

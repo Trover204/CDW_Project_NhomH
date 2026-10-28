@@ -23,7 +23,7 @@
                                 <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
                                     <input type="checkbox" name="sport_types[]" value="{{ $type->id }}"
                                            {{ in_array($type->id, request('sport_types', [])) ? 'checked' : '' }}
-                                           onchange="document.getElementById('filter-form').submit();"
+                                           data-auto-submit
                                            style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--turf-teal);">
                                     <span style="font-size: 15px; color: var(--ink);">{{ $type->name }}</span>
                                 </label>
@@ -76,7 +76,7 @@
                 <h3 style="margin: 20px 0 15px; font-size: 22px; color: var(--turf-dark);">{{ $sportName }}</h3>
                 <div class="grid">
                     @foreach ($group as $court)
-                        <div class="court-card" onclick="window.location.href='{{ route('courts.show', $court->id) }}'" style="cursor: pointer;">
+                        <div class="court-card" data-href="{{ route('courts.show', $court->id) }}" style="cursor: pointer;">
                             {{-- TAG --}}
                             <span class="court-tag">
                                 {{ $court->sportType->name ?? 'Thể thao' }}

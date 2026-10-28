@@ -121,7 +121,7 @@
                 <td style="text-align: right; white-space: nowrap;">
                     <a href="{{ route('admin.payments.show', $p) }}" class="action-link">Xem</a>
                     <a href="{{ route('admin.payments.edit', $p) }}" class="action-link">Sửa</a>
-                    <form method="POST" action="{{ route('admin.payments.destroy', $p) }}" style="display:inline" onsubmit="return confirm('Xóa thanh toán này?')">
+                    <form method="POST" action="{{ route('admin.payments.destroy', $p) }}" style="display:inline" data-confirm="Xóa thanh toán này?">
                         @csrf @method('DELETE')
                         <button type="submit" class="action-btn-danger">Xóa</button>
                     </form>

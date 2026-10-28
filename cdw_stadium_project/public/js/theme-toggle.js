@@ -49,3 +49,49 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// Delegated UI helpers (CSP-compliant replacement for inline event attributes).
+document.addEventListener('submit', (e) => {
+    const form = e.target.closest('form[data-confirm]');
+    if (form && !window.confirm(form.dataset.confirm)) {
+        e.preventDefault();
+    }
+});
+
+document.addEventListener('change', (e) => {
+    const autoSubmit = e.target.closest('[data-auto-submit]');
+    if (autoSubmit && autoSubmit.form) {
+        autoSubmit.form.submit();
+    }
+});
+
+document.addEventListener('click', (e) => {
+    if (e.target.closest('[data-stop-propagation]')) {
+        e.stopPropagation();
+        return;
+    }
+
+    const submitTrigger = e.target.closest('[data-submit-form]');
+    if (submitTrigger) {
+        e.preventDefault();
+        const form = document.getElementById(submitTrigger.dataset.submitForm);
+        if (form) {
+            form.submit();
+        }
+        return;
+    }
+
+    const thumb = e.target.closest('[data-gallery-target][data-gallery-src]');
+    if (thumb) {
+        const img = document.getElementById(thumb.dataset.galleryTarget);
+        if (img) {
+            img.src = thumb.dataset.gallerySrc;
+        }
+        return;
+    }
+
+    const navEl = e.target.closest('[data-href]');
+    if (navEl && !e.target.closest('a, button, form, input, select, textarea, label')) {
+        window.location.href = navEl.dataset.href;
+    }
+});

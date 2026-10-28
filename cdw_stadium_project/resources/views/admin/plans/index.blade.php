@@ -40,7 +40,7 @@
                 <td style="text-align: right; white-space: nowrap;">
                     <a href="{{ route('admin.plans.edit', $p) }}" class="action-link">Sửa</a>
                     <form method="POST" action="{{ route('admin.plans.destroy', $p) }}"
-                          style="display:inline" onsubmit="return confirm('Xóa plan này?')">
+                          style="display:inline" data-confirm="Xóa plan này?">
                         @csrf @method('DELETE')
                         <button type="submit" class="action-btn-danger">Xóa</button>
                     </form>

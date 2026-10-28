@@ -5,10 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdRequest;
 use App\Models\Ad;
-use Illuminate\Support\Facades\Storage;
+use App\Services\SecureFileStorage;
 
 class AdController extends Controller
 {
+    private const IMAGE_DIRECTORY = 'ads';
+
+    public function __construct(private readonly SecureFileStorage $files) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -37,7 +41,7 @@ class AdController extends Controller
         $validated['is_active'] = $request->has('is_active');
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('ads', 'public');
+            $validated['image'] = $this->files->store($request->file('image'), self::IMAGE_DIRECTORY);
         }
 
         Ad::create($validated);
@@ -63,10 +67,7 @@ class AdController extends Controller
         $validated['is_active'] = $request->has('is_active');
 
         if ($request->hasFile('image')) {
-            if ($ad->image) {
-                Storage::disk('public')->delete($ad->image);
-            }
-            $validated['image'] = $request->file('image')->store('ads', 'public');
+            $validated['image'] = $this->files->replace($request->file('image'), $ad->image, self::IMAGE_DIRECTORY);
         }
 
         $ad->update($validated);
@@ -79,9 +80,7 @@ class AdController extends Controller
      */
     public function destroy(Ad $ad)
     {
-        if ($ad->image) {
-            Storage::disk('public')->delete($ad->image);
-        }
+        $this->files->delete($ad->image, self::IMAGE_DIRECTORY);
 
         $ad->delete();
 

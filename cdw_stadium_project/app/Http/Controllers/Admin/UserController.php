@@ -5,11 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
+use App\Services\SecureFileStorage;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+    private const AVATAR_DIRECTORY = 'avatars';
+
+    public function __construct(private readonly SecureFileStorage $files) {}
+
     // R - Danh sách
     public function index()
     {
@@ -31,8 +35,7 @@ class UserController extends Controller
         $validated['password'] = Hash::make($validated['password']);
 
         if ($request->hasFile('avatar')) {
-            $path = $request->file('avatar')->store('avatars', 'public');
-            $validated['avatar'] = $path;
+            $validated['avatar'] = $this->files->store($request->file('avatar'), self::AVATAR_DIRECTORY);
         }
 
         User::create($validated);
@@ -66,12 +69,7 @@ class UserController extends Controller
         }
 
         if ($request->hasFile('avatar')) {
-            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-                Storage::disk('public')->delete($user->avatar);
-            }
-
-            $path = $request->file('avatar')->store('avatars', 'public');
-            $validated['avatar'] = $path;
+            $validated['avatar'] = $this->files->replace($request->file('avatar'), $user->avatar, self::AVATAR_DIRECTORY);
         }
 
         $user->update($validated);
@@ -82,9 +80,7 @@ class UserController extends Controller
     // D - Xóa
     public function destroy(User $user)
     {
-        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-            Storage::disk('public')->delete($user->avatar);
-        }
+        $this->files->delete($user->avatar, self::AVATAR_DIRECTORY);
 
         $user->delete();
 

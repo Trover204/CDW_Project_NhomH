@@ -48,7 +48,7 @@
                 <td style="text-align: right; white-space: nowrap;">
                     <a href="{{ route('admin.news.edit', $item) }}" class="action-link">Sửa</a>
                     <form action="{{ route('admin.news.destroy', $item) }}" method="POST" style="display:inline;"
-                          onsubmit="return confirm('Bạn có chắc muốn xóa tin tức này?')">
+                          data-confirm="Bạn có chắc muốn xóa tin tức này?">
                         @csrf @method('DELETE')
                         <button type="submit" class="action-btn-danger">Xóa</button>
                     </form>

@@ -54,7 +54,7 @@
                 <td style="text-align: right; white-space: nowrap;">
                     <a href="{{ route('admin.subscriptions.edit', $s) }}" class="action-link">Sửa</a>
                     <form method="POST" action="{{ route('admin.subscriptions.destroy', $s) }}"
-                          style="display:inline" onsubmit="return confirm('Xóa subscription này?')">
+                          style="display:inline" data-confirm="Xóa subscription này?">
                         @csrf @method('DELETE')
                         <button type="submit" class="action-btn-danger">Xóa</button>
                     </form>

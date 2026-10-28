@@ -28,7 +28,7 @@
                         <i class="ti ti-user-circle" style="font-size: 19px;"></i>
                         <span>{{ Auth::user()->name }}</span>
                     </a>
-                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="btn btn-ghost">Đăng xuất</a>
+                    <a href="#" data-submit-form="logout-form" class="btn btn-ghost">Đăng xuất</a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>

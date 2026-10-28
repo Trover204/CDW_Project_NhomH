@@ -52,7 +52,7 @@
                 <td style="text-align: right; white-space: nowrap;">
                     <a href="{{ route('admin.ads.edit', $item) }}" class="action-link">Sửa</a>
                     <form action="{{ route('admin.ads.destroy', $item) }}" method="POST" style="display:inline;"
-                          onsubmit="return confirm('Bạn có chắc muốn xóa quảng cáo này?')">
+                          data-confirm="Bạn có chắc muốn xóa quảng cáo này?">
                         @csrf @method('DELETE')
                         <button type="submit" class="action-btn-danger">Xóa</button>
                     </form>

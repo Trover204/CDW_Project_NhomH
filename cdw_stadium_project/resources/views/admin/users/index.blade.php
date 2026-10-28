@@ -44,7 +44,7 @@
                 <td style="text-align: right; white-space: nowrap;">
                     <a href="{{ route('admin.users.edit', $user) }}" class="action-link">Sửa</a>
                     <form method="POST" action="{{ route('admin.users.destroy', $user) }}"
-                          style="display:inline" onsubmit="return confirm('Bạn có chắc muốn xóa người dùng này?')">
+                          style="display:inline" data-confirm="Bạn có chắc muốn xóa người dùng này?">
                         @csrf @method('DELETE')
                         <button type="submit" class="action-btn-danger">Xóa</button>
                     </form>
