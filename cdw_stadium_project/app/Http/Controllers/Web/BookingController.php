@@ -26,7 +26,7 @@ class BookingController extends Controller
 
         $startTime = Carbon::parse($validated['start_time']);
         $endTime = Carbon::parse($validated['end_time']);
-        $hours = $endTime->diffInMinutes($startTime) / 60;
+        $hours =  $startTime->diffInMinutes($endTime) / 60;
 
         $subtotal = 120000 * $hours;
         $discountAmount = 0;
