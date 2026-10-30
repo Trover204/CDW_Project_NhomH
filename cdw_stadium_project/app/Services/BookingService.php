@@ -29,15 +29,21 @@ class BookingService
             ->orderByRaw('court_id IS NULL')
             ->get();
 
+        $rulesArray = $rules->all();
+
         for ($t = Carbon::createFromFormat('H:i', $start);
             $t->lt(Carbon::createFromFormat('H:i', $end));
             $t->addHour()) {
 
             $hour = $t->format('H:i:s');
 
-            $rule = $rules->first(function ($r) use ($hour) {
-                return $r->start_time <= $hour && $r->end_time > $hour;
-            });
+            $rule = null;
+            foreach ($rulesArray as $r) {
+                if ($r->start_time <= $hour && $r->end_time > $hour) {
+                    $rule = $r;
+                    break;
+                }
+            }
 
             if (! $rule) {
                 throw ValidationException::withMessages(['start_time' => "Chưa có bảng giá cho khung giờ {$t->format('H:i')}."]);
