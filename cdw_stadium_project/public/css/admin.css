@@ -425,6 +425,11 @@ body {
     color: var(--danger);
 }
 
+.badge.info {
+    background: #E0F2FE;
+    color: #0369A1;
+}
+
 /* ==========================================================================
    Buttons
    ========================================================================== */
@@ -526,6 +531,26 @@ body {
 
 .form-group {
     margin-bottom: 16px;
+}
+
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.form-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+@media (max-width: 640px) {
+    .form-grid-2,
+    .form-grid-3 {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
 }
 
 .form-label {

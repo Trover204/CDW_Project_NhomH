@@ -9,26 +9,28 @@
     </div>
 @endif
 
-<div class="form-group">
-    <label class="form-label">Người dùng *</label>
-    <select name="user_id" class="form-control">
-        <option value="">-- Chọn người dùng --</option>
-        @foreach ($users as $u)
-            <option value="{{ $u->id }}" @selected(old('user_id', $booking->user_id ?? '') == $u->id)>{{ $u->name }} ({{ $u->email }})</option>
-        @endforeach
-    </select>
-    @error('user_id') <div class="form-error">{{ $message }}</div> @enderror
-</div>
+<div class="form-grid-2">
+    <div class="form-group">
+        <label class="form-label">Người dùng <span style="color: var(--danger);">*</span></label>
+        <select name="user_id" class="form-control">
+            <option value="">-- Chọn người dùng --</option>
+            @foreach ($users as $u)
+                <option value="{{ $u->id }}" @selected(old('user_id', $booking->user_id ?? '') == $u->id)>{{ $u->name }} ({{ $u->email }})</option>
+            @endforeach
+        </select>
+        @error('user_id') <div class="form-error">{{ $message }}</div> @enderror
+    </div>
 
-<div class="form-group">
-    <label class="form-label">Sân *</label>
-    <select name="court_id" class="form-control">
-        <option value="">-- Chọn sân --</option>
-        @foreach ($courts as $c)
-            <option value="{{ $c->id }}" @selected(old('court_id', $booking->court_id ?? '') == $c->id)>{{ $c->name }}</option>
-        @endforeach
-    </select>
-    @error('court_id') <div class="form-error">{{ $message }}</div> @enderror
+    <div class="form-group">
+        <label class="form-label">Sân <span style="color: var(--danger);">*</span></label>
+        <select name="court_id" class="form-control">
+            <option value="">-- Chọn sân --</option>
+            @foreach ($courts as $c)
+                <option value="{{ $c->id }}" @selected(old('court_id', $booking->court_id ?? '') == $c->id)>{{ $c->name }}</option>
+            @endforeach
+        </select>
+        @error('court_id') <div class="form-error">{{ $message }}</div> @enderror
+    </div>
 </div>
 
 <div class="form-group">
@@ -42,58 +44,64 @@
     @error('subscription_id') <div class="form-error">{{ $message }}</div> @enderror
 </div>
 
-<div class="form-group">
-    <label class="form-label">Tên khách hàng *</label>
-    <input type="text" name="customer_name" class="form-control" value="{{ old('customer_name', $booking->customer_name ?? '') }}">
-    @error('customer_name') <div class="form-error">{{ $message }}</div> @enderror
+<div class="form-grid-3">
+    <div class="form-group">
+        <label class="form-label">Tên khách hàng <span style="color: var(--danger);">*</span></label>
+        <input type="text" name="customer_name" class="form-control" value="{{ old('customer_name', $booking->customer_name ?? '') }}">
+        @error('customer_name') <div class="form-error">{{ $message }}</div> @enderror
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Số điện thoại <span style="color: var(--danger);">*</span></label>
+        <input type="text" name="customer_phone" class="form-control" value="{{ old('customer_phone', $booking->customer_phone ?? '') }}">
+        @error('customer_phone') <div class="form-error">{{ $message }}</div> @enderror
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Email <span style="color: var(--danger);">*</span></label>
+        <input type="email" name="customer_email" class="form-control" value="{{ old('customer_email', $booking->customer_email ?? '') }}">
+        @error('customer_email') <div class="form-error">{{ $message }}</div> @enderror
+    </div>
 </div>
 
-<div class="form-group">
-    <label class="form-label">Số điện thoại *</label>
-    <input type="text" name="customer_phone" class="form-control" value="{{ old('customer_phone', $booking->customer_phone ?? '') }}">
-    @error('customer_phone') <div class="form-error">{{ $message }}</div> @enderror
+<div class="form-grid-3">
+    <div class="form-group">
+        <label class="form-label">Ngày đặt <span style="color: var(--danger);">*</span></label>
+        <input type="date" name="booking_date" class="form-control" value="{{ old('booking_date', $booking->booking_date ?? '') }}">
+        @error('booking_date') <div class="form-error">{{ $message }}</div> @enderror
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Giờ bắt đầu <span style="color: var(--danger);">*</span></label>
+        <input type="time" name="start_time" class="form-control" value="{{ old('start_time', isset($booking->start_time) ? substr($booking->start_time, 0, 5) : '') }}">
+        @error('start_time') <div class="form-error">{{ $message }}</div> @enderror
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Giờ kết thúc <span style="color: var(--danger);">*</span></label>
+        <input type="time" name="end_time" class="form-control" value="{{ old('end_time', isset($booking->end_time) ? substr($booking->end_time, 0, 5) : '') }}">
+        @error('end_time') <div class="form-error">{{ $message }}</div> @enderror
+    </div>
 </div>
 
-<div class="form-group">
-    <label class="form-label">Email *</label>
-    <input type="email" name="customer_email" class="form-control" value="{{ old('customer_email', $booking->customer_email ?? '') }}">
-    @error('customer_email') <div class="form-error">{{ $message }}</div> @enderror
-</div>
+<div class="form-grid-3">
+    <div class="form-group">
+        <label class="form-label">Tạm tính <span style="color: var(--danger);">*</span></label>
+        <input type="number" name="subtotal" class="form-control" value="{{ old('subtotal', $booking->subtotal ?? 0) }}">
+        @error('subtotal') <div class="form-error">{{ $message }}</div> @enderror
+    </div>
 
-<div class="form-group">
-    <label class="form-label">Ngày đặt *</label>
-    <input type="date" name="booking_date" class="form-control" value="{{ old('booking_date', $booking->booking_date ?? '') }}">
-    @error('booking_date') <div class="form-error">{{ $message }}</div> @enderror
-</div>
+    <div class="form-group">
+        <label class="form-label">Giảm giá <span style="color: var(--danger);">*</span></label>
+        <input type="number" name="discount_amount" class="form-control" value="{{ old('discount_amount', $booking->discount_amount ?? 0) }}">
+        @error('discount_amount') <div class="form-error">{{ $message }}</div> @enderror
+    </div>
 
-<div class="form-group">
-    <label class="form-label">Giờ bắt đầu *</label>
-    <input type="time" name="start_time" class="form-control" value="{{ old('start_time', isset($booking->start_time) ? substr($booking->start_time, 0, 5) : '') }}">
-    @error('start_time') <div class="form-error">{{ $message }}</div> @enderror
-</div>
-
-<div class="form-group">
-    <label class="form-label">Giờ kết thúc *</label>
-    <input type="time" name="end_time" class="form-control" value="{{ old('end_time', isset($booking->end_time) ? substr($booking->end_time, 0, 5) : '') }}">
-    @error('end_time') <div class="form-error">{{ $message }}</div> @enderror
-</div>
-
-<div class="form-group">
-    <label class="form-label">Tạm tính *</label>
-    <input type="number" name="subtotal" class="form-control" value="{{ old('subtotal', $booking->subtotal ?? 0) }}">
-    @error('subtotal') <div class="form-error">{{ $message }}</div> @enderror
-</div>
-
-<div class="form-group">
-    <label class="form-label">Giảm giá *</label>
-    <input type="number" name="discount_amount" class="form-control" value="{{ old('discount_amount', $booking->discount_amount ?? 0) }}">
-    @error('discount_amount') <div class="form-error">{{ $message }}</div> @enderror
-</div>
-
-<div class="form-group">
-    <label class="form-label">Tổng tiền *</label>
-    <input type="number" name="total_price" class="form-control" value="{{ old('total_price', $booking->total_price ?? 0) }}">
-    @error('total_price') <div class="form-error">{{ $message }}</div> @enderror
+    <div class="form-group">
+        <label class="form-label">Tổng tiền <span style="color: var(--danger);">*</span></label>
+        <input type="number" name="total_price" class="form-control" value="{{ old('total_price', $booking->total_price ?? 0) }}">
+        @error('total_price') <div class="form-error">{{ $message }}</div> @enderror
+    </div>
 </div>
 
 <div class="form-group">
@@ -103,7 +111,7 @@
 </div>
 
 <div class="form-group">
-    <label class="form-label">Trạng thái *</label>
+    <label class="form-label">Trạng thái <span style="color: var(--danger);">*</span></label>
     <select name="status" class="form-control">
         @foreach (['pending'=>'Chờ xử lý', 'confirmed'=>'Đã xác nhận', 'checked_in'=>'Đã check-in', 'completed'=>'Hoàn thành', 'cancelled'=>'Đã hủy', 'rejected'=>'Bị từ chối'] as $val => $text)
             <option value="{{ $val }}" @selected(old('status', $booking->status ?? 'pending') === $val)>{{ $text }}</option>

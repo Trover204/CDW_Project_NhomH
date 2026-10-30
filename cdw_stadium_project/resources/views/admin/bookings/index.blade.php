@@ -57,7 +57,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="6" style="padding: 24px; text-align: center; color: var(--muted);">Chưa có đặt sân nào.</td>
+                <td colspan="7" style="padding: 24px; text-align: center; color: var(--muted);">Chưa có đặt sân nào.</td>
             </tr>
         @endforelse
         </tbody>
