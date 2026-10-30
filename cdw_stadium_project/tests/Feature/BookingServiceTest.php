@@ -9,6 +9,10 @@ use App\Services\BookingService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
+use App\Models\Booking;
+use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Validation\ValidationException;
 
 class BookingServiceTest extends TestCase
 {
@@ -59,5 +63,50 @@ class BookingServiceTest extends TestCase
 
         $time = ($end - $start) * 1000;
         echo "\nTime for 100 calculations (16 hours each): {$time} ms\n";
+    }
+
+    public function test_cancel_booking_success()
+    {
+        $user = User::factory()->create();
+
+        $this->travelTo(Carbon::parse('2026-09-01 08:00:00'));
+
+        $booking = Booking::factory()->create([
+            'booking_date' => '2026-09-01',
+            'start_time' => '12:00:00', // 4 hours in the future
+            'status' => 'pending',
+            'user_id' => $user->id,
+        ]);
+
+        $service = new BookingService();
+        $service->cancel($booking, $user->id);
+
+        $this->assertEquals('cancelled', $booking->fresh()->status);
+        $this->assertDatabaseHas('booking_logs', [
+            'booking_id' => $booking->id,
+            'user_id' => $user->id,
+            'action' => 'cancelled',
+        ]);
+    }
+
+    public function test_cancel_booking_throws_exception_if_past_time_limit()
+    {
+        $user = User::factory()->create();
+
+        $this->travelTo(Carbon::parse('2026-09-01 11:00:00'));
+
+        $booking = Booking::factory()->create([
+            'booking_date' => '2026-09-01',
+            'start_time' => '12:00:00', // 1 hour in the future, past the 2 hours free cancel limit
+            'status' => 'pending',
+            'user_id' => $user->id,
+        ]);
+
+        $service = new BookingService();
+
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage('Không thể hủy vì đã quá thời gian quy định.');
+
+        $service->cancel($booking, $user->id);
     }
 }
