@@ -46,6 +46,43 @@ document.addEventListener('DOMContentLoaded', () => {
                     icon.classList.add('ti-moon');
                 }
             }
+
+            const badge = btn.querySelector('.theme-status-badge');
+            if (badge) {
+                const lightText = badge.dataset.lightText || 'Sáng';
+                const darkText = badge.dataset.darkText || 'Tối';
+                badge.textContent = theme === 'dark' ? darkText : lightText;
+            }
+        });
+    }
+
+    // Settings Gear Dropdown toggle
+    const settingsDropdown = document.querySelector('.settings-dropdown');
+    const settingsToggleBtn = document.getElementById('settingsDropdownBtn');
+    const settingsDropdownMenu = document.getElementById('settingsDropdownMenu');
+
+    if (settingsToggleBtn && settingsDropdown && settingsDropdownMenu) {
+        settingsToggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = settingsDropdown.classList.toggle('open');
+            settingsDropdownMenu.classList.toggle('show', isOpen);
+            settingsToggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!settingsDropdown.contains(e.target)) {
+                settingsDropdown.classList.remove('open');
+                settingsDropdownMenu.classList.remove('show');
+                settingsToggleBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                settingsDropdown.classList.remove('open');
+                settingsDropdownMenu.classList.remove('show');
+                settingsToggleBtn.setAttribute('aria-expanded', 'false');
+            }
         });
     }
 });

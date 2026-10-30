@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Web\BookingController;
 use App\Http\Controllers\Web\CourtController;
+use App\Http\Controllers\Web\LanguageController;
 use App\Http\Controllers\Web\NewsController;
 use App\Http\Controllers\Web\PageController;
 use App\Http\Controllers\Web\PartnershipController;
@@ -14,6 +15,9 @@ use App\Http\Controllers\Web\ProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/lang/{locale}', [LanguageController::class, 'switch'])
+    ->whereIn('locale', ['vi', 'en'])
+    ->name('lang.switch');
 
 Route::get('/courts', [CourtController::class, 'index'])->name('courts.index');
 Route::get('/courts/search', [CourtController::class, 'search'])->name('courts.search');
