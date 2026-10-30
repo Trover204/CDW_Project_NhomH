@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\LogsActivity;
+use App\Traits\OptimisticLocking;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -10,7 +11,7 @@ use Laravel\Scout\Searchable;
 
 class Facility extends Model
 {
-    use HasFactory, LogsActivity, Searchable;
+    use HasFactory, LogsActivity, Searchable, OptimisticLocking;
 
     protected $fillable = [
         'name',
