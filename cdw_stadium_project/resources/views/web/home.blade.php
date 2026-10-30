@@ -20,20 +20,17 @@
                     </div>
 
                     <h1>
-                        Ra sân trong 30 giây,
-                        không cần gọi điện hỏi lịch
+                        {{ __('Ra sân trong 30 giây, không cần gọi điện hỏi lịch') }}
                     </h1>
 
                     <p>
-                        Bóng đá, cầu lông, pickleball, bóng chuyền —
-                        hàng trăm sân quanh TP.HCM, giữ chỗ và thanh toán
-                        ngay trên điện thoại.
+                        {{ __('Bóng đá, cầu lông, pickleball, bóng chuyền — hàng trăm sân quanh TP.HCM, giữ chỗ và thanh toán ngay trên điện thoại.') }}
                     </p>
 
                     {{-- CALL TO ACTION (LIME BUTTON) --}}
                     <div>
                         <a href="{{ route('courts.index') }}" class="btn-hero">
-                            Đặt sân ngay
+                            {{ __('Đặt sân ngay') }}
                         </a>
                     </div>
 
@@ -46,12 +43,12 @@
                                 <circle cx="11" cy="11" r="8"/>
                                 <path d="m21 21-4.3-4.3"/>
                             </svg>
-                            <input type="text" name="q" value="{{ request('q') }}" placeholder="Tìm kiếm sân thể thao hoặc tin tức...">
+                            <input type="text" name="q" value="{{ request('q') }}" placeholder="{{ __('Tìm kiếm sân thể thao hoặc tin tức...') }}">
                         </div>
 
                         {{-- BUTTON --}}
                         <button type="submit" class="search-btn">
-                            Tìm kiếm
+                            {{ __('Tìm kiếm') }}
                         </button>
                     </form>
 
@@ -59,17 +56,17 @@
                     <div class="scoreboard">
                         <div class="stat">
                             <div class="stat-num">320+</div>
-                            <div class="stat-label">sân đối tác</div>
+                            <div class="stat-label">{{ __('sân đối tác') }}</div>
                         </div>
 
                         <div class="stat">
                             <div class="stat-num">4.8/5</div>
-                            <div class="stat-label">đánh giá trung bình</div>
+                            <div class="stat-label">{{ __('đánh giá trung bình') }}</div>
                         </div>
 
                         <div class="stat">
                             <div class="stat-num">12k</div>
-                            <div class="stat-label">lượt đặt / tháng</div>
+                            <div class="stat-label">{{ __('lượt đặt / tháng') }}</div>
                         </div>
                     </div>
 
@@ -88,9 +85,9 @@
                 {{-- TITLE --}}
                 <div class="section-head">
                     <div>
-                        <h2>Sân nổi bật gần bạn</h2>
+                        <h2>{{ __('Sân nổi bật gần bạn') }}</h2>
                     </div>
-                    <a href="#">Xem tất cả &rarr;</a>
+                    <a href="{{ route('courts.index') }}">{{ __('Xem tất cả') }} &rarr;</a>
                 </div>
 
                 {{-- COURT GRID --}}
@@ -100,7 +97,7 @@
 
                             {{-- TAG --}}
                             <span class="court-tag" style="display:flex; justify-content:space-between; width: calc(100% - 40px);">
-                                <span>{{ $court->sportType->name ?? 'Thể thao' }}</span>
+                                <span>{{ $court->sportType->name ?? __('Thể thao') }}</span>
                                 @auth
                                     @php
                                         $isFavorited = auth()->user()->favoriteCourts->contains($court->id);
@@ -141,7 +138,7 @@
                                         <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/>
                                         <circle cx="12" cy="10" r="2.5"/>
                                     </svg>
-                                    <span>{{ $court->facility->address ?? 'Không rõ địa chỉ' }}</span>
+                                    <span>{{ $court->facility->address ?? __('Không rõ địa chỉ') }}</span>
                                 </div>
 
                                 <div class="court-foot">
@@ -150,19 +147,19 @@
                                             {{ number_format($court->price ?? 150000, 0, ',', '.') }}đ/h
                                         </div>
                                         <span class="court-slots">
-                                            {{ $court->capacity ?? 0 }} khung trống
+                                            {{ $court->capacity ?? 0 }} {{ __('khung trống') }}
                                         </span>
                                     </div>
 
                                     <a href="#" class="btn-book">
-                                        Đặt ngay
+                                        {{ __('Đặt ngay') }}
                                     </a>
                                 </div>
                             </div>
 
                         </div>
                     @empty
-                        <p>Hiện chưa có sân nào.</p>
+                        <p>{{ __('Hiện chưa có sân nào.') }}</p>
                     @endforelse
                 </div>
 
@@ -178,16 +175,14 @@
                 ================================================== --}}
                 <div class="cta">
                     <div>
-                        <h2>Là chủ sân? Đưa sân của bạn lên Sân Nhóm H</h2>
+                        <h2>{{ __('Là chủ sân? Đưa sân của bạn lên Sân Nhóm H') }}</h2>
                         <p>
-                            Quản lý lịch đặt, thanh toán và khách hàng
-                            ở một nơi duy nhất — miễn phí đăng ký
-                            trong tháng đầu.
+                            {{ __('Quản lý lịch đặt, thanh toán và khách hàng ở một nơi duy nhất — miễn phí đăng ký trong tháng đầu.') }}
                         </p>
                     </div>
 
                     <a href="{{ route('partnership.index') }}" class="btn btn-solid" style="padding:12px 28px;">
-                        Đăng ký làm đối tác
+                        {{ __('Đăng ký làm đối tác') }}
                     </a>
                 </div>
 

@@ -11,10 +11,10 @@
             </div>
         </div>
 
-                    <div class="foot-links">
-            <a href="{{ route('pages.about') }}">Về chúng tôi</a>
-            <a href="{{ route('pages.contact') }}">Liên hệ</a>
-            <a href="{{ route('pages.privacy') }}">Điều khoản</a>
+        <div class="foot-links">
+            <a href="{{ route('pages.about') }}">{{ __('Về chúng tôi') }}</a>
+            <a href="{{ route('pages.contact') }}">{{ __('Liên hệ') }}</a>
+            <a href="{{ route('pages.privacy') }}">{{ __('Điều khoản') }}</a>
         </div>
     </div>
 </footer>
