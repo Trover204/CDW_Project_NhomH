@@ -34,15 +34,11 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request)
     {
-        if (Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
-            $request->session()->regenerate();
+        $request->authenticate();
 
-            return redirect()->intended(route('home'));
-        }
+        $request->session()->regenerate();
 
-        throw ValidationException::withMessages([
-            'email' => __('auth.failed'),
-        ]);
+        return redirect()->intended(route('home'));
     }
 
     /**

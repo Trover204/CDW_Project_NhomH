@@ -38,4 +38,51 @@ class AuthControllerTest extends TestCase
             'email' => 'test@thisdomaindoesnotexist.invalid',
         ]);
     }
+
+    public function test_users_can_not_authenticate_with_invalid_password()
+    {
+        $user = \App\Models\User::factory()->create();
+
+        $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'wrong-password',
+        ]);
+
+        $this->assertGuest();
+    }
+
+    public function test_users_can_authenticate_using_the_login_screen()
+    {
+        $user = \App\Models\User::factory()->create();
+
+        $response = $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+
+        $this->assertAuthenticated();
+        $response->assertRedirect(route('home'));
+    }
+
+    public function test_login_rate_limiting()
+    {
+        $user = \App\Models\User::factory()->create();
+
+        // 5 failed attempts
+        for ($i = 0; $i < 5; $i++) {
+            $response = $this->post('/login', [
+                'email' => $user->email,
+                'password' => 'wrong-password',
+            ]);
+            $this->assertGuest();
+        }
+
+        // 6th attempt should hit rate limit
+        $response = $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'wrong-password',
+        ]);
+
+        $response->assertSessionHasErrors(['email']);
+    }
 }
