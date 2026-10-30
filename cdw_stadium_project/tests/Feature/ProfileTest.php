@@ -160,4 +160,27 @@ class ProfileTest extends TestCase
         $response->assertSee('120.000đ');
         $response->assertSee('Đã hoàn thành');
     }
+
+    public function test_user_can_view_purchase_history_in_profile(): void
+    {
+        $user = User::factory()->create();
+
+        $product = \App\Models\Product::factory()->create([
+            'name' => 'Áo Cầu Lông Cao Cấp',
+        ]);
+
+        $sale = \App\Models\Sale::factory()->create([
+            'user_id' => $user->id,
+            'product_id' => $product->id,
+            'total_price' => 250000,
+            'status' => 'completed',
+        ]);
+
+        $response = $this->actingAs($user)->get(route('profile.edit'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Lịch sử mua hàng');
+        $response->assertSee('Áo Cầu Lông Cao Cấp');
+        $response->assertSee('250.000đ');
+    }
 }
