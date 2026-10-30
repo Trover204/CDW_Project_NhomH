@@ -59,7 +59,21 @@ services:
       - db
     networks:
       - laravel
-
+  zap:
+    image: ghcr.io/zaproxy/zaproxy:stable
+    container_name: laravel_zap
+    restart: unless-stopped
+    user: zap
+    ports:
+      - "8082:8080" # Cổng truy cập giao diện Web UI (WebSwing)
+      - "8090:8090" # Cổng ZAP Proxy / API
+    volumes:
+      - ./zap_reports:/zap/wrk:rw # Lưu trữ báo cáo hoặc cấu hình quét ra máy host
+    command: zap-webswing.sh
+    depends_on:
+      - app
+    networks:
+      - laravel
 volumes:
   mysql_data:
   meilisearch_data:
