@@ -32,9 +32,12 @@ class ProfileController extends Controller
         $bookingsCount = $user->bookings()->count();
 
         // Lấy lịch sử đặt sân
-        $bookingHistory = $user->bookings()->with('court')->latest()->paginate(10);
+        $bookingHistory = $user->bookings()->with('court')->latest()->paginate(10, ['*'], 'booking_page')->appends(request()->except('booking_page'));
 
-        return view('web.profile', compact('user', 'activeSubscription', 'favoritesCount', 'bookingsCount', 'bookingHistory'));
+        // Lấy lịch sử mua hàng
+        $purchaseHistory = $user->sales()->with('product')->latest()->paginate(10, ['*'], 'purchase_page')->appends(request()->except('purchase_page'));
+
+        return view('web.profile', compact('user', 'activeSubscription', 'favoritesCount', 'bookingsCount', 'bookingHistory', 'purchaseHistory'));
     }
 
     /**

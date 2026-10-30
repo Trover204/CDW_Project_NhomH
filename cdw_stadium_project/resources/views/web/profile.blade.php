@@ -593,6 +593,11 @@
                         <span>Lịch sử đặt sân</span>
                     </button>
 
+                    <button type="button" class="menu-item {{ session('active_tab') == 'purchase_history' ? 'active' : '' }}" data-profile-tab="purchase_history">
+                        <i class="ti ti-shopping-cart"></i>
+                        <span>Lịch sử mua hàng</span>
+                    </button>
+
                     <a href="{{ route('plans.index') }}" class="menu-item">
                         <i class="ti ti-award"></i>
                         <span>Gói hội viên</span>
@@ -920,6 +925,50 @@
 
                         <div style="margin-top: 24px;">
                             {{ $bookingHistory->links() }}
+                        </div>
+                    @endif
+                </div>
+
+                {{-- TAB 5: LỊCH SỬ MUA HÀNG --}}
+                <div id="tab-purchase_history" class="tab-pane {{ session('active_tab') == 'purchase_history' ? '' : 'style-none' }}" style="{{ session('active_tab') == 'purchase_history' ? '' : 'display:none;' }}">
+                    <div class="section-header">
+                        <h2 class="section-title">Lịch sử mua hàng</h2>
+                        <p class="section-desc">Danh sách các sản phẩm bạn đã mua và trạng thái tương ứng.</p>
+                    </div>
+
+                    @if(isset($purchaseHistory) && $purchaseHistory->isEmpty())
+                        <div style="text-align: center; padding: 40px; color: #5E726A;">
+                            <i class="ti ti-shopping-cart-x" style="font-size: 48px; color: #E1E8E3; margin-bottom: 16px;"></i>
+                            <p>Bạn chưa có lịch sử mua hàng nào.</p>
+                        </div>
+                    @elseif(isset($purchaseHistory))
+                        <div class="table-responsive" style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+                                <thead>
+                                    <tr style="border-bottom: 1px solid #E1E8E3;">
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #178A4C;">Mã ĐH</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #178A4C;">Sản phẩm</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #178A4C;">Ngày mua</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #178A4C;">Số lượng</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #178A4C;">Tổng tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($purchaseHistory as $purchase)
+                                        <tr style="border-bottom: 1px solid #F1F4F2;">
+                                            <td style="padding: 12px 8px; font-weight: 600;">#{{ $purchase->id }}</td>
+                                            <td style="padding: 12px 8px;">{{ $purchase->product->name ?? 'N/A' }}</td>
+                                            <td style="padding: 12px 8px;">{{ \Carbon\Carbon::parse($purchase->sale_date)->format('d/m/Y') }}</td>
+                                            <td style="padding: 12px 8px;">{{ $purchase->quantity }}</td>
+                                            <td style="padding: 12px 8px; font-weight: 600;">{{ number_format($purchase->total_price, 0, ',', '.') }}đ</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div style="margin-top: 24px;">
+                            {{ $purchaseHistory->links() }}
                         </div>
                     @endif
                 </div>
