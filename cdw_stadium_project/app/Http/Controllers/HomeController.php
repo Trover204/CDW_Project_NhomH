@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Court;
 use App\Models\Facility;
+use App\Models\Review;
 use App\Models\SportType;
 
 class HomeController extends Controller
@@ -20,7 +21,13 @@ class HomeController extends Controller
             ->whereNotNull('district')
             ->distinct()
             ->get();
+        $reviews = Review::with(['user', 'court'])
+            ->where('status', 1)
+            ->whereNotNull('content')
+            ->inRandomOrder()
+            ->take(6)
+            ->get();
 
-        return view('web.home', compact('courts', 'sportTypes', 'locations'));
+        return view('web.home', compact('courts', 'sportTypes', 'locations', 'reviews'));
     }
 }

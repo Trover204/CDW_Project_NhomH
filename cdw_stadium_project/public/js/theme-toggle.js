@@ -85,6 +85,165 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Testimonial Carousel
+    const testimonialTrack = document.getElementById('testimonialTrack');
+    const testimonialViewport = document.getElementById('testimonialViewport');
+    const testimonialSlides = testimonialTrack
+        ? Array.from(testimonialTrack.querySelectorAll('.testimonial-slide'))
+        : [];
+    const testimonialDots = Array.from(document.querySelectorAll('[data-testimonial-dot]'));
+    const prevBtn = document.querySelector('[data-testimonial-prev]');
+    const nextBtn = document.querySelector('[data-testimonial-next]');
+
+    if (testimonialTrack && testimonialSlides.length > 0) {
+        let currentSlide = 0;
+        let autoPlayTimer = null;
+
+        function getSlidesPerView() {
+            if (window.innerWidth <= 640) {
+                return 1;
+            }
+            if (window.innerWidth <= 960) {
+                return Math.min(2, testimonialSlides.length);
+            }
+            return Math.min(3, testimonialSlides.length);
+        }
+
+        function getMaxIndex() {
+            return Math.max(0, testimonialSlides.length - getSlidesPerView());
+        }
+
+        function updateCarousel(index) {
+            const maxIdx = getMaxIndex();
+            if (index > maxIdx) {
+                currentSlide = 0;
+            } else if (index < 0) {
+                currentSlide = maxIdx;
+            } else {
+                currentSlide = index;
+            }
+
+            const stepPercent = 100 / getSlidesPerView();
+            testimonialTrack.style.transform = `translateX(-${currentSlide * stepPercent}%)`;
+
+            testimonialDots.forEach((dot, idx) => {
+                dot.classList.toggle('active', idx === currentSlide);
+            });
+        }
+
+        function startAutoPlay() {
+            stopAutoPlay();
+            if (testimonialSlides.length > 1) {
+                autoPlayTimer = window.setInterval(() => {
+                    updateCarousel(currentSlide + 1);
+                }, 4500);
+            }
+        }
+
+        function stopAutoPlay() {
+            if (autoPlayTimer) {
+                window.clearInterval(autoPlayTimer);
+                autoPlayTimer = null;
+            }
+        }
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                updateCarousel(currentSlide - 1);
+                startAutoPlay();
+            });
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                updateCarousel(currentSlide + 1);
+                startAutoPlay();
+            });
+        }
+
+        testimonialDots.forEach((dot) => {
+            dot.addEventListener('click', () => {
+                const targetIdx = parseInt(dot.dataset.testimonialDot || '0', 10);
+                updateCarousel(targetIdx);
+                startAutoPlay();
+            });
+        });
+
+        if (testimonialViewport) {
+            testimonialViewport.addEventListener('mouseenter', stopAutoPlay);
+            testimonialViewport.addEventListener('mouseleave', startAutoPlay);
+        }
+
+        window.addEventListener('resize', () => {
+            updateCarousel(currentSlide);
+        });
+
+        updateCarousel(0);
+        startAutoPlay();
+    }
+
+    // Pre-footer simulated contact form (validates types only, does not save to DB)
+    const prefooterForm = document.getElementById('prefooterContactForm');
+    const prefooterFeedback = document.getElementById('prefooterFeedback');
+
+    if (prefooterForm && prefooterFeedback) {
+        prefooterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const nameInput = prefooterForm.querySelector('input[name="name"]');
+            const emailInput = prefooterForm.querySelector('input[name="email"]');
+            const messageInput = prefooterForm.querySelector('textarea[name="message"]');
+
+            [nameInput, emailInput, messageInput].forEach((el) => {
+                if (el) {
+                    el.classList.remove('is-invalid');
+                }
+            });
+
+            const nameVal = nameInput ? String(nameInput.value).trim() : '';
+            const emailVal = emailInput ? String(emailInput.value).trim() : '';
+            const messageVal = messageInput ? String(messageInput.value).trim() : '';
+
+            const isNameValid =
+                typeof nameVal === 'string' &&
+                nameVal.length >= 2 &&
+                nameVal.length <= 100 &&
+                !/^\d+$/.test(nameVal);
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+            const isEmailValid = typeof emailVal === 'string' && emailRegex.test(emailVal);
+            const isMessageValid =
+                typeof messageVal === 'string' &&
+                messageVal.length >= 5 &&
+                messageVal.length <= 1000;
+
+            if (!isNameValid || !isEmailValid || !isMessageValid) {
+                if (!isNameValid && nameInput) {
+                    nameInput.classList.add('is-invalid');
+                }
+                if (!isEmailValid && emailInput) {
+                    emailInput.classList.add('is-invalid');
+                }
+                if (!isMessageValid && messageInput) {
+                    messageInput.classList.add('is-invalid');
+                }
+
+                prefooterFeedback.hidden = false;
+                prefooterFeedback.className = 'prefooter-feedback is-error';
+                prefooterFeedback.textContent =
+                    prefooterFeedback.dataset.errorMsg ||
+                    'Vui lòng nhập đầy đủ họ tên hợp lệ, đúng định dạng Email và nội dung tối thiểu 5 ký tự.';
+                return;
+            }
+
+            prefooterFeedback.hidden = false;
+            prefooterFeedback.className = 'prefooter-feedback is-success';
+            prefooterFeedback.textContent =
+                prefooterFeedback.dataset.successMsg ||
+                'Cảm ơn bạn! Thông tin liên hệ đã được kiểm tra và gửi thành công.';
+            prefooterForm.reset();
+        });
+    }
 });
 
 // Delegated UI helpers (CSP-compliant replacement for inline event attributes).

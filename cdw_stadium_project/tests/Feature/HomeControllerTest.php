@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Court;
 use App\Models\Facility;
+use App\Models\Review;
 use App\Models\SportType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -81,5 +82,34 @@ class HomeControllerTest extends TestCase
         $this->assertTrue($locationsData->contains('district', 'District C'));
         $this->assertTrue($locationsData->contains('district', 'District D'));
         $this->assertFalse($locationsData->contains('district', 'District E')); // Inactive district should not be present
+    }
+
+    public function test_home_page_displays_testimonial_carousel_and_prefooter(): void
+    {
+        $review = Review::factory()->create([
+            'status' => 1,
+            'rating' => 5,
+            'content' => 'Sân cỏ rất đẹp và thoáng mát!',
+        ]);
+        $inactiveReview = Review::factory()->create([
+            'status' => 0,
+            'content' => 'Đánh giá đã ẩn',
+        ]);
+
+        $response = $this->get(route('home'));
+
+        $response->assertStatus(200);
+        $response->assertViewHas('reviews');
+        $response->assertSee('id="testimonials-section"', false);
+        $response->assertSee('id="testimonialTrack"', false);
+        $response->assertSee($review->content);
+        $response->assertDontSee($inactiveReview->content);
+
+        // Pre-footer assertions
+        $response->assertSee('id="prefooter-section"', false);
+        $response->assertSee('Liên hệ với chúng tôi');
+        $response->assertSee('placeholder="Nguyễn Văn An"', false);
+        $response->assertSee('type="email"', false);
+        $response->assertSee('1900.6868.88');
     }
 }
