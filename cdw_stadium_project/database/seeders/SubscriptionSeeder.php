@@ -3,11 +3,15 @@
 namespace Database\Seeders;
 
 use App\Models\Payment;
+use App\Models\Subscription;
+use Database\Seeders\Concerns\SyncsSearchIndex;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class SubscriptionSeeder extends Seeder
 {
+    use SyncsSearchIndex;
+
     public function run(): void
     {
         $now = now();
@@ -75,5 +79,8 @@ class SubscriptionSeeder extends Seeder
                 ]
             );
         }
+
+        $this->syncSearchIndex(Subscription::class);
+        $this->syncSearchIndex(Payment::class);
     }
 }

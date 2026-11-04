@@ -2,11 +2,15 @@
 
 namespace Database\Seeders;
 
+use App\Models\PriceRule;
+use Database\Seeders\Concerns\SyncsSearchIndex;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class PriceRuleSeeder extends Seeder
 {
+    use SyncsSearchIndex;
+
     public function run(): void
     {
         $now = now();
@@ -115,5 +119,7 @@ class PriceRuleSeeder extends Seeder
         foreach (array_chunk($rulesToInsert, 500) as $chunk) {
             DB::table('price_rules')->insert($chunk);
         }
+
+        $this->syncSearchIndex(PriceRule::class);
     }
 }

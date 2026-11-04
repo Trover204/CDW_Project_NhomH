@@ -408,7 +408,7 @@ class ElasticsearchEngine extends Engine implements UpdatesIndexSettings
     {
         $index = $model->indexableAs();
 
-        $this->client()->post("/{$index}/_delete_by_query?refresh=true", [
+        $this->client()->post("/{$index}/_delete_by_query?refresh=true&ignore_unavailable=true", [
             'query' => [
                 'match_all' => (object) [],
             ],

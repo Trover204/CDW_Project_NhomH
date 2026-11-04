@@ -3,11 +3,14 @@
 namespace Database\Seeders;
 
 use App\Models\Review;
+use Database\Seeders\Concerns\SyncsSearchIndex;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class ReviewSeeder extends Seeder
 {
+    use SyncsSearchIndex;
+
     /**
      * Run the database seeds.
      */
@@ -46,15 +49,19 @@ class ReviewSeeder extends Seeder
             ['rating' => 4, 'content' => 'Bạn bè mình cũng rất thích sân này, thường xuyên cáp kèo đá.'],
         ];
 
-        foreach ($reviews as $review) {
-            Review::create([
-                'user_id' => $users[array_rand($users)],
-                'court_id' => $courts[array_rand($courts)],
-                'booking_id' => null,
-                'rating' => $review['rating'],
-                'content' => $review['content'],
-                'status' => 1,
-            ]);
-        }
+        Review::withoutSyncingToSearch(function () use ($reviews, $users, $courts) {
+            foreach ($reviews as $review) {
+                Review::create([
+                    'user_id' => $users[array_rand($users)],
+                    'court_id' => $courts[array_rand($courts)],
+                    'booking_id' => null,
+                    'rating' => $review['rating'],
+                    'content' => $review['content'],
+                    'status' => 1,
+                ]);
+            }
+        });
+
+        $this->syncSearchIndex(Review::class);
     }
 }

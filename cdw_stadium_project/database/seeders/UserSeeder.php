@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
+use Database\Seeders\Concerns\SyncsSearchIndex;
 use Faker\Factory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -9,6 +11,8 @@ use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
+    use SyncsSearchIndex;
+
     public function run(): void
     {
         $now = now();
@@ -76,5 +80,7 @@ class UserSeeder extends Seeder
                 ]
             );
         }
+
+        $this->syncSearchIndex(User::class);
     }
 }

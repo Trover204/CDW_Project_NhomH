@@ -2,11 +2,15 @@
 
 namespace Database\Seeders;
 
+use App\Models\Facility;
+use Database\Seeders\Concerns\SyncsSearchIndex;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class FacilitySeeder extends Seeder
 {
+    use SyncsSearchIndex;
+
     public function run(): void
     {
         // Ensure districts are seeded
@@ -49,5 +53,7 @@ class FacilitySeeder extends Seeder
                 ]
             );
         }
+
+        $this->syncSearchIndex(Facility::class);
     }
 }

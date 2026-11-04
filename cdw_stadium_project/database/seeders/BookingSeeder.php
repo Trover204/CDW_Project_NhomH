@@ -2,14 +2,19 @@
 
 namespace Database\Seeders;
 
+use App\Models\Booking;
 use App\Models\Payment;
+use App\Models\Review;
 use Carbon\Carbon;
+use Database\Seeders\Concerns\SyncsSearchIndex;
 use Faker\Factory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class BookingSeeder extends Seeder
 {
+    use SyncsSearchIndex;
+
     public function run(): void
     {
         $now = now();
@@ -181,5 +186,9 @@ class BookingSeeder extends Seeder
             ['user_id' => $an->id, 'court_id' => $court1, 'created_at' => $now, 'updated_at' => $now],
             ['user_id' => $an->id, 'court_id' => $court2, 'created_at' => $now, 'updated_at' => $now],
         ]);
+
+        $this->syncSearchIndex(Booking::class);
+        $this->syncSearchIndex(Review::class);
+        $this->syncSearchIndex(Payment::class);
     }
 }

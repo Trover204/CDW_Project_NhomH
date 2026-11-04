@@ -5,14 +5,16 @@ namespace App\Models;
 use App\Contracts\Payable;
 use App\Models\Concerns\HasPayment;
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Scout\Searchable;
 
 class Subscription extends Model implements Payable
 {
-    use HasFactory, HasPayment, LogsActivity;
+    use HasFactory, HasPayment, LogsActivity, Searchable;
 
     protected $fillable = [
         'user_id',
@@ -100,5 +102,31 @@ class Subscription extends Model implements Payable
         }
 
         return $currentStatus ?: 'paid';
+    }
+
+    protected function makeAllSearchableUsing(Builder $query): Builder
+    {
+        return $query->with(['user', 'plan']);
+    }
+
+    public function toSearchableArray(): array
+    {
+        $array = [
+            'id' => (int) $this->id,
+            'user_id' => $this->user_id ? (int) $this->user_id : null,
+            'plan_id' => $this->plan_id ? (int) $this->plan_id : null,
+            'price' => (float) $this->price,
+        ];
+
+        if (config('scout.driver') === 'elasticsearch') {
+            $array['user_name'] = $this->user?->name;
+            $array['plan_name'] = $this->plan?->name;
+            $array['status'] = (bool) $this->status;
+            $array['starts_at'] = $this->starts_at?->toDateTimeString();
+            $array['expires_at'] = $this->expires_at?->toDateTimeString();
+            $array['created_at'] = $this->created_at?->timestamp;
+        }
+
+        return $array;
     }
 }

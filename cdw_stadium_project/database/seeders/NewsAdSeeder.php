@@ -3,11 +3,15 @@
 namespace Database\Seeders;
 
 use App\Models\Ad;
+use App\Models\News;
+use Database\Seeders\Concerns\SyncsSearchIndex;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class NewsAdSeeder extends Seeder
 {
+    use SyncsSearchIndex;
+
     public function run(): void
     {
         $now = now();
@@ -314,6 +318,11 @@ class NewsAdSeeder extends Seeder
         }
 
         // Fake 20 additional ads
-        Ad::factory()->count(20)->create();
+        Ad::withoutSyncingToSearch(function () {
+            Ad::factory()->count(20)->create();
+        });
+
+        $this->syncSearchIndex(News::class);
+        $this->syncSearchIndex(Ad::class);
     }
 }

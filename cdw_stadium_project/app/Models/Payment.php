@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Str;
+use Laravel\Scout\Searchable;
 
 class Payment extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     public const TYPE_BOOKING = 'booking';
 
@@ -157,5 +158,33 @@ class Payment extends Model
         $prefix = self::TYPE_PREFIXES[$type] ?? 'PAY';
 
         return $prefix.'-'.now()->format('ymdHis').'-'.strtoupper(Str::random(5));
+    }
+
+    protected function makeAllSearchableUsing(Builder $query): Builder
+    {
+        return $query->with('user');
+    }
+
+    public function toSearchableArray(): array
+    {
+        $array = [
+            'id' => (int) $this->id,
+            'transaction_code' => $this->transaction_code,
+            'payment_method' => $this->payment_method,
+            'status' => $this->status,
+            'note' => $this->note,
+            'payable_type' => $this->payable_type,
+        ];
+
+        if (config('scout.driver') === 'elasticsearch') {
+            $array['payable_id'] = $this->payable_id ? (int) $this->payable_id : null;
+            $array['user_id'] = $this->user_id ? (int) $this->user_id : null;
+            $array['user_name'] = $this->user?->name;
+            $array['amount'] = (float) $this->amount;
+            $array['paid_at'] = $this->paid_at?->toDateTimeString();
+            $array['created_at'] = $this->created_at?->timestamp;
+        }
+
+        return $array;
     }
 }

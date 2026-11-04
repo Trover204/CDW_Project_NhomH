@@ -2,11 +2,15 @@
 
 namespace Database\Seeders;
 
+use App\Models\Court;
+use Database\Seeders\Concerns\SyncsSearchIndex;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class CourtSeeder extends Seeder
 {
+    use SyncsSearchIndex;
+
     public function run(): void
     {
         $now = now();
@@ -139,5 +143,7 @@ class CourtSeeder extends Seeder
 
         // Một sân đang bảo trì để demo trạng thái
         DB::table('courts')->where('name', 'Sân pickleball 2')->limit(1)->update(['status' => 'maintenance']);
+
+        $this->syncSearchIndex(Court::class);
     }
 }
