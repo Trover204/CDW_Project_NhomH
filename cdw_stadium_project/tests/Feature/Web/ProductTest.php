@@ -41,6 +41,10 @@ class ProductTest extends TestCase
         $response->assertStatus(200);
         $response->assertViewIs('web.products.checkout');
         $response->assertSee($product->name);
+        $response->assertSee('momo_card_clean.jpg');
+        $response->assertSee('qr_card_clean.jpg');
+        $response->assertSee('PSP2615713900000057');
+        $response->assertSee('1000 6118 170');
     }
 
     public function test_auth_user_can_purchase_product()
@@ -80,6 +84,45 @@ class ProductTest extends TestCase
             'id' => $product->id,
             'stock_quantity' => 8,
             'is_in_stock' => true,
+        ]);
+    }
+
+    public function test_auth_user_can_purchase_with_qr_and_customer_details()
+    {
+        $user = User::factory()->create();
+        $product = Product::factory()->create([
+            'is_active' => true,
+            'is_in_stock' => true,
+            'stock_quantity' => 5,
+            'cost_price' => 350000,
+        ]);
+
+        $response = $this->actingAs($user)->post(route('products.purchase', $product->id), [
+            'payment_method' => 'qr',
+            'quantity' => 1,
+            'customer_name' => 'Nguyễn Văn A',
+            'customer_phone' => '0912345678',
+            'shipping_address' => '123 Đường Lê Lợi, Q1, TP.HCM',
+            'note' => 'Size L',
+        ]);
+
+        $response->assertRedirect(route('home'));
+        $response->assertSessionHas('success');
+        $response->assertSessionHas('order_success');
+
+        $this->assertDatabaseHas('sales', [
+            'product_id' => $product->id,
+            'customer_name' => 'Nguyễn Văn A',
+            'customer_phone' => '0912345678',
+            'quantity' => 1,
+            'total_price' => 350000,
+        ]);
+
+        $this->assertDatabaseHas('payments', [
+            'payable_type' => 'sale',
+            'payment_method' => 'qr',
+            'amount' => 350000,
+            'status' => 'paid',
         ]);
     }
 }

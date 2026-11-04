@@ -5,6 +5,7 @@ namespace App\Models;
 use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Scout\Searchable;
 
 class Product extends Model
@@ -29,6 +30,33 @@ class Product extends Model
         'is_in_stock' => 'boolean',
         'is_active' => 'boolean',
     ];
+
+    public function getImageUrlAttribute(): ?string
+    {
+        if (! $this->image) {
+            return null;
+        }
+
+        if (str_contains($this->image, '..') || str_contains($this->image, '\\') || str_contains($this->image, "\0")) {
+            return null;
+        }
+
+        if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
+            return $this->image;
+        }
+
+        $encodedPath = implode('/', array_map('rawurlencode', explode('/', $this->image)));
+
+        if (str_starts_with($this->image, 'img_') || str_starts_with($this->image, 'images/')) {
+            return asset($encodedPath);
+        }
+
+        if (file_exists(public_path($this->image))) {
+            return asset($encodedPath);
+        }
+
+        return Storage::url($this->image);
+    }
 
     public function shouldBeSearchable(): bool
     {

@@ -19,8 +19,12 @@ class PurchaseProductRequest extends FormRequest
         $maxStock = $product ? max(1, (int) $product->stock_quantity) : 1;
 
         return [
-            'payment_method' => ['required', 'in:momo,visa,paypal,vnpay,cod,cash'],
+            'payment_method' => ['required', 'in:momo,visa,paypal,vnpay,cod,cash,qr,bank_transfer'],
             'quantity' => ['required', 'integer', 'min:1', 'max:'.$maxStock],
+            'customer_name' => ['nullable', 'string', 'max:255'],
+            'customer_phone' => ['nullable', 'string', 'max:30'],
+            'shipping_address' => ['nullable', 'string', 'max:500'],
+            'note' => ['nullable', 'string', 'max:500'],
         ];
     }
 }
