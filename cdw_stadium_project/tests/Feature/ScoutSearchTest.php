@@ -16,14 +16,18 @@ use App\Models\Sale;
 use App\Models\SportType;
 use App\Models\Subscription;
 use App\Models\User;
+use App\Scout\Factories\OptimizedSearchParametersFactory;
 use Database\Seeders\FacilitySeeder;
 use Database\Seeders\PlanSeeder;
 use Database\Seeders\ProductSeeder;
 use Database\Seeders\SportTypeSeeder;
 use Database\Seeders\UserSeeder;
+use Elastic\ScoutDriver\Engine as ElasticScoutDriverEngine;
+use Elastic\ScoutDriver\Factories\SearchParametersFactoryInterface;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
+use Laravel\Scout\EngineManager;
 use Laravel\Scout\Searchable;
 use Tests\TestCase;
 
@@ -193,7 +197,9 @@ class ScoutSearchTest extends TestCase
 
         Http::fake([
             '*/_bulk*' => Http::response(['errors' => false], 200),
-            '*/courts/_search' => Http::response([
+            '*/_mapping*' => Http::response(['acknowledged' => true], 200),
+            '*/courts' => Http::response(['acknowledged' => true], 200),
+            '*/courts/_search*' => Http::response([
                 'hits' => [
                     'total' => ['value' => 1],
                     'hits' => [
@@ -320,6 +326,7 @@ class ScoutSearchTest extends TestCase
         Http::fake([
             '*/_delete_by_query*' => Http::response(['deleted' => 0], 200),
             '*/_bulk*' => Http::response(['errors' => false], 200),
+            '*' => Http::response(['acknowledged' => true], 200),
         ]);
 
         config([
@@ -347,5 +354,55 @@ class ScoutSearchTest extends TestCase
         Http::assertSent(fn (Request $request) => str_contains($request->url(), '/plans/_delete_by_query'));
         Http::assertSent(fn (Request $request) => str_contains($request->url(), '/products/_delete_by_query'));
         Http::assertSent(fn (Request $request) => str_contains($request->url(), '/_bulk'));
+    }
+
+    public function test_elasticsearch_golden_rules_and_elastic_scout_driver_integration(): void
+    {
+        // Kiểm tra tích hợp babenkoivan/elastic-scout-driver
+        $factory = app(SearchParametersFactoryInterface::class);
+        $this->assertInstanceOf(OptimizedSearchParametersFactory::class, $factory);
+
+        $elasticEngine = app(EngineManager::class)->driver('elastic');
+        $this->assertInstanceOf(ElasticScoutDriverEngine::class, $elasticEngine);
+
+        // Kiểm tra Quy tắc 2, 4, 5 trong cấu hình Mapping của 14 index
+        $courtsConfig = config('scout.elasticsearch.index-settings.courts');
+        $this->assertSame('keyword', $courtsConfig['mappings']['properties']['status']['type']);
+        $this->assertSame('keyword', $courtsConfig['mappings']['properties']['district']['type']);
+        $this->assertFalse($courtsConfig['mappings']['properties']['description']['norms']);
+        $this->assertSame('freqs', $courtsConfig['mappings']['properties']['description']['index_options']);
+        $this->assertContains('id', $courtsConfig['_source']);
+        $this->assertNotContains('description', $courtsConfig['_source']);
+
+        // Kiểm tra Quy tắc 1 (Filter Context), Quy tắc 3 (search_after), Quy tắc 4 (_source & fields)
+        $builder = Court::search('Pickleball')
+            ->where('status', 'available')
+            ->whereIn('sport_type_id', [1, 2])
+            ->searchAfter([1.5, 42]);
+
+        $params = $factory->makeFromBuilder($builder, ['perPage' => 12, 'page' => 3])->toArray();
+        $body = $params['body'];
+
+        // Quy tắc 1: Điều kiện cố định nằm trong bool.filter, không nằm trong bool.must
+        $this->assertArrayHasKey('filter', $body['query']['bool']);
+        $this->assertCount(1, $body['query']['bool']['must']);
+        $this->assertArrayHasKey('multi_match', $body['query']['bool']['must'][0]);
+        $this->assertContains(['term' => ['status' => 'available']], $body['query']['bool']['filter']);
+        $this->assertContains(['terms' => ['sport_type_id' => [1, 2]]], $body['query']['bool']['filter']);
+
+        // Quy tắc 3: search_after được gửi kèm sort tie-breaker và loại bỏ tham số from
+        $this->assertSame([1.5, 42], $body['search_after']);
+        $this->assertArrayNotHasKey('from', $body);
+        $this->assertNotEmpty($body['sort']);
+
+        // Quy tắc 4: _source và fields được giới hạn gọn nhẹ
+        $this->assertSame($courtsConfig['_source'], $body['_source']);
+        $this->assertSame($courtsConfig['fields'], $body['fields']);
+
+        // Quy tắc 1 khi không có từ khóa: match_all nằm trong bool.filter (_score = 0), không có bool.must
+        $emptyKeywordBuilder = Court::search('')->where('status', 'available');
+        $emptyKeywordBody = $factory->makeFromBuilder($emptyKeywordBuilder)->toArray()['body'];
+        $this->assertArrayNotHasKey('must', $emptyKeywordBody['query']['bool']);
+        $this->assertArrayHasKey('filter', $emptyKeywordBody['query']['bool']);
     }
 }

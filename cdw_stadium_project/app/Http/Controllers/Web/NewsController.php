@@ -13,7 +13,10 @@ class NewsController extends Controller
         $keyword = $request->keyword();
 
         if ($keyword !== '') {
+            $searchAfter = $request->searchAfterCursor();
             $news = News::search($keyword)
+                ->where('status', 'published')
+                ->when($searchAfter !== [], fn ($search) => $search->searchAfter($searchAfter))
                 ->query(fn ($query) => $query->where('status', 'published')->with('user:id,name')->latest())
                 ->paginate(12)
                 ->appends($request->query());

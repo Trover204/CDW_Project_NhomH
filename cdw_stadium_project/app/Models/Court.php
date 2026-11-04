@@ -87,7 +87,7 @@ class Court extends Model
             'description' => $this->description,
         ];
 
-        if (config('scout.driver') === 'elasticsearch') {
+        if (in_array(config('scout.driver'), ['elasticsearch', 'elastic'], true)) {
             $array['facility_id'] = (int) $this->facility_id;
             $array['sport_type_id'] = (int) $this->sport_type_id;
             $array['capacity'] = (int) $this->capacity;

@@ -129,7 +129,7 @@ class Booking extends Model implements Payable
             'status' => $this->status,
         ];
 
-        if (config('scout.driver') === 'elasticsearch') {
+        if (in_array(config('scout.driver'), ['elasticsearch', 'elastic'], true)) {
             $array['user_id'] = $this->user_id ? (int) $this->user_id : null;
             $array['court_id'] = $this->court_id ? (int) $this->court_id : null;
             $array['court_name'] = $this->court?->name;

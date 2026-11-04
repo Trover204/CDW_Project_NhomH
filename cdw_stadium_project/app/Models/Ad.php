@@ -31,7 +31,7 @@ class Ad extends Model
             'description' => $this->description,
         ];
 
-        if (config('scout.driver') === 'elasticsearch') {
+        if (in_array(config('scout.driver'), ['elasticsearch', 'elastic'], true)) {
             $array['is_active'] = (bool) $this->is_active;
             $array['created_at'] = $this->created_at?->timestamp;
         }

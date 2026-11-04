@@ -72,7 +72,7 @@ class News extends Model
             'category' => $this->category,
         ];
 
-        if (config('scout.driver') === 'elasticsearch') {
+        if (in_array(config('scout.driver'), ['elasticsearch', 'elastic'], true)) {
             $array['slug'] = $this->slug;
             $array['status'] = $this->status;
             $array['views'] = (int) $this->views;

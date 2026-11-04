@@ -47,7 +47,7 @@ class PriceRule extends Model
             'price' => (float) $this->price,
         ];
 
-        if (config('scout.driver') === 'elasticsearch') {
+        if (in_array(config('scout.driver'), ['elasticsearch', 'elastic'], true)) {
             $array['court_id'] = $this->court_id ? (int) $this->court_id : null;
             $array['sport_type_id'] = $this->sport_type_id ? (int) $this->sport_type_id : null;
             $array['court_name'] = $this->court?->name;

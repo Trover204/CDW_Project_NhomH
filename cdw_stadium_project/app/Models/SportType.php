@@ -34,7 +34,7 @@ class SportType extends Model
             'description' => $this->description,
         ];
 
-        if (config('scout.driver') === 'elasticsearch') {
+        if (in_array(config('scout.driver'), ['elasticsearch', 'elastic'], true)) {
             $array['status'] = (bool) $this->status;
         }
 

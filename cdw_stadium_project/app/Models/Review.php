@@ -49,7 +49,7 @@ class Review extends Model
             'rating' => (int) $this->rating,
         ];
 
-        if (config('scout.driver') === 'elasticsearch') {
+        if (in_array(config('scout.driver'), ['elasticsearch', 'elastic'], true)) {
             $array['user_id'] = $this->user_id ? (int) $this->user_id : null;
             $array['court_id'] = $this->court_id ? (int) $this->court_id : null;
             $array['booking_id'] = $this->booking_id ? (int) $this->booking_id : null;

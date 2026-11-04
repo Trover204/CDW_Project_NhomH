@@ -21,6 +21,7 @@ class SearchRequest extends FormRequest
                 'string',
                 'in:all,courts,facilities,products,news,sport_types,bookings,users,sales,payments,plans,subscriptions,reviews,ads,price_rules',
             ],
+            'search_after' => ['nullable', 'array'],
         ];
     }
 
@@ -32,5 +33,15 @@ class SearchRequest extends FormRequest
     public function searchType(): string
     {
         return (string) ($this->validated('type') ?? 'all');
+    }
+
+    /**
+     * @return array<int, scalar>
+     */
+    public function searchAfterCursor(): array
+    {
+        $cursor = $this->validated('search_after');
+
+        return is_array($cursor) ? array_values($cursor) : [];
     }
 }

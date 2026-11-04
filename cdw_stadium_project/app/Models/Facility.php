@@ -48,7 +48,7 @@ class Facility extends Model
             'phone' => $this->phone,
         ];
 
-        if (config('scout.driver') === 'elasticsearch') {
+        if (in_array(config('scout.driver'), ['elasticsearch', 'elastic'], true)) {
             $array['status'] = (bool) $this->status;
             $array['created_at'] = $this->created_at?->timestamp;
         }
