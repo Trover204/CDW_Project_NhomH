@@ -13,7 +13,7 @@ use Laravel\Scout\Searchable;
 
 class Court extends Model
 {
-    use HasFactory, LogsActivity, Searchable, OptimisticLocking;
+    use HasFactory, LogsActivity, OptimisticLocking, Searchable;
 
     protected $fillable = [
         'facility_id',
@@ -87,7 +87,7 @@ class Court extends Model
             'description' => $this->description,
         ];
 
-        if (config('scout.driver') === 'meilisearch') {
+        if (config('scout.driver') === 'elasticsearch') {
             $array['facility_id'] = (int) $this->facility_id;
             $array['sport_type_id'] = (int) $this->sport_type_id;
             $array['capacity'] = (int) $this->capacity;

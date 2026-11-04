@@ -10,7 +10,7 @@ use Laravel\Scout\Searchable;
 
 class SportType extends Model
 {
-    use HasFactory, Searchable, OptimisticLocking;
+    use HasFactory, OptimisticLocking, Searchable;
 
     protected $fillable = ['name', 'image', 'description', 'status', 'version'];
 
@@ -34,7 +34,7 @@ class SportType extends Model
             'description' => $this->description,
         ];
 
-        if (config('scout.driver') === 'meilisearch') {
+        if (config('scout.driver') === 'elasticsearch') {
             $array['status'] = (bool) $this->status;
         }
 

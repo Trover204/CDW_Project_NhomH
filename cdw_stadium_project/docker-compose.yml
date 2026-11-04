@@ -11,22 +11,22 @@ services:
       - /var/www/html/vendor
     depends_on:
       - db
-      - meilisearch
+      - elasticsearch
     networks:
       - laravel
 
-  meilisearch:
-    image: getmeili/meilisearch:v1.6
-    container_name: laravel_meilisearch
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.0
+    container_name: laravel_elasticsearch
     restart: unless-stopped
     ports:
-      - "7700:7700"
+      - "9200:9200"
     environment:
-      - MEILI_ENV=${MEILI_ENV:-development}
-      - MEILI_MASTER_KEY=${MEILISEARCH_KEY:-my_secure_master_key_123}
-      - MEILI_NO_ANALYTICS=true
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     volumes:
-      - meilisearch_data:/meili_data
+      - elasticsearch_data:/usr/share/elasticsearch/data
     networks:
       - laravel # Đã gom về chung mạng 'laravel' với app
 
@@ -76,7 +76,7 @@ services:
       - laravel
 volumes:
   mysql_data:
-  meilisearch_data:
+  elasticsearch_data:
     driver: local
 
 networks:

@@ -11,7 +11,7 @@ use Laravel\Scout\Searchable;
 
 class Facility extends Model
 {
-    use HasFactory, LogsActivity, Searchable, OptimisticLocking;
+    use HasFactory, LogsActivity, OptimisticLocking, Searchable;
 
     protected $fillable = [
         'name',
@@ -48,7 +48,7 @@ class Facility extends Model
             'phone' => $this->phone,
         ];
 
-        if (config('scout.driver') === 'meilisearch') {
+        if (config('scout.driver') === 'elasticsearch') {
             $array['status'] = (bool) $this->status;
             $array['created_at'] = $this->created_at?->timestamp;
         }
