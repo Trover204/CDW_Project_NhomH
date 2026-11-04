@@ -197,6 +197,63 @@
             color: var(--text);
             align-items: center;
         }
+
+        .admin-search-form {
+            display: flex;
+            align-items: center;
+            background: var(--surface);
+            border: 1px solid var(--border-strong);
+            border-radius: 9999px;
+            padding: 2px 4px 2px 12px;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+        .admin-search-form:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(13, 92, 64, 0.12);
+        }
+        .admin-search-form svg {
+            color: var(--muted);
+            flex-shrink: 0;
+            transition: color 0.2s ease;
+        }
+        .admin-search-form:focus-within svg {
+            color: var(--primary);
+        }
+        .admin-search-form input {
+            border: none;
+            background: transparent;
+            outline: none;
+            color: var(--text);
+            font-size: 12.5px;
+            width: 200px;
+            padding: 5px 0;
+            font-family: inherit;
+        }
+        .admin-search-form input::placeholder {
+            color: var(--muted);
+        }
+        .admin-search-btn {
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            border-radius: 9999px;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease, transform 0.1s ease;
+        }
+        .admin-search-btn:hover {
+            background: var(--turf-dark, #0a4631);
+        }
+        .admin-search-btn:active {
+            transform: scale(0.97);
+        }
     </style>
 
     <div class="topbar">
@@ -205,7 +262,16 @@
             <a href="{{ route('home') }}" class="btn btn-secondary">
                 <i class="ti ti-home"></i> Quay về trang chủ
             </a>
-            <input class="search" type="text" placeholder="Tìm đơn, sân...">
+            <form action="{{ route('courts.search') }}" method="GET" class="admin-search-form">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.3-4.3"/>
+                </svg>
+                <input type="text" name="q" value="{{ request('q') }}" placeholder="{{ __('Tìm kiếm sân thể thao hoặc tin tức...') }}">
+                <button type="submit" class="admin-search-btn">
+                    {{ __('Tìm kiếm') }}
+                </button>
+            </form>
             <div class="avatar">NA</div>
         </div>
     </div>

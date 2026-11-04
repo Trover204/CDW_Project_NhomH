@@ -23,5 +23,6 @@ class DatabaseSeeder extends Seeder
             SaleSeeder::class,
             PaymentSeeder::class,
         ]);
+        Artisan::call('scout:import', ['model' => Post::class]);
     }
 }
