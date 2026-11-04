@@ -2,13 +2,29 @@
 
 namespace Tests\Feature;
 
+use App\Models\Ad;
+use App\Models\Booking;
 use App\Models\Court;
 use App\Models\Facility;
 use App\Models\News;
+use App\Models\Payment;
+use App\Models\Plan;
+use App\Models\PriceRule;
 use App\Models\Product;
+use App\Models\Review;
+use App\Models\Sale;
 use App\Models\SportType;
+use App\Models\Subscription;
+use App\Models\User;
+use Database\Seeders\FacilitySeeder;
+use Database\Seeders\PlanSeeder;
+use Database\Seeders\ProductSeeder;
+use Database\Seeders\SportTypeSeeder;
+use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
+use Laravel\Scout\Searchable;
 use Tests\TestCase;
 
 class ScoutSearchTest extends TestCase
@@ -201,5 +217,135 @@ class ScoutSearchTest extends TestCase
 
         $this->assertCount(1, $results);
         $this->assertSame($court->id, $results->first()->id);
+    }
+
+    public function test_admin_dashboard_search_bar_targets_admin_search_route(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $response = $this->actingAs($admin)->get(route('admin.dashboard'));
+
+        $response->assertStatus(200);
+        $response->assertSee(route('admin.search'), false);
+        $response->assertSee('name="q"', false);
+    }
+
+    public function test_admin_search_page_displays_unified_results_and_supports_type_filter(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        Facility::factory()->create([
+            'name' => 'Cơ sở Pickleball Thủ Đức',
+            'district' => 'Thủ Đức',
+            'status' => true,
+        ]);
+
+        Court::factory()->create([
+            'name' => 'Sân Pickleball Pro 01',
+            'status' => 'available',
+        ]);
+
+        Product::factory()->create([
+            'name' => 'Vợt Pickleball Carbon',
+            'is_active' => true,
+            'is_in_stock' => true,
+        ]);
+
+        News::factory()->create([
+            'title' => 'Giải vô địch Pickleball Admin Cup',
+            'slug' => 'giai-vo-dich-pickleball-admin-cup',
+            'status' => 'published',
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('admin.search', ['q' => 'Pickleball']));
+
+        $response->assertStatus(200);
+        $response->assertViewIs('admin.search');
+        $response->assertSee('Cơ sở Pickleball Thủ Đức');
+        $response->assertSee('Sân Pickleball Pro 01');
+        $response->assertSee('Vợt Pickleball Carbon');
+        $response->assertSee('Giải vô địch Pickleball Admin Cup');
+        // Các section không có kết quả (ví dụ: Đơn bán hàng, Quảng cáo) không được render ra
+        $response->assertDontSee('Quản lý đơn bán hàng');
+        $response->assertDontSee('Quản lý quảng cáo');
+
+        $filteredResponse = $this->actingAs($admin)->get(route('admin.search', [
+            'q' => 'Pickleball',
+            'type' => 'products',
+        ]));
+
+        $filteredResponse->assertStatus(200);
+        $filteredResponse->assertSee('Vợt Pickleball Carbon');
+        $filteredResponse->assertDontSee('Sân Pickleball Pro 01');
+    }
+
+    public function test_all_seeder_models_are_searchable_and_configured_in_elasticsearch(): void
+    {
+        $seederModels = [
+            User::class,
+            SportType::class,
+            Facility::class,
+            Court::class,
+            PriceRule::class,
+            Plan::class,
+            Subscription::class,
+            News::class,
+            Ad::class,
+            Booking::class,
+            Review::class,
+            Product::class,
+            Sale::class,
+            Payment::class,
+        ];
+
+        $indexSettings = config('scout.elasticsearch.index-settings', []);
+
+        foreach ($seederModels as $modelClass) {
+            $this->assertTrue(
+                in_array(Searchable::class, class_uses_recursive($modelClass)),
+                "Model [{$modelClass}] must use Searchable trait."
+            );
+
+            $indexName = (new $modelClass)->searchableAs();
+            $this->assertArrayHasKey(
+                $indexName,
+                $indexSettings,
+                "Index [{$indexName}] for [{$modelClass}] must be configured in config/scout.php."
+            );
+        }
+    }
+
+    public function test_seeders_automatically_import_models_into_elasticsearch(): void
+    {
+        Http::fake([
+            '*/_delete_by_query*' => Http::response(['deleted' => 0], 200),
+            '*/_bulk*' => Http::response(['errors' => false], 200),
+        ]);
+
+        config([
+            'scout.driver' => 'elasticsearch',
+            'scout.elasticsearch.host' => 'http://elasticsearch:9200',
+        ]);
+
+        $this->seed([
+            UserSeeder::class,
+            SportTypeSeeder::class,
+            FacilitySeeder::class,
+            PlanSeeder::class,
+            ProductSeeder::class,
+        ]);
+
+        $this->assertGreaterThan(0, User::count());
+        $this->assertGreaterThan(0, SportType::count());
+        $this->assertGreaterThan(0, Facility::count());
+        $this->assertGreaterThan(0, Plan::count());
+        $this->assertGreaterThan(0, Product::count());
+
+        Http::assertSent(fn (Request $request) => str_contains($request->url(), '/users/_delete_by_query'));
+        Http::assertSent(fn (Request $request) => str_contains($request->url(), '/sport_types/_delete_by_query'));
+        Http::assertSent(fn (Request $request) => str_contains($request->url(), '/facilities/_delete_by_query'));
+        Http::assertSent(fn (Request $request) => str_contains($request->url(), '/plans/_delete_by_query'));
+        Http::assertSent(fn (Request $request) => str_contains($request->url(), '/products/_delete_by_query'));
+        Http::assertSent(fn (Request $request) => str_contains($request->url(), '/_bulk'));
     }
 }

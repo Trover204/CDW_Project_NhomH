@@ -3,13 +3,17 @@
 namespace Database\Seeders;
 
 use App\Models\Payment;
+use App\Models\Sale;
 use Carbon\Carbon;
+use Database\Seeders\Concerns\SyncsSearchIndex;
 use Faker\Factory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class SaleSeeder extends Seeder
 {
+    use SyncsSearchIndex;
+
     public function run(): void
     {
         $products = DB::table('products')->get();
@@ -69,5 +73,8 @@ class SaleSeeder extends Seeder
                 'updated_at' => $paidAt ?? now(),
             ]);
         }
+
+        $this->syncSearchIndex(Sale::class);
+        $this->syncSearchIndex(Payment::class);
     }
 }

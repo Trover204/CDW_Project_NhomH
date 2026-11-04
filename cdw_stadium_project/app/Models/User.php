@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Scout\Searchable;
 
 class User extends Authenticatable
 {
@@ -17,7 +18,7 @@ class User extends Authenticatable
     protected $hidden = ['password', 'remember_token'];
 
     /** @use HasFactory<UserFactory> */
-    use HasFactory, LogsActivity, Notifiable;
+    use HasFactory, LogsActivity, Notifiable, Searchable;
 
     /**
      * Get the attributes that should be cast.
@@ -56,5 +57,24 @@ class User extends Authenticatable
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
+    }
+
+    public function toSearchableArray(): array
+    {
+        $array = [
+            'id' => (int) $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'phone' => $this->phone,
+            'role' => $this->role,
+        ];
+
+        if (config('scout.driver') === 'elasticsearch') {
+            $array['status'] = (bool) $this->status;
+            $array['birthday'] = $this->birthday?->format('Y-m-d');
+            $array['created_at'] = $this->created_at?->timestamp;
+        }
+
+        return $array;
     }
 }

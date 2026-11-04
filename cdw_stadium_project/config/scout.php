@@ -207,6 +207,173 @@ return [
                     'id',
                 ],
             ],
+            'users' => [
+                'searchableAttributes' => [
+                    'name',
+                    'email',
+                    'phone',
+                    'role',
+                ],
+                'filterableAttributes' => [
+                    'id',
+                    'role',
+                    'status',
+                ],
+                'sortableAttributes' => [
+                    'id',
+                    'created_at',
+                ],
+            ],
+            'price_rules' => [
+                'searchableAttributes' => [
+                    'day_type',
+                    'court_name',
+                    'sport_type_name',
+                ],
+                'filterableAttributes' => [
+                    'id',
+                    'court_id',
+                    'sport_type_id',
+                    'day_type',
+                    'status',
+                ],
+                'sortableAttributes' => [
+                    'id',
+                    'price',
+                    'created_at',
+                ],
+            ],
+            'plans' => [
+                'searchableAttributes' => [
+                    'name',
+                ],
+                'filterableAttributes' => [
+                    'id',
+                    'status',
+                ],
+                'sortableAttributes' => [
+                    'id',
+                    'price',
+                    'duration_days',
+                    'created_at',
+                ],
+            ],
+            'subscriptions' => [
+                'searchableAttributes' => [
+                    'user_name',
+                    'plan_name',
+                ],
+                'filterableAttributes' => [
+                    'id',
+                    'user_id',
+                    'plan_id',
+                    'status',
+                ],
+                'sortableAttributes' => [
+                    'id',
+                    'price',
+                    'created_at',
+                ],
+            ],
+            'ads' => [
+                'searchableAttributes' => [
+                    'name',
+                    'description',
+                    'link_url',
+                ],
+                'filterableAttributes' => [
+                    'id',
+                    'is_active',
+                ],
+                'sortableAttributes' => [
+                    'id',
+                    'created_at',
+                ],
+            ],
+            'bookings' => [
+                'searchableAttributes' => [
+                    'customer_name',
+                    'customer_phone',
+                    'customer_email',
+                    'court_name',
+                    'note',
+                ],
+                'filterableAttributes' => [
+                    'id',
+                    'user_id',
+                    'court_id',
+                    'status',
+                    'booking_date',
+                ],
+                'sortableAttributes' => [
+                    'id',
+                    'total_price',
+                    'created_at',
+                ],
+            ],
+            'reviews' => [
+                'searchableAttributes' => [
+                    'content',
+                    'user_name',
+                    'court_name',
+                ],
+                'filterableAttributes' => [
+                    'id',
+                    'user_id',
+                    'court_id',
+                    'booking_id',
+                    'rating',
+                    'status',
+                ],
+                'sortableAttributes' => [
+                    'id',
+                    'rating',
+                    'created_at',
+                ],
+            ],
+            'sales' => [
+                'searchableAttributes' => [
+                    'customer_name',
+                    'customer_phone',
+                    'product_name',
+                    'status',
+                ],
+                'filterableAttributes' => [
+                    'id',
+                    'product_id',
+                    'user_id',
+                    'status',
+                    'sale_date',
+                ],
+                'sortableAttributes' => [
+                    'id',
+                    'total_price',
+                    'created_at',
+                ],
+            ],
+            'payments' => [
+                'searchableAttributes' => [
+                    'transaction_code',
+                    'payment_method',
+                    'user_name',
+                    'note',
+                    'payable_type',
+                    'status',
+                ],
+                'filterableAttributes' => [
+                    'id',
+                    'payable_type',
+                    'payable_id',
+                    'user_id',
+                    'payment_method',
+                    'status',
+                ],
+                'sortableAttributes' => [
+                    'id',
+                    'amount',
+                    'created_at',
+                ],
+            ],
         ],
     ],
 

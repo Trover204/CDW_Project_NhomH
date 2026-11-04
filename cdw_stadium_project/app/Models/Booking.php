@@ -5,15 +5,17 @@ namespace App\Models;
 use App\Contracts\Payable;
 use App\Models\Concerns\HasPayment;
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Laravel\Scout\Searchable;
 
 class Booking extends Model implements Payable
 {
-    use HasFactory, HasPayment, LogsActivity;
+    use HasFactory, HasPayment, LogsActivity, Searchable;
 
     protected $fillable = [
         'user_id',
@@ -109,5 +111,35 @@ class Booking extends Model implements Payable
         }
 
         return $currentStatus ?: 'pending';
+    }
+
+    protected function makeAllSearchableUsing(Builder $query): Builder
+    {
+        return $query->with(['user', 'court']);
+    }
+
+    public function toSearchableArray(): array
+    {
+        $array = [
+            'id' => (int) $this->id,
+            'customer_name' => $this->customer_name ?: $this->user?->name,
+            'customer_phone' => $this->customer_phone,
+            'customer_email' => $this->customer_email,
+            'note' => $this->note,
+            'status' => $this->status,
+        ];
+
+        if (config('scout.driver') === 'elasticsearch') {
+            $array['user_id'] = $this->user_id ? (int) $this->user_id : null;
+            $array['court_id'] = $this->court_id ? (int) $this->court_id : null;
+            $array['court_name'] = $this->court?->name;
+            $array['booking_date'] = $this->booking_date?->format('Y-m-d');
+            $array['start_time'] = $this->start_time;
+            $array['end_time'] = $this->end_time;
+            $array['total_price'] = (float) $this->total_price;
+            $array['created_at'] = $this->created_at?->timestamp;
+        }
+
+        return $array;
     }
 }

@@ -2,11 +2,15 @@
 
 namespace Database\Seeders;
 
+use App\Models\SportType;
+use Database\Seeders\Concerns\SyncsSearchIndex;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class SportTypeSeeder extends Seeder
 {
+    use SyncsSearchIndex;
+
     public function run(): void
     {
         $now = now();
@@ -43,5 +47,7 @@ class SportTypeSeeder extends Seeder
                 ['description' => $desc, 'status' => 1, 'created_at' => $now, 'updated_at' => $now]
             );
         }
+
+        $this->syncSearchIndex(SportType::class);
     }
 }

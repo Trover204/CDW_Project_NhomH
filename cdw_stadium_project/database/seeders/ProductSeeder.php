@@ -3,10 +3,13 @@
 namespace Database\Seeders;
 
 use App\Models\Product;
+use Database\Seeders\Concerns\SyncsSearchIndex;
 use Illuminate\Database\Seeder;
 
 class ProductSeeder extends Seeder
 {
+    use SyncsSearchIndex;
+
     /**
      * Run the database seeds.
      */
@@ -455,11 +458,15 @@ class ProductSeeder extends Seeder
             ],
         ];
 
-        foreach ($products as $product) {
-            Product::updateOrCreate(
-                ['name' => $product['name']],
-                $product
-            );
-        }
+        Product::withoutSyncingToSearch(function () use ($products) {
+            foreach ($products as $product) {
+                Product::updateOrCreate(
+                    ['name' => $product['name']],
+                    $product
+                );
+            }
+        });
+
+        $this->syncSearchIndex(Product::class);
     }
 }

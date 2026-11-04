@@ -13,12 +13,14 @@ use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\RevenueReportController;
 use App\Http\Controllers\Admin\SaleController;
+use App\Http\Controllers\Admin\SearchController;
 use App\Http\Controllers\Admin\SportTypeController;
 use App\Http\Controllers\Admin\SubscriptionController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/search', [SearchController::class, 'index'])->name('search');
 Route::resource('facilities', FacilityController::class);
 Route::resource('sport-types', SportTypeController::class);
 Route::resource('courts', CourtController::class);

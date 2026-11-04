@@ -2,11 +2,15 @@
 
 namespace Database\Seeders;
 
+use App\Models\Plan;
+use Database\Seeders\Concerns\SyncsSearchIndex;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class PlanSeeder extends Seeder
 {
+    use SyncsSearchIndex;
+
     public function run(): void
     {
         $now = now();
@@ -46,5 +50,7 @@ class PlanSeeder extends Seeder
                 ]
             );
         }
+
+        $this->syncSearchIndex(Plan::class);
     }
 }
