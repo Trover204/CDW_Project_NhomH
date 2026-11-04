@@ -19,10 +19,12 @@ class CourtController extends Controller
 
         if ($keyword !== '' || ! empty($selectedSportTypes)) {
             if ($keyword !== '') {
+                $searchAfter = $request->searchAfterCursor();
                 $courts = Court::search($keyword)
                     ->when(! empty($selectedSportTypes), function ($search) use ($selectedSportTypes) {
                         $search->whereIn('sport_type_id', array_map('intval', $selectedSportTypes));
                     })
+                    ->when($searchAfter !== [], fn ($search) => $search->searchAfter($searchAfter))
                     ->query(function ($query) use ($selectedSportTypes) {
                         $query->with(['facility', 'sportType', 'images'])->where('status', '!=', 'inactive');
                         if (! empty($selectedSportTypes)) {
@@ -68,12 +70,17 @@ class CourtController extends Controller
             return redirect()->route('courts.index');
         }
 
+        $searchAfter = $request->searchAfterCursor();
+
         $courts = Court::search($keyword)
+            ->when($searchAfter !== [], fn ($search) => $search->searchAfter($searchAfter))
             ->query(fn ($query) => $query->with(['facility', 'sportType', 'images'])->where('status', '!=', 'inactive'))
             ->paginate(12)
             ->appends($request->query());
 
         $news = News::search($keyword)
+            ->where('status', 'published')
+            ->when($searchAfter !== [], fn ($search) => $search->searchAfter($searchAfter))
             ->query(fn ($query) => $query->where('status', 'published')->with('user:id,name')->latest())
             ->paginate(6, 'news_page')
             ->appends($request->query());

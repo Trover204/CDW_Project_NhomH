@@ -69,7 +69,7 @@ class User extends Authenticatable
             'role' => $this->role,
         ];
 
-        if (config('scout.driver') === 'elasticsearch') {
+        if (in_array(config('scout.driver'), ['elasticsearch', 'elastic'], true)) {
             $array['status'] = (bool) $this->status;
             $array['birthday'] = $this->birthday?->format('Y-m-d');
             $array['created_at'] = $this->created_at?->timestamp;

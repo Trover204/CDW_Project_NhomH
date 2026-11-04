@@ -96,7 +96,7 @@ class Sale extends Model implements Payable
             'status' => $this->status,
         ];
 
-        if (config('scout.driver') === 'elasticsearch') {
+        if (in_array(config('scout.driver'), ['elasticsearch', 'elastic'], true)) {
             $array['product_id'] = $this->product_id ? (int) $this->product_id : null;
             $array['user_id'] = $this->user_id ? (int) $this->user_id : null;
             $array['product_name'] = $this->product?->name;

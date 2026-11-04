@@ -118,7 +118,7 @@ class Subscription extends Model implements Payable
             'price' => (float) $this->price,
         ];
 
-        if (config('scout.driver') === 'elasticsearch') {
+        if (in_array(config('scout.driver'), ['elasticsearch', 'elastic'], true)) {
             $array['user_name'] = $this->user?->name;
             $array['plan_name'] = $this->plan?->name;
             $array['status'] = (bool) $this->status;

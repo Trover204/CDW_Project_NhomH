@@ -177,7 +177,7 @@ class Payment extends Model
             'payable_type' => $this->payable_type,
         ];
 
-        if (config('scout.driver') === 'elasticsearch') {
+        if (in_array(config('scout.driver'), ['elasticsearch', 'elastic'], true)) {
             $array['payable_id'] = $this->payable_id ? (int) $this->payable_id : null;
             $array['user_id'] = $this->user_id ? (int) $this->user_id : null;
             $array['user_name'] = $this->user?->name;

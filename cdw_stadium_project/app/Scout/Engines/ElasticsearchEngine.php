@@ -2,7 +2,7 @@
 
 namespace App\Scout\Engines;
 
-use BackedEnum;
+use App\Scout\Factories\OptimizedSearchParametersFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Client\PendingRequest;
@@ -20,10 +20,16 @@ class ElasticsearchEngine extends Engine implements UpdatesIndexSettings
 
     protected bool $softDelete;
 
-    public function __construct(array $config = [], bool $softDelete = false)
-    {
+    protected OptimizedSearchParametersFactory $parametersFactory;
+
+    public function __construct(
+        array $config = [],
+        bool $softDelete = false,
+        ?OptimizedSearchParametersFactory $parametersFactory = null
+    ) {
         $this->config = $config;
         $this->softDelete = $softDelete;
+        $this->parametersFactory = $parametersFactory ?? new OptimizedSearchParametersFactory;
     }
 
     protected function client(): PendingRequest
@@ -146,7 +152,7 @@ class ElasticsearchEngine extends Engine implements UpdatesIndexSettings
     public function search(Builder $builder)
     {
         return $this->performSearch($builder, array_filter([
-            'size' => $builder->limit ?? 1000,
+            'perPage' => $builder->limit ?? 1000,
         ]));
     }
 
@@ -159,12 +165,9 @@ class ElasticsearchEngine extends Engine implements UpdatesIndexSettings
      */
     public function paginate(Builder $builder, $perPage, $page)
     {
-        $perPage = (int) $perPage;
-        $page = max(1, (int) $page);
-
         return $this->performSearch($builder, [
-            'from' => ($page - 1) * $perPage,
-            'size' => $perPage,
+            'perPage' => (int) $perPage,
+            'page' => max(1, (int) $page),
         ]);
     }
 
@@ -201,98 +204,27 @@ class ElasticsearchEngine extends Engine implements UpdatesIndexSettings
         ];
     }
 
-    protected function buildSearchBody(Builder $builder, array $options = []): array
+    /**
+     * Xây dựng cấu trúc truy vấn Elasticsearch áp dụng 5 Quy tắc vàng:
+     * 1. Filter Context (bool.filter) cho điều kiện cố định (_score = 0).
+     * 2. Mapping keyword vs text đã định nghĩa trong config/scout.php.
+     * 3. Phân trang tối ưu bằng search_after (không gửi from khi dùng search_after, giới hạn max_from_window).
+     * 4. Giới hạn dữ liệu trả về bằng _source filtering và fields.
+     * 5. Norms: false & index_options: freqs trong mapping.
+     */
+    public function buildSearchBody(Builder $builder, array $options = []): array
     {
-        $index = $builder->index ?: $builder->model->searchableAs();
-        $indexSettings = $this->config['index-settings'][$index] ?? [];
-        $searchableFields = $indexSettings['searchableAttributes'] ?? ['*'];
+        $searchParameters = $this->parametersFactory->makeFromBuilder($builder, $options)->toArray();
+        $body = $searchParameters['body'] ?? [];
 
-        $must = [];
-        $query = trim((string) $builder->query);
-
-        if ($query !== '') {
-            $must[] = [
-                'multi_match' => [
-                    'query' => $query,
-                    'fields' => $searchableFields,
-                    'fuzziness' => 'AUTO',
-                ],
-            ];
-        } else {
-            $must[] = ['match_all' => (object) []];
-        }
-
-        $filters = $this->filters($builder);
-
-        $boolQuery = ['must' => $must];
-
-        if (! empty($filters['filter'])) {
-            $boolQuery['filter'] = $filters['filter'];
-        }
-
-        if (! empty($filters['must_not'])) {
-            $boolQuery['must_not'] = $filters['must_not'];
-        }
-
-        $body = array_merge($builder->options, $options, [
-            'query' => [
-                'bool' => $boolQuery,
-            ],
-        ]);
-
-        $sort = $this->buildSortFromOrderByClauses($builder);
-
-        if (! empty($sort)) {
-            $body['sort'] = $sort;
+        // Cho phép ghi đè tuỳ chọn từ $builder->options (trừ những khóa điều khiển riêng)
+        foreach ($builder->options as $key => $value) {
+            if (! in_array($key, ['search_after', '_source', 'fields'], true)) {
+                $body[$key] = $value;
+            }
         }
 
         return $body;
-    }
-
-    protected function filters(Builder $builder): array
-    {
-        $filter = [];
-        $mustNot = [];
-
-        foreach ($builder->wheres as $key => $where) {
-            $field = is_array($where) ? ($where['field'] ?? $key) : $key;
-            $value = is_array($where) ? ($where['value'] ?? null) : $where;
-            $operator = is_array($where) ? ($where['operator'] ?? '=') : '=';
-
-            if ($value instanceof BackedEnum) {
-                $value = $value->value;
-            }
-
-            if ($operator === '!=') {
-                $mustNot[] = ['term' => [$field => $value]];
-            } else {
-                $filter[] = ['term' => [$field => $value]];
-            }
-        }
-
-        if (property_exists($builder, 'whereIns')) {
-            foreach ($builder->whereIns as $field => $values) {
-                $filter[] = ['terms' => [$field => array_values($values)]];
-            }
-        }
-
-        if (property_exists($builder, 'whereNotIns')) {
-            foreach ($builder->whereNotIns as $field => $values) {
-                $mustNot[] = ['terms' => [$field => array_values($values)]];
-            }
-        }
-
-        return [
-            'filter' => $filter,
-            'must_not' => $mustNot,
-        ];
-    }
-
-    protected function buildSortFromOrderByClauses(Builder $builder): array
-    {
-        return collect($builder->orders)
-            ->map(fn (array $order) => [$order['column'] => ['order' => $order['direction']]])
-            ->all();
     }
 
     /**
@@ -303,15 +235,7 @@ class ElasticsearchEngine extends Engine implements UpdatesIndexSettings
      */
     public function mapIds($results)
     {
-        $hits = $results['hits']['hits'] ?? [];
-
-        if (empty($hits)) {
-            return collect();
-        }
-
-        return collect($hits)->map(function (array $hit) {
-            return $hit['_source']['id'] ?? $hit['_id'] ?? null;
-        })->filter(fn ($id) => $id !== null)->values();
+        return $this->mapIdsFrom($results, 'id');
     }
 
     /**
@@ -330,7 +254,15 @@ class ElasticsearchEngine extends Engine implements UpdatesIndexSettings
         }
 
         return collect($hits)->map(function (array $hit) use ($key) {
-            return $hit['_source'][$key] ?? $hit['_id'] ?? null;
+            if (isset($hit['_source'][$key])) {
+                return $hit['_source'][$key];
+            }
+
+            if (isset($hit['fields'][$key][0])) {
+                return $hit['fields'][$key][0];
+            }
+
+            return $hit['_id'] ?? null;
         })->filter(fn ($id) => $id !== null)->values();
     }
 
@@ -416,13 +348,21 @@ class ElasticsearchEngine extends Engine implements UpdatesIndexSettings
     }
 
     /**
-     * Create a search index.
+     * Create a search index with optimized mappings (Rule 2 & Rule 5).
      *
      * @param  string  $name
      * @return mixed
      */
     public function createIndex($name, array $options = [])
     {
+        $indexSettings = $this->config['index-settings'][$name] ?? [];
+
+        if (empty($options) && ! empty($indexSettings['mappings'])) {
+            $options = [
+                'mappings' => $indexSettings['mappings'],
+            ];
+        }
+
         return $this->client()->put("/{$name}", $options ?: (object) [])->json();
     }
 
@@ -438,13 +378,15 @@ class ElasticsearchEngine extends Engine implements UpdatesIndexSettings
     }
 
     /**
-     * Update the index settings for the given index.
+     * Update the index settings and mappings for the given index (Rule 2 & Rule 5).
      *
      * @return void
      */
     public function updateIndexSettings(string $name, array $settings = [])
     {
-        $this->createIndex($name);
+        $settings = $settings ?: ($this->config['index-settings'][$name] ?? []);
+
+        $this->createIndex($name, ! empty($settings['mappings']) ? ['mappings' => $settings['mappings']] : []);
 
         if (! empty($settings['mappings'])) {
             $this->client()->put("/{$name}/_mapping", $settings['mappings']);

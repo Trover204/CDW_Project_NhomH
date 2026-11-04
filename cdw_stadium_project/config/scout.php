@@ -1,5 +1,47 @@
 <?php
 
+$textTitleField = [
+    'type' => 'text',
+    'norms' => false,
+    'fields' => [
+        'keyword' => [
+            'type' => 'keyword',
+            'ignore_above' => 256,
+        ],
+    ],
+];
+
+$textFreqsField = [
+    'type' => 'text',
+    'norms' => false,
+    'index_options' => 'freqs',
+];
+
+$keywordField = [
+    'type' => 'keyword',
+];
+
+$longField = [
+    'type' => 'long',
+];
+
+$integerField = [
+    'type' => 'integer',
+];
+
+$floatField = [
+    'type' => 'float',
+];
+
+$booleanField = [
+    'type' => 'boolean',
+];
+
+$dateField = [
+    'type' => 'date',
+    'format' => 'yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_second||strict_date_optional_time',
+];
+
 return [
 
     /*
@@ -11,8 +53,8 @@ return [
     | using Laravel Scout. This connection is used when syncing all models
     | to the search service. You should adjust this based on your needs.
     |
-    | Supported: "algolia", "elasticsearch", "typesense", "database",
-    |            "collection", "null"
+    | Supported: "algolia", "elasticsearch", "elastic", "typesense",
+    |            "database", "collection", "null"
     |
     */
 
@@ -101,12 +143,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Elasticsearch Configuration
+    | Elasticsearch Configuration (5 Golden Rules Optimized)
     |--------------------------------------------------------------------------
     |
-    | Here you may configure your Elasticsearch settings. Below, you can state
-    | the host, authentication, and index settings for your own Elasticsearch
-    | installation.
+    | 1. Filter Context (bool.filter) cho toàn bộ điều kiện cố định (_score = 0).
+    | 2. Mapping chuẩn keyword (ID, mã, email, status, sort) vs text (nội dung).
+    | 3. Hỗ trợ phân trang search_after thay vì deep from/size.
+    | 4. Giới hạn dữ liệu trả về bằng _source filtering và fields.
+    | 5. Tắt norms: false và dùng index_options: "freqs" cho trường text phụ.
     |
     */
 
@@ -115,6 +159,7 @@ return [
         'username' => env('ELASTICSEARCH_USERNAME'),
         'password' => env('ELASTICSEARCH_PASSWORD'),
         'api_key' => env('ELASTICSEARCH_API_KEY'),
+        'max_from_window' => (int) env('ELASTICSEARCH_MAX_FROM_WINDOW', 1000),
         'index-settings' => [
             'courts' => [
                 'searchableAttributes' => [
@@ -137,6 +182,24 @@ return [
                     'capacity',
                     'created_at',
                 ],
+                '_source' => ['id', 'name', 'facility_id', 'sport_type_id', 'status', 'district'],
+                'fields' => ['id', 'facility_id', 'sport_type_id', 'status', 'district'],
+                'mappings' => [
+                    'properties' => [
+                        'id' => $longField,
+                        'facility_id' => $longField,
+                        'sport_type_id' => $longField,
+                        'name' => $textTitleField,
+                        'description' => $textFreqsField,
+                        'facility_name' => $textFreqsField,
+                        'sport_type_name' => $textFreqsField,
+                        'address' => $textFreqsField,
+                        'district' => $keywordField,
+                        'status' => $keywordField,
+                        'capacity' => $integerField,
+                        'created_at' => $dateField,
+                    ],
+                ],
             ],
             'news' => [
                 'searchableAttributes' => [
@@ -148,6 +211,7 @@ return [
                 ],
                 'filterableAttributes' => [
                     'id',
+                    'slug',
                     'category',
                     'status',
                 ],
@@ -155,6 +219,22 @@ return [
                     'id',
                     'views',
                     'created_at',
+                ],
+                '_source' => ['id', 'title', 'slug', 'category', 'status', 'views'],
+                'fields' => ['id', 'slug', 'category', 'status', 'views'],
+                'mappings' => [
+                    'properties' => [
+                        'id' => $longField,
+                        'title' => $textTitleField,
+                        'summary' => $textFreqsField,
+                        'content' => $textFreqsField,
+                        'author_name' => $textFreqsField,
+                        'slug' => $keywordField,
+                        'category' => $keywordField,
+                        'status' => $keywordField,
+                        'views' => $integerField,
+                        'created_at' => $dateField,
+                    ],
                 ],
             ],
             'products' => [
@@ -176,6 +256,28 @@ return [
                     'cost_price',
                     'created_at',
                 ],
+                '_source' => ['id', 'name', 'team', 'season', 'cost_price', 'is_in_stock', 'is_active'],
+                'fields' => ['id', 'season', 'cost_price', 'is_in_stock', 'is_active'],
+                'mappings' => [
+                    'properties' => [
+                        'id' => $longField,
+                        'name' => $textTitleField,
+                        'description' => $textFreqsField,
+                        'team' => [
+                            'type' => 'text',
+                            'norms' => false,
+                            'index_options' => 'freqs',
+                            'fields' => [
+                                'keyword' => $keywordField,
+                            ],
+                        ],
+                        'season' => $keywordField,
+                        'cost_price' => $floatField,
+                        'is_in_stock' => $booleanField,
+                        'is_active' => $booleanField,
+                        'created_at' => $dateField,
+                    ],
+                ],
             ],
             'facilities' => [
                 'searchableAttributes' => [
@@ -187,11 +289,25 @@ return [
                 'filterableAttributes' => [
                     'id',
                     'district',
+                    'phone',
                     'status',
                 ],
                 'sortableAttributes' => [
                     'id',
                     'created_at',
+                ],
+                '_source' => ['id', 'name', 'district', 'phone', 'status'],
+                'fields' => ['id', 'district', 'phone', 'status'],
+                'mappings' => [
+                    'properties' => [
+                        'id' => $longField,
+                        'name' => $textTitleField,
+                        'address' => $textFreqsField,
+                        'district' => $keywordField,
+                        'phone' => $keywordField,
+                        'status' => $booleanField,
+                        'created_at' => $dateField,
+                    ],
                 ],
             ],
             'sport_types' => [
@@ -206,6 +322,16 @@ return [
                 'sortableAttributes' => [
                     'id',
                 ],
+                '_source' => ['id', 'name', 'status'],
+                'fields' => ['id', 'status'],
+                'mappings' => [
+                    'properties' => [
+                        'id' => $longField,
+                        'name' => $textTitleField,
+                        'description' => $textFreqsField,
+                        'status' => $booleanField,
+                    ],
+                ],
             ],
             'users' => [
                 'searchableAttributes' => [
@@ -216,12 +342,28 @@ return [
                 ],
                 'filterableAttributes' => [
                     'id',
+                    'email',
+                    'phone',
                     'role',
                     'status',
                 ],
                 'sortableAttributes' => [
                     'id',
                     'created_at',
+                ],
+                '_source' => ['id', 'name', 'email', 'phone', 'role', 'status'],
+                'fields' => ['id', 'email', 'phone', 'role', 'status'],
+                'mappings' => [
+                    'properties' => [
+                        'id' => $longField,
+                        'name' => $textTitleField,
+                        'email' => $keywordField,
+                        'phone' => $keywordField,
+                        'role' => $keywordField,
+                        'status' => $booleanField,
+                        'birthday' => $dateField,
+                        'created_at' => $dateField,
+                    ],
                 ],
             ],
             'price_rules' => [
@@ -242,6 +384,23 @@ return [
                     'price',
                     'created_at',
                 ],
+                '_source' => ['id', 'court_id', 'sport_type_id', 'day_type', 'price', 'status'],
+                'fields' => ['id', 'court_id', 'sport_type_id', 'day_type', 'price', 'status'],
+                'mappings' => [
+                    'properties' => [
+                        'id' => $longField,
+                        'court_id' => $longField,
+                        'sport_type_id' => $longField,
+                        'day_type' => $keywordField,
+                        'start_time' => $keywordField,
+                        'end_time' => $keywordField,
+                        'court_name' => $textFreqsField,
+                        'sport_type_name' => $textFreqsField,
+                        'price' => $floatField,
+                        'status' => $booleanField,
+                        'created_at' => $dateField,
+                    ],
+                ],
             ],
             'plans' => [
                 'searchableAttributes' => [
@@ -256,6 +415,19 @@ return [
                     'price',
                     'duration_days',
                     'created_at',
+                ],
+                '_source' => ['id', 'name', 'duration_days', 'price', 'discount_percent', 'status'],
+                'fields' => ['id', 'duration_days', 'price', 'discount_percent', 'status'],
+                'mappings' => [
+                    'properties' => [
+                        'id' => $longField,
+                        'name' => $textTitleField,
+                        'duration_days' => $integerField,
+                        'price' => $floatField,
+                        'discount_percent' => $integerField,
+                        'status' => $booleanField,
+                        'created_at' => $dateField,
+                    ],
                 ],
             ],
             'subscriptions' => [
@@ -274,6 +446,22 @@ return [
                     'price',
                     'created_at',
                 ],
+                '_source' => ['id', 'user_id', 'plan_id', 'price', 'status'],
+                'fields' => ['id', 'user_id', 'plan_id', 'price', 'status'],
+                'mappings' => [
+                    'properties' => [
+                        'id' => $longField,
+                        'user_id' => $longField,
+                        'plan_id' => $longField,
+                        'user_name' => $textFreqsField,
+                        'plan_name' => $textFreqsField,
+                        'price' => $floatField,
+                        'status' => $booleanField,
+                        'starts_at' => $dateField,
+                        'expires_at' => $dateField,
+                        'created_at' => $dateField,
+                    ],
+                ],
             ],
             'ads' => [
                 'searchableAttributes' => [
@@ -289,6 +477,18 @@ return [
                     'id',
                     'created_at',
                 ],
+                '_source' => ['id', 'name', 'link_url', 'is_active'],
+                'fields' => ['id', 'link_url', 'is_active'],
+                'mappings' => [
+                    'properties' => [
+                        'id' => $longField,
+                        'name' => $textTitleField,
+                        'description' => $textFreqsField,
+                        'link_url' => $keywordField,
+                        'is_active' => $booleanField,
+                        'created_at' => $dateField,
+                    ],
+                ],
             ],
             'bookings' => [
                 'searchableAttributes' => [
@@ -302,6 +502,8 @@ return [
                     'id',
                     'user_id',
                     'court_id',
+                    'customer_phone',
+                    'customer_email',
                     'status',
                     'booking_date',
                 ],
@@ -309,6 +511,26 @@ return [
                     'id',
                     'total_price',
                     'created_at',
+                ],
+                '_source' => ['id', 'user_id', 'court_id', 'customer_name', 'customer_phone', 'status', 'booking_date', 'total_price'],
+                'fields' => ['id', 'user_id', 'court_id', 'customer_phone', 'status', 'booking_date', 'total_price'],
+                'mappings' => [
+                    'properties' => [
+                        'id' => $longField,
+                        'user_id' => $longField,
+                        'court_id' => $longField,
+                        'customer_name' => $textFreqsField,
+                        'customer_phone' => $keywordField,
+                        'customer_email' => $keywordField,
+                        'court_name' => $textFreqsField,
+                        'note' => $textFreqsField,
+                        'status' => $keywordField,
+                        'booking_date' => $dateField,
+                        'start_time' => $keywordField,
+                        'end_time' => $keywordField,
+                        'total_price' => $floatField,
+                        'created_at' => $dateField,
+                    ],
                 ],
             ],
             'reviews' => [
@@ -330,6 +552,22 @@ return [
                     'rating',
                     'created_at',
                 ],
+                '_source' => ['id', 'user_id', 'court_id', 'rating', 'status'],
+                'fields' => ['id', 'user_id', 'court_id', 'rating', 'status'],
+                'mappings' => [
+                    'properties' => [
+                        'id' => $longField,
+                        'user_id' => $longField,
+                        'court_id' => $longField,
+                        'booking_id' => $longField,
+                        'content' => $textFreqsField,
+                        'user_name' => $textFreqsField,
+                        'court_name' => $textFreqsField,
+                        'rating' => $integerField,
+                        'status' => $booleanField,
+                        'created_at' => $dateField,
+                    ],
+                ],
             ],
             'sales' => [
                 'searchableAttributes' => [
@@ -342,6 +580,7 @@ return [
                     'id',
                     'product_id',
                     'user_id',
+                    'customer_phone',
                     'status',
                     'sale_date',
                 ],
@@ -349,6 +588,23 @@ return [
                     'id',
                     'total_price',
                     'created_at',
+                ],
+                '_source' => ['id', 'product_id', 'user_id', 'customer_name', 'customer_phone', 'status', 'total_price'],
+                'fields' => ['id', 'product_id', 'user_id', 'customer_phone', 'status', 'total_price'],
+                'mappings' => [
+                    'properties' => [
+                        'id' => $longField,
+                        'product_id' => $longField,
+                        'user_id' => $longField,
+                        'customer_name' => $textFreqsField,
+                        'customer_phone' => $keywordField,
+                        'product_name' => $textFreqsField,
+                        'status' => $keywordField,
+                        'quantity' => $integerField,
+                        'total_price' => $floatField,
+                        'sale_date' => $dateField,
+                        'created_at' => $dateField,
+                    ],
                 ],
             ],
             'payments' => [
@@ -362,6 +618,7 @@ return [
                 ],
                 'filterableAttributes' => [
                     'id',
+                    'transaction_code',
                     'payable_type',
                     'payable_id',
                     'user_id',
@@ -372,6 +629,24 @@ return [
                     'id',
                     'amount',
                     'created_at',
+                ],
+                '_source' => ['id', 'transaction_code', 'payable_type', 'payable_id', 'user_id', 'payment_method', 'status', 'amount'],
+                'fields' => ['id', 'transaction_code', 'payable_type', 'payable_id', 'user_id', 'payment_method', 'status', 'amount'],
+                'mappings' => [
+                    'properties' => [
+                        'id' => $longField,
+                        'payable_id' => $longField,
+                        'user_id' => $longField,
+                        'transaction_code' => $keywordField,
+                        'payable_type' => $keywordField,
+                        'payment_method' => $keywordField,
+                        'status' => $keywordField,
+                        'user_name' => $textFreqsField,
+                        'note' => $textFreqsField,
+                        'amount' => $floatField,
+                        'paid_at' => $dateField,
+                        'created_at' => $dateField,
+                    ],
                 ],
             ],
         ],
