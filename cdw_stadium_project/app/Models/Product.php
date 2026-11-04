@@ -45,7 +45,7 @@ class Product extends Model
             'season' => $this->season,
         ];
 
-        if (config('scout.driver') === 'meilisearch') {
+        if (config('scout.driver') === 'elasticsearch') {
             $array['cost_price'] = (float) $this->cost_price;
             $array['is_in_stock'] = (bool) $this->is_in_stock;
             $array['is_active'] = (bool) $this->is_active;

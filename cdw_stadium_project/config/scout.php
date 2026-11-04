@@ -11,7 +11,7 @@ return [
     | using Laravel Scout. This connection is used when syncing all models
     | to the search service. You should adjust this based on your needs.
     |
-    | Supported: "algolia", "meilisearch", "typesense", "database",
+    | Supported: "algolia", "elasticsearch", "typesense", "database",
     |            "collection", "null"
     |
     */
@@ -101,20 +101,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Meilisearch Configuration
+    | Elasticsearch Configuration
     |--------------------------------------------------------------------------
     |
-    | Here you may configure your Meilisearch settings. Meilisearch is an open
-    | source search engine with minimal configuration. Below, you can state
-    | the host and key information for your own Meilisearch installation.
-    |
-    | See: https://www.meilisearch.com/docs/learn/configuration/instance_options#all-instance-options
+    | Here you may configure your Elasticsearch settings. Below, you can state
+    | the host, authentication, and index settings for your own Elasticsearch
+    | installation.
     |
     */
 
-    'meilisearch' => [
-        'host' => env('MEILISEARCH_HOST', 'http://localhost:7700'),
-        'key' => env('MEILISEARCH_KEY'),
+    'elasticsearch' => [
+        'host' => env('ELASTICSEARCH_HOST', 'http://localhost:9200'),
+        'username' => env('ELASTICSEARCH_USERNAME'),
+        'password' => env('ELASTICSEARCH_PASSWORD'),
+        'api_key' => env('ELASTICSEARCH_API_KEY'),
         'index-settings' => [
             'courts' => [
                 'searchableAttributes' => [

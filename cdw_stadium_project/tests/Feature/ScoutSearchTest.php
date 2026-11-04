@@ -8,6 +8,7 @@ use App\Models\News;
 use App\Models\Product;
 use App\Models\SportType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class ScoutSearchTest extends TestCase
@@ -114,7 +115,7 @@ class ScoutSearchTest extends TestCase
         $response->assertDontSee('Lịch thi đấu bóng đá cuối tuần');
     }
 
-    public function test_searchable_models_configure_meilisearch_attributes_and_visibility(): void
+    public function test_searchable_models_configure_elasticsearch_attributes_and_visibility(): void
     {
         $facility = Facility::factory()->create([
             'name' => 'Cơ sở Quận 7',
@@ -149,7 +150,7 @@ class ScoutSearchTest extends TestCase
             'is_active' => true,
         ]);
 
-        config(['scout.driver' => 'meilisearch']);
+        config(['scout.driver' => 'elasticsearch']);
 
         $this->assertTrue($activeCourt->shouldBeSearchable());
         $this->assertFalse($inactiveCourt->shouldBeSearchable());
@@ -165,5 +166,40 @@ class ScoutSearchTest extends TestCase
         $productArray = $product->toSearchableArray();
         $this->assertSame('Áo đấu Đội tuyển', $productArray['name']);
         $this->assertSame('Việt Nam', $productArray['team']);
+    }
+
+    public function test_elasticsearch_scout_driver_indexes_and_searches_records(): void
+    {
+        $court = Court::factory()->create([
+            'name' => 'Sân Tennis Trung Tâm',
+            'status' => 'available',
+        ]);
+
+        Http::fake([
+            '*/_bulk*' => Http::response(['errors' => false], 200),
+            '*/courts/_search' => Http::response([
+                'hits' => [
+                    'total' => ['value' => 1],
+                    'hits' => [
+                        [
+                            '_id' => (string) $court->id,
+                            '_source' => ['id' => $court->id, 'name' => $court->name],
+                        ],
+                    ],
+                ],
+            ], 200),
+        ]);
+
+        config([
+            'scout.driver' => 'elasticsearch',
+            'scout.elasticsearch.host' => 'http://elasticsearch:9200',
+        ]);
+
+        $court->searchable();
+
+        $results = Court::search('Tennis')->get();
+
+        $this->assertCount(1, $results);
+        $this->assertSame($court->id, $results->first()->id);
     }
 }
