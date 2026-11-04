@@ -68,6 +68,7 @@ class Payment extends Model
         'cash' => 'Tiền mặt',
         'cod' => 'Thanh toán tại sân',
         'bank_transfer' => 'Chuyển khoản',
+        'qr' => 'Quét mã VietQR',
         'vnpay' => 'VNPay',
         'momo' => 'Ví MoMo',
         'visa' => 'Thẻ Visa/Mastercard',

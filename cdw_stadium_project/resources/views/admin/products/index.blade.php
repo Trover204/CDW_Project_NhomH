@@ -31,8 +31,8 @@
             <tr>
                 <td>{{ $product->id }}</td>
                 <td>
-                    @if ($product->image)
-                        <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}" style="width:44px;height:44px;object-fit:cover;border-radius:8px;border:1px solid var(--border);">
+                    @if ($product->image_url)
+                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}" style="width:44px;height:44px;object-fit:cover;border-radius:8px;border:1px solid var(--border);">
                     @else
                         <span style="color:var(--muted);">—</span>
                     @endif

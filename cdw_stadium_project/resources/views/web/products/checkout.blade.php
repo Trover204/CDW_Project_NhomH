@@ -1,112 +1,1182 @@
 @extends('web.layouts.app')
 
-@section('title', 'Thanh toán sản phẩm')
+@section('title', 'Thanh toán đơn hàng - ' . $product->name)
+
+@push('styles')
+<style>
+    .checkout-container {
+        max-width: 820px;
+        margin: 36px auto 70px;
+        padding: 0 20px;
+    }
+
+    /* Stepper Bar */
+    .checkout-stepper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 32px;
+        position: relative;
+    }
+    .checkout-stepper::before {
+        content: "";
+        position: absolute;
+        top: 21px;
+        left: 40px;
+        right: 40px;
+        height: 3px;
+        background: var(--line, #E3ECE6);
+        z-index: 1;
+    }
+    .step-item {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        user-select: none;
+    }
+    .step-number {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--bg-white, #FFFFFF);
+        border: 2.5px solid var(--line, #D1D5DB);
+        color: var(--ink-soft, #6B7280);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .step-item.active .step-number {
+        background: #178A4C;
+        border-color: #178A4C;
+        color: #FFFFFF;
+        box-shadow: 0 4px 14px rgba(23, 138, 76, 0.4);
+        transform: scale(1.08);
+    }
+    .step-item.completed .step-number {
+        background: #DCFCE7;
+        border-color: #178A4C;
+        color: #15803D;
+    }
+    .step-label {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--ink-soft, #6B7280);
+        white-space: nowrap;
+        transition: color 0.3s ease;
+    }
+    .step-item.active .step-label {
+        color: #178A4C;
+        font-weight: 700;
+    }
+
+    /* Checkout Card */
+    .checkout-card {
+        background: var(--bg-white, #FFFFFF);
+        border: 1px solid var(--line, #E3ECE6);
+        border-radius: 24px;
+        padding: 36px 32px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Product Summary Header */
+    .checkout-prod-box {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 18px 20px;
+        background: var(--bg-page, #F9FAFB);
+        border-radius: 16px;
+        border: 1px solid var(--line, #E5E7EB);
+        margin-bottom: 28px;
+    }
+    .checkout-prod-img {
+        width: 84px;
+        height: 84px;
+        background: #FFFFFF;
+        border-radius: 12px;
+        border: 1px solid var(--line, #E5E7EB);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        padding: 6px;
+    }
+    .checkout-prod-img img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    /* Quantity Control Buttons */
+    .qty-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: #FFFFFF;
+        border: 2px solid var(--line, #D1D5DB);
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--ink, #11201B);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        user-select: none;
+    }
+    .qty-btn:hover {
+        border-color: #178A4C;
+        color: #178A4C;
+        background: #F0FDF4;
+        transform: translateY(-1px);
+    }
+    .qty-btn:active {
+        transform: scale(0.95);
+    }
+
+    /* Payment Radio Cards */
+    .payment-option-card {
+        display: flex;
+        align-items: center;
+        padding: 16px 18px;
+        border: 2px solid var(--line, #E5E7EB);
+        border-radius: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: var(--bg-white, #FFFFFF);
+        margin-bottom: 12px;
+        position: relative;
+        user-select: none;
+    }
+    .payment-option-card:hover {
+        border-color: #178A4C;
+        background: #F0FDF4;
+    }
+    .payment-option-card.selected {
+        border-color: #178A4C;
+        background: #F0FDF4;
+        box-shadow: 0 4px 14px rgba(23, 138, 76, 0.12);
+    }
+    .payment-option-card input[type="radio"] {
+        margin-right: 14px;
+        width: 20px;
+        height: 20px;
+        accent-color: #178A4C;
+        cursor: pointer;
+    }
+
+    /* Form Fields */
+    .form-group-custom {
+        margin-bottom: 20px;
+    }
+    .form-label-custom {
+        display: block;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--ink, #11201B);
+        margin-bottom: 8px;
+    }
+    .form-label-custom span.req {
+        color: #DC2626;
+        margin-left: 2px;
+    }
+    .form-input-custom {
+        width: 100%;
+        height: 48px;
+        padding: 0 16px;
+        border: 1.5px solid var(--line, #D1D5DB);
+        border-radius: 12px;
+        font-size: 14.5px;
+        background: var(--bg-white, #FFFFFF);
+        color: var(--ink, #11201B);
+        outline: none;
+        transition: all 0.2s;
+    }
+    .form-input-custom:focus {
+        border-color: #178A4C;
+        box-shadow: 0 0 0 3px rgba(23, 138, 76, 0.12);
+    }
+
+    /* Size Selector Pills */
+    .size-pills {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    .size-pill-label {
+        flex: 1 1 50px;
+        text-align: center;
+        padding: 10px;
+        border: 1.5px solid var(--line, #D1D5DB);
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: var(--bg-white, #FFFFFF);
+        color: var(--ink, #11201B);
+        user-select: none;
+    }
+    .size-pill-label:hover {
+        border-color: #178A4C;
+        color: #178A4C;
+    }
+    .size-pill-label.selected {
+        background: #178A4C;
+        color: #FFFFFF;
+        border-color: #178A4C;
+    }
+
+    /* QR Code Display Frame */
+    .qr-payment-frame {
+        background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%);
+        border: 2px solid #BFDBFE;
+        border-radius: 20px;
+        padding: 26px;
+        margin-bottom: 28px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    [data-theme="dark"] .qr-payment-frame {
+        background: #1f2937;
+        border-color: #374151;
+    }
+    .qr-switch-pills {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
+    }
+    .qr-switch-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 18px;
+        border-radius: 30px;
+        font-size: 13.5px;
+        font-weight: 700;
+        border: 1.5px solid var(--line, #CBD5E1);
+        background: var(--bg-white, #FFFFFF);
+        color: var(--ink, #1F2937);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .qr-switch-pill:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+    .qr-switch-pill.active-bank {
+        background: #178A4C;
+        color: #FFFFFF;
+        border-color: #178A4C;
+        box-shadow: 0 4px 12px rgba(23, 138, 76, 0.25);
+    }
+    .qr-switch-pill.active-momo {
+        background: #A50064;
+        color: #FFFFFF;
+        border-color: #A50064;
+        box-shadow: 0 4px 12px rgba(165, 0, 100, 0.25);
+    }
+    .momo-mini-badge {
+        background: #A50064;
+        color: #FFFFFF;
+        font-size: 11px;
+        font-weight: 800;
+        padding: 2px 7px;
+        border-radius: 5px;
+        line-height: 1;
+    }
+    .active-momo .momo-mini-badge {
+        background: #FFFFFF;
+        color: #A50064;
+    }
+    .qr-img-wrapper {
+        background: #FFFFFF;
+        padding: 14px;
+        border-radius: 16px;
+        display: inline-block;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        border: 1px solid #E2E8F0;
+        margin-bottom: 18px;
+    }
+    .qr-img-wrapper img {
+        max-width: 240px;
+        height: auto;
+        display: block;
+    }
+
+    .bank-info-table {
+        width: 100%;
+        max-width: 460px;
+        margin: 0 auto 20px;
+        border-collapse: collapse;
+        text-align: left;
+    }
+    .bank-info-table td {
+        padding: 10px 12px;
+        font-size: 14px;
+        border-bottom: 1px dashed rgba(0,0,0,0.08);
+    }
+    .bank-info-table td:first-child {
+        color: var(--ink-soft, #64748B);
+        font-weight: 500;
+        width: 38%;
+    }
+    .bank-info-table td:last-child {
+        color: var(--ink, #0F172A);
+        font-weight: 700;
+    }
+
+    .btn-copy {
+        background: #E2E8F0;
+        border: none;
+        color: #334155;
+        font-size: 11.5px;
+        font-weight: 600;
+        padding: 4px 9px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-left: 8px;
+        float: right;
+    }
+    .btn-copy:hover {
+        background: #178A4C;
+        color: #FFFFFF;
+    }
+
+    /* Buttons */
+    .btn-checkout-primary {
+        width: 100%;
+        height: 52px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #178A4C 0%, #12723E 100%);
+        color: #FFFFFF;
+        border: none;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.2s;
+        box-shadow: 0 4px 14px rgba(23, 138, 76, 0.28);
+    }
+    .btn-checkout-primary:hover {
+        background: linear-gradient(135deg, #137740 0%, #0D562E 100%);
+        box-shadow: 0 6px 18px rgba(23, 138, 76, 0.4);
+        transform: translateY(-1px);
+    }
+    .btn-checkout-back {
+        height: 52px;
+        padding: 0 24px;
+        border-radius: 12px;
+        background: var(--bg-page, #F3F4F6);
+        color: var(--ink-soft, #4B5563);
+        border: 1.5px solid var(--line, #D1D5DB);
+        font-size: 14.5px;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s;
+    }
+    .btn-checkout-back:hover {
+        background: var(--line, #E5E7EB);
+        color: var(--ink, #111827);
+    }
+
+    @media (max-width: 640px) {
+        .checkout-card {
+            padding: 24px 18px;
+        }
+        .checkout-stepper {
+            margin-bottom: 24px;
+        }
+        .step-label {
+            font-size: 11.5px;
+        }
+        .step-number {
+            width: 38px;
+            height: 38px;
+            font-size: 14px;
+        }
+    }
+</style>
+@endpush
 
 @section('content')
 
-<div style="overflow:hidden; background:#FFFFFF; max-width: 600px; margin: 40px auto; padding: 20px; border: 1px solid #E1E8E3; border-radius: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+<div class="checkout-container">
 
-    <div style="padding:22px 20px;">
-        <div style="text-align:center;margin-bottom:30px;">
-            <div style="font-size:24px;font-weight:700;color:#16241C;margin-bottom:6px;">Thanh toán đơn hàng</div>
+    {{-- Breadcrumb --}}
+    <div style="margin-bottom: 22px; font-size: 14px; color: var(--ink-soft, #5E726A); display: flex; align-items: center; gap: 8px;">
+        <a href="{{ route('products.index') }}" style="color: #178A4C; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+            <i class="ti ti-arrow-left"></i> Cửa hàng Merch
+        </a>
+        <span>/</span>
+        <span style="color: var(--ink, #11201B); font-weight: 500;">Quy trình đặt mua & Thanh toán</span>
+    </div>
+
+    @if(session('error'))
+        <div style="background: #E53E3E; color: white; padding: 14px 20px; border-radius: 12px; margin-bottom: 24px; text-align: center; font-weight: 600; box-shadow: 0 4px 12px rgba(229,62,62,0.15);">
+            <i class="ti ti-alert-triangle" style="margin-right: 6px;"></i> {{ session('error') }}
+        </div>
+    @endif
+
+    {{-- 3-Step Wizard Stepper (No inline onclick!) --}}
+    <div class="checkout-stepper">
+        <div class="step-item active" id="step-nav-1">
+            <div class="step-number" id="step-num-1">1</div>
+            <div class="step-label">1. Chọn thanh toán</div>
+        </div>
+        <div class="step-item" id="step-nav-2">
+            <div class="step-number" id="step-num-2">2</div>
+            <div class="step-label">2. Thông tin khách</div>
+        </div>
+        <div class="step-item" id="step-nav-3">
+            <div class="step-number" id="step-num-3">3</div>
+            <div class="step-label">3. Quét mã QR</div>
+        </div>
+    </div>
+
+    <div class="checkout-card">
+
+        {{-- Product Summary Header --}}
+        <div class="checkout-prod-box">
+            <div class="checkout-prod-img">
+                @if($product->image_url)
+                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
+                @else
+                    <i class="ti ti-shirt" style="font-size: 36px; color: #9CA3AF;"></i>
+                @endif
+            </div>
+
+            <div style="flex-grow: 1;">
+                @if($product->team)
+                    <span style="display: inline-block; background: #F0FDF4; color: #15803D; font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-bottom: 4px;">
+                        <i class="ti ti-shield" style="font-size: 11px;"></i> {{ $product->team }} {{ $product->season ? "• {$product->season}" : '' }}
+                    </span>
+                @endif
+                <div style="font-weight: 700; color: var(--ink, #111827); font-size: 16.5px; margin-bottom: 6px;">{{ $product->name }}</div>
+                <div style="display: flex; align-items: baseline; justify-content: space-between;">
+                    <span style="font-size: 13px; color: #15803D; font-weight: 600;">
+                        <i class="ti ti-check" style="font-size: 12px;"></i> Còn {{ $product->stock_quantity }} sản phẩm
+                    </span>
+                    <span style="font-size: 19px; font-weight: 800; color: #EA580C; font-family: 'Oswald', sans-serif;">
+                        {{ number_format($product->cost_price, 0, ',', '.') }}₫
+                    </span>
+                </div>
+            </div>
         </div>
 
-        @if(session('error'))
-            <div style="background: #E53E3E; color: white; padding: 10px 20px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
-                {{ session('error') }}
+        {{-- The Master Form --}}
+        <form action="{{ route('products.purchase', $product->id) }}" method="POST" id="purchase-form">
+            @csrf
+
+            {{-- ========================================================
+                 BƯỚC 1: CHỌN SỐ LƯỢNG & PHƯƠNG THỨC THANH TOÁN
+            ======================================================== --}}
+            <div id="step-section-1">
+                <h3 style="font-size: 18px; font-weight: 700; color: var(--ink, #11201B); margin: 0 0 18px; display: flex; align-items: center; gap: 8px;">
+                    <i class="ti ti-credit-card" style="color: #178A4C;"></i> Bước 1: Chọn số lượng & Phương thức thanh toán
+                </h3>
+
+                {{-- Quantity Selector --}}
+                <div class="form-group-custom" style="background: var(--bg-page, #F8FAFC); padding: 16px 20px; border-radius: 14px; border: 1px solid var(--line, #E5E7EB); margin-bottom: 24px;">
+                    <label class="form-label-custom">
+                        Số lượng áo đặt mua <span class="req">*</span>
+                    </label>
+                    <div style="display: flex; align-items: center; gap: 14px;">
+                        <button type="button" id="btn-qty-minus" class="qty-btn" aria-label="Giảm số lượng">-</button>
+                        <input type="number" name="quantity" id="quantity" value="1" min="1" max="{{ $product->stock_quantity }}" required
+                               class="form-input-custom" style="width: 80px; text-align: center; font-weight: 700; font-size: 18px;">
+                        <button type="button" id="btn-qty-plus" class="qty-btn" aria-label="Tăng số lượng">+</button>
+                        <span style="font-size: 13.5px; color: var(--ink-soft, #6B7280);">
+                            (Tối đa: {{ $product->stock_quantity }} cái)
+                        </span>
+                    </div>
+                </div>
+
+                {{-- Payment Methods --}}
+                <div class="form-group-custom">
+                    <label class="form-label-custom">
+                        Chọn phương thức thanh toán <span class="req">*</span>
+                    </label>
+
+                    {{-- VietQR Bank Transfer (Recommended) --}}
+                    <label class="payment-option-card selected" id="opt-qr">
+                        <input type="radio" name="payment_method" value="qr" checked>
+                        <div style="flex-grow: 1;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                                <span style="background: #178A4C; color: #fff; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700;">KHUYÊN DÙNG</span>
+                                <span style="font-weight: 700; font-size: 15px; color: var(--ink, #111827);">Quét mã QR Ngân Hàng (VietQR / Chuyển khoản 24/7)</span>
+                            </div>
+                            <div style="font-size: 13px; color: var(--ink-soft, #6B7280);">Quét mã chuyển tiền tức thì từ MB Bank, Vietcombank, Techcombank, BIDV... hoặc MoMo</div>
+                        </div>
+                        <i class="ti ti-qrcode" style="font-size: 28px; color: #178A4C;"></i>
+                    </label>
+
+                    {{-- MoMo --}}
+                    <label class="payment-option-card" id="opt-momo">
+                        <input type="radio" name="payment_method" value="momo">
+                        <div style="flex-grow: 1;">
+                            <div style="font-weight: 700; font-size: 15px; color: var(--ink, #111827); margin-bottom: 4px;">Ví điện tử MoMo</div>
+                            <div style="font-size: 13px; color: var(--ink-soft, #6B7280);">Thanh toán qua ví điện tử MoMo hoặc quét mã QR MoMo</div>
+                        </div>
+                        <span style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 8px; background: #A50064; color: #fff; font-weight: 700; font-size: 11px;">MoMo</span>
+                    </label>
+
+                    {{-- Visa / Mastercard --}}
+                    <label class="payment-option-card" id="opt-visa">
+                        <input type="radio" name="payment_method" value="visa">
+                        <div style="flex-grow: 1;">
+                            <div style="font-weight: 700; font-size: 15px; color: var(--ink, #111827); margin-bottom: 4px;">Thẻ Quốc tế (Visa / MasterCard / JCB)</div>
+                            <div style="font-size: 13px; color: var(--ink-soft, #6B7280);">Thanh toán bằng thẻ ghi nợ hoặc thẻ tín dụng quốc tế an toàn 3D Secure</div>
+                        </div>
+                        <i class="ti ti-credit-card" style="font-size: 26px; color: #1E3A8A;"></i>
+                    </label>
+
+                    {{-- PayPal --}}
+                    <label class="payment-option-card" id="opt-paypal">
+                        <input type="radio" name="payment_method" value="paypal">
+                        <div style="flex-grow: 1;">
+                            <div style="font-weight: 700; font-size: 15px; color: var(--ink, #111827); margin-bottom: 4px;">Cổng thanh toán PayPal</div>
+                            <div style="font-size: 13px; color: var(--ink-soft, #6B7280);">Thanh toán quốc tế qua tài khoản PayPal bảo mật</div>
+                        </div>
+                        <i class="ti ti-brand-paypal" style="font-size: 26px; color: #003087;"></i>
+                    </label>
+
+                    {{-- COD --}}
+                    <label class="payment-option-card" id="opt-cod">
+                        <input type="radio" name="payment_method" value="cod">
+                        <div style="flex-grow: 1;">
+                            <div style="font-weight: 700; font-size: 15px; color: var(--ink, #111827); margin-bottom: 4px;">Thanh toán khi nhận hàng (COD)</div>
+                            <div style="font-size: 13px; color: var(--ink-soft, #6B7280);">Kiểm tra hàng trước khi thanh toán tiền mặt cho nhân viên giao hàng</div>
+                        </div>
+                        <i class="ti ti-truck" style="font-size: 26px; color: #D97706;"></i>
+                    </label>
+                </div>
+
+                {{-- Price Total Box --}}
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; background: #FFF7ED; border-radius: 14px; border: 1.5px solid #FDBA74; margin-bottom: 24px;">
+                    <div>
+                        <span style="display: block; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; color: #9A3412;">Tổng tiền tạm tính</span>
+                        <span style="font-size: 12px; color: #C2410C;">Miễn phí giao hàng toàn quốc</span>
+                    </div>
+                    <span style="font-weight: 800; font-size: 26px; color: #C2410C; font-family: 'Oswald', sans-serif;" class="total-display-tag">
+                        {{ number_format($product->cost_price, 0, ',', '.') }}₫
+                    </span>
+                </div>
+
+                <button type="button" id="btn-to-step2" class="btn-checkout-primary">
+                    Tiếp tục: Nhập thông tin khách hàng <i class="ti ti-arrow-right"></i>
+                </button>
             </div>
-        @endif
 
-        <div style="background:#F9FAFB; padding:20px; border-radius:12px; margin-bottom: 24px; border: 1px solid #E5E7EB;">
-            <div style="font-size:18px;font-weight:700;color:#16241C;margin-bottom:10px;">Chi tiết sản phẩm</div>
+            {{-- ========================================================
+                 BƯỚC 2: NHẬP THÔNG TIN KHÁCH HÀNG
+            ======================================================== --}}
+            <div id="step-section-2" style="display: none;">
+                <h3 style="font-size: 18px; font-weight: 700; color: var(--ink, #11201B); margin: 0 0 18px; display: flex; align-items: center; gap: 8px;">
+                    <i class="ti ti-user-check" style="color: #178A4C;"></i> Bước 2: Nhập thông tin nhận hàng
+                </h3>
 
-            <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-                @if($product->image)
-                    <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
-                @else
-                    <div style="width: 80px; height: 80px; background-color: #E5E7EB; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #9CA3AF;">No Image</div>
-                @endif
+                {{-- Customer Name --}}
+                <div class="form-group-custom">
+                    <label class="form-label-custom">
+                        Họ và tên người nhận <span class="req">*</span>
+                    </label>
+                    <input type="text" name="customer_name" id="customer_name"
+                           value="{{ old('customer_name', auth()->user()->name ?? '') }}"
+                           class="form-input-custom" placeholder="Ví dụ: Nguyễn Văn A" required>
+                    <div id="err-name" style="color: #DC2626; font-size: 13px; margin-top: 5px; display: none;">Vui lòng nhập họ và tên người nhận.</div>
+                </div>
 
-                <div>
-                    <div style="font-weight:600; color:#111827; font-size: 16px; margin-bottom: 4px;">{{ $product->name }}</div>
-                    @if($product->team)
-                        <div style="color:#6B7280; font-size: 14px; margin-bottom: 4px;">{{ $product->team }} {{ $product->season ? "({$product->season})" : '' }}</div>
-                    @endif
-                    <div style="color:#178A4C; font-weight: 600;">Còn lại: {{ $product->stock_quantity }} sản phẩm</div>
+                {{-- Customer Phone --}}
+                <div class="form-group-custom">
+                    <label class="form-label-custom">
+                        Số điện thoại liên hệ <span class="req">*</span>
+                    </label>
+                    <input type="tel" name="customer_phone" id="customer_phone"
+                           value="{{ old('customer_phone', auth()->user()->phone ?? '') }}"
+                           class="form-input-custom" placeholder="Ví dụ: 0987654321" required>
+                    <div id="err-phone" style="color: #DC2626; font-size: 13px; margin-top: 5px; display: none;">Vui lòng nhập số điện thoại hợp lệ (tối thiểu 9 số).</div>
+                </div>
+
+                {{-- Shipping Address --}}
+                <div class="form-group-custom">
+                    <label class="form-label-custom">
+                        Địa chỉ nhận hàng chi tiết <span class="req">*</span>
+                    </label>
+                    <input type="text" name="shipping_address" id="shipping_address"
+                           class="form-input-custom" placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố..." required>
+                    <div id="err-address" style="color: #DC2626; font-size: 13px; margin-top: 5px; display: none;">Vui lòng nhập địa chỉ nhận hàng chi tiết.</div>
+                </div>
+
+                {{-- Size Selection --}}
+                <div class="form-group-custom">
+                    <label class="form-label-custom">
+                        Chọn kích thước áo (Size)
+                    </label>
+                    <div class="size-pills">
+                        <div class="size-pill-label" data-size="S">S</div>
+                        <div class="size-pill-label" data-size="M">M</div>
+                        <div class="size-pill-label selected" data-size="L">L</div>
+                        <div class="size-pill-label" data-size="XL">XL</div>
+                        <div class="size-pill-label" data-size="XXL">XXL</div>
+                    </div>
+                </div>
+
+                {{-- Note --}}
+                <div class="form-group-custom">
+                    <label class="form-label-custom">
+                        Ghi chú đơn hàng (Tùy chọn)
+                    </label>
+                    <textarea name="note" id="order_note" rows="2"
+                              style="width: 100%; padding: 12px 16px; border: 1.5px solid var(--line, #D1D5DB); border-radius: 12px; font-size: 14px; outline: none; background: var(--bg-white, #fff); color: var(--ink, #11201B);"
+                              placeholder="Ví dụ: In số 7 sau lưng áo, giao giờ hành chính...">Size L</textarea>
+                </div>
+
+                {{-- Navigation Buttons --}}
+                <div style="display: flex; gap: 12px; margin-top: 28px;">
+                    <button type="button" id="btn-back-step-1" class="btn-checkout-back">
+                        <i class="ti ti-arrow-left"></i> Quay lại
+                    </button>
+                    <button type="button" id="btn-to-step-3" class="btn-checkout-primary">
+                        Tiếp tục: Quét mã QR thanh toán <i class="ti ti-arrow-right"></i>
+                    </button>
                 </div>
             </div>
 
-            <div style="display:flex; justify-content:space-between; border-top: 1px solid #E5E7EB; padding-top: 10px; margin-top: 10px;">
-                <span style="font-weight:600; color:#111827;">Đơn giá:</span>
-                <span style="font-weight:700; font-size:18px; color:#F97316;">{{ number_format($product->cost_price, 0, ',', '.') }}đ</span>
+            {{-- ========================================================
+                 BƯỚC 3: MÃ QR THANH TOÁN & XÁC NHẬN ĐƠN HÀNG
+            ======================================================== --}}
+            <div id="step-section-3" style="display: none;">
+                <h3 style="font-size: 18px; font-weight: 700; color: var(--ink, #11201B); margin: 0 0 18px; display: flex; align-items: center; gap: 8px;">
+                    <i class="ti ti-qrcode" style="color: #178A4C;"></i> Bước 3: Quét mã QR & Xác nhận thanh toán
+                </h3>
+
+                {{-- QR Payment Container (Visible for QR / Bank / MoMo) --}}
+                <div id="qr-display-box" class="qr-payment-frame">
+                    {{-- Switch Pills between Bank and MoMo --}}
+                    <div class="qr-switch-pills">
+                        <button type="button" id="pill-bank" class="qr-switch-pill active-bank">
+                            <i class="ti ti-building-bank"></i> QR Ngân Hàng (TPBank)
+                        </button>
+                        <button type="button" id="pill-momo" class="qr-switch-pill">
+                            <span class="momo-mini-badge">MoMo</span> QR Ví MoMo
+                        </button>
+                    </div>
+
+                    {{-- Countdown Timer (Shared for both) --}}
+                    <div style="font-size: 13px; color: #DC2626; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                        <i class="ti ti-clock"></i> Mã QR có hiệu lực trong: <span id="countdown-timer">14:59</span>
+                    </div>
+
+                    {{-- =========================================
+                         VIEW 1: MÃ QR TPBANK (VIETQR)
+                    ========================================= --}}
+                    <div id="bank-qr-view">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px;">
+                            <span style="background: #178A4C; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;">
+                                VIETQR CHUẨN QUỐC GIA
+                            </span>
+                            <span style="font-size: 13px; color: #475569; font-weight: 600;">
+                                Hỗ trợ tất cả App Ngân Hàng & MoMo
+                            </span>
+                        </div>
+
+                        {{-- QR Image --}}
+                        <div class="qr-img-wrapper" style="display: inline-flex; flex-direction: column; align-items: center; padding: 16px; background: #ffffff; border-radius: 18px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); border: 1.5px solid #E2E8F0; margin-bottom: 16px;">
+                            <img id="vietqr-image" src="{{ asset('img qr/qr_card_clean.jpg') }}" alt="Mã QR TPBank - NGUYEN CHI HAI" style="max-width: 270px; width: 100%; height: auto; border-radius: 12px; display: block;">
+                            <div style="margin-top: 12px;">
+                                <a href="{{ asset('img qr/qr_card_clean.jpg') }}" download="QR_ThanhToan_TPBank.jpg" class="btn-copy" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; font-size: 13px; font-weight: 600;">
+                                    <i class="ti ti-download"></i> Tải mã QR về máy
+                                </a>
+                            </div>
+                        </div>
+
+                        {{-- Transfer Info Table with One-Click Copy --}}
+                        <table class="bank-info-table">
+                            <tr>
+                                <td>Ngân hàng:</td>
+                                <td>
+                                    <strong>TPBank (Ngân hàng Tiên Phong)</strong>
+                                    <span style="font-size: 11px; color: #178A4C; margin-left: 8px;">24/7 Tức thì</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Số tài khoản:</td>
+                                <td>
+                                    <span id="bank-acc-num" style="font-weight: 700; font-size: 16px; letter-spacing: 0.5px;">1000 6118 170</span>
+                                    <button type="button" class="btn-copy" id="btn-copy-acc">Sao chép</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Chủ tài khoản:</td>
+                                <td>
+                                    <strong style="text-transform: uppercase;">NGUYEN CHI HAI</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Số tiền cần chuyển:</td>
+                                <td>
+                                    <span id="bank-amount" style="color: #EA580C; font-weight: 800; font-size: 16px;"></span>
+                                    <button type="button" class="btn-copy" id="btn-copy-amount">Sao chép</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Nội dung chuyển khoản:</td>
+                                <td>
+                                    <span id="bank-memo" style="color: #178A4C; font-weight: 700; font-family: monospace; font-size: 15px;"></span>
+                                    <button type="button" class="btn-copy" id="btn-copy-memo">Sao chép</button>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div style="background: rgba(23,138,76,0.08); border-radius: 10px; padding: 12px; font-size: 13px; color: #166534; line-height: 1.5; max-width: 480px; margin: 0 auto; text-align: left;">
+                            <i class="ti ti-info-circle" style="margin-right: 4px;"></i>
+                            <strong>Hướng dẫn:</strong> Quý khách mở App Ngân hàng (TPBank, MB, VCB, BIDV, Techcombank...) hoặc MoMo, chọn <strong>Quét mã QR</strong> để quét mã trên. Vui lòng giữ nguyên nội dung chuyển khoản để đơn hàng được xác nhận nhanh chóng.
+                        </div>
+                    </div>
+
+                    {{-- =========================================
+                         VIEW 2: MÃ QR VÍ MOMO (NAPAS 247)
+                    ========================================= --}}
+                    <div id="momo-qr-view" style="display: none;">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px;">
+                            <span style="background: #A50064; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;">
+                                VÍ ĐIỆN TỬ MOMO
+                            </span>
+                            <span style="font-size: 13px; color: #475569; font-weight: 600;">
+                                Hỗ trợ tất cả App MoMo & Napas 247
+                            </span>
+                        </div>
+
+                        {{-- MoMo QR Image --}}
+                        <div class="qr-img-wrapper" style="display: inline-flex; flex-direction: column; align-items: center; padding: 16px; background: #ffffff; border-radius: 18px; box-shadow: 0 8px 24px rgba(165,0,100,0.12); border: 2px solid #FBCFE8; margin-bottom: 16px;">
+                            <img id="momo-qr-image" src="{{ asset('img qr/momo_card_clean.jpg') }}" alt="Mã QR Ví MoMo - NGUYEN CHI HAI" style="max-width: 270px; width: 100%; height: auto; border-radius: 12px; display: block;">
+                            <div style="margin-top: 12px;">
+                                <a href="{{ asset('img qr/momo_card_clean.jpg') }}" download="QR_ThanhToan_MoMo.jpg" class="btn-copy" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; font-size: 13px; font-weight: 600; background: #A50064; color: #fff; border-color: #A50064;">
+                                    <i class="ti ti-download"></i> Tải mã QR MoMo về máy
+                                </a>
+                            </div>
+                        </div>
+
+                        {{-- Transfer Info Table with One-Click Copy for MoMo --}}
+                        <table class="bank-info-table">
+                            <tr>
+                                <td>Cổng thanh toán:</td>
+                                <td>
+                                    <strong style="color: #A50064;">Ví điện tử MoMo</strong>
+                                    <span style="font-size: 11px; color: #A50064; margin-left: 8px; background: #FDF2F8; padding: 2px 6px; border-radius: 4px; font-weight: 700;">Napas 247</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Số tài khoản MoMo:</td>
+                                <td>
+                                    <span id="momo-acc-num" style="font-weight: 700; font-size: 15px; letter-spacing: 0.5px; color: #111827;">PSP2615713900000057</span>
+                                    <button type="button" class="btn-copy" id="btn-copy-momo-acc">Sao chép</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Chủ tài khoản:</td>
+                                <td>
+                                    <strong style="text-transform: uppercase;">NGUYEN CHI HAI</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Số tiền cần chuyển:</td>
+                                <td>
+                                    <span id="momo-amount" style="color: #A50064; font-weight: 800; font-size: 16px;"></span>
+                                    <button type="button" class="btn-copy" id="btn-copy-momo-amount">Sao chép</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Nội dung chuyển tiền:</td>
+                                <td>
+                                    <span id="momo-memo" style="color: #A50064; font-weight: 700; font-family: monospace; font-size: 15px;"></span>
+                                    <button type="button" class="btn-copy" id="btn-copy-momo-memo">Sao chép</button>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div style="background: rgba(165,0,100,0.06); border: 1px solid #FBCFE8; border-radius: 10px; padding: 12px; font-size: 13px; color: #831843; line-height: 1.5; max-width: 480px; margin: 0 auto; text-align: left;">
+                            <i class="ti ti-info-circle" style="margin-right: 4px; color: #A50064;"></i>
+                            <strong>Hướng dẫn MoMo:</strong> Mở ứng dụng MoMo &rarr; Chọn <strong>Quét mã QR</strong> &rarr; Quét mã trên để chuyển tiền tự động. Vui lòng giữ nguyên nội dung chuyển tiền để đơn hàng được xác nhận nhanh chóng.
+                        </div>
+                    </div>
+                </div>
+
+                {{-- COD Alternative Notice (if COD chosen) --}}
+                <div id="cod-display-box" style="display: none; background: #FEF3C7; border: 1.5px solid #FCD34D; border-radius: 16px; padding: 22px; margin-bottom: 24px;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                        <i class="ti ti-truck-delivery" style="font-size: 26px; color: #B45309;"></i>
+                        <h4 style="margin: 0; font-size: 16px; font-weight: 700; color: #92400E;">Thanh toán tiền mặt khi nhận hàng (COD)</h4>
+                    </div>
+                    <p style="margin: 0 0 10px; font-size: 14px; color: #78350F; line-height: 1.5;">
+                        Quý khách sẽ thanh toán số tiền <strong class="total-display-tag" style="color: #B45309;"></strong> trực tiếp cho nhân viên giao hàng sau khi kiểm tra đầy đủ áo thi đấu và hóa đơn.
+                    </p>
+                </div>
+
+                {{-- Final Confirmation Button --}}
+                <div style="display: flex; gap: 12px;">
+                    <button type="button" id="btn-back-step-2" class="btn-checkout-back">
+                        <i class="ti ti-arrow-left"></i> Sửa thông tin
+                    </button>
+                    <button type="submit" class="btn-checkout-primary" id="btn-final-confirm">
+                        <i class="ti ti-circle-check"></i> Xác nhận đã thanh toán & Hoàn tất đặt hàng
+                    </button>
+                </div>
             </div>
-        </div>
 
-        <form action="{{ route('products.purchase', $product->id) }}" method="POST" id="purchase-form" data-confirm="Bạn có chắc chắn muốn mua sản phẩm này không?">
-            @csrf
-
-            <div style="margin-bottom: 24px;">
-                <div style="font-size:16px;font-weight:600;color:#16241C;margin-bottom:12px;">Số lượng</div>
-                <input type="number" name="quantity" id="quantity" value="1" min="1" max="{{ $product->stock_quantity }}" required
-                       style="width: 100%; padding: 10px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 16px;">
-                @error('quantity')
-                    <div style="color: red; font-size: 14px; margin-top: 8px;">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <div style="margin-bottom: 24px;">
-                <div style="font-size:16px;font-weight:600;color:#16241C;margin-bottom:12px;">Phương thức thanh toán</div>
-
-                <label style="display:flex; align-items:center; padding: 12px; border: 1px solid #E1E8E3; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s;">
-                    <input type="radio" name="payment_method" value="momo" required style="margin-right: 12px; width: 18px; height: 18px;">
-                    <span style="font-weight: 500; color: #374151;">Ví MoMo</span>
-                </label>
-
-                <label style="display:flex; align-items:center; padding: 12px; border: 1px solid #E1E8E3; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s;">
-                    <input type="radio" name="payment_method" value="visa" required style="margin-right: 12px; width: 18px; height: 18px;">
-                    <span style="font-weight: 500; color: #374151;">Thẻ Visa/Mastercard</span>
-                </label>
-
-                <label style="display:flex; align-items:center; padding: 12px; border: 1px solid #E1E8E3; border-radius: 8px; cursor: pointer; transition: all 0.2s;">
-                    <input type="radio" name="payment_method" value="paypal" required style="margin-right: 12px; width: 18px; height: 18px;">
-                    <span style="font-weight: 500; color: #374151;">PayPal</span>
-                </label>
-
-                @error('payment_method')
-                    <div style="color: red; font-size: 14px; margin-top: 8px;">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 24px; padding: 15px; background: #FFF7ED; border-radius: 8px; border: 1px solid #FDBA74;">
-                <span style="font-weight:600; color:#9A3412;">Tổng tiền thanh toán:</span>
-                <span style="font-weight:700; font-size:22px; color:#C2410C;" id="total-price-display">{{ number_format($product->cost_price, 0, ',', '.') }}đ</span>
-            </div>
-
-            <button type="submit" style="width:100%;height:48px;border-radius:8px;background:#178A4C;color:#fff;border:none;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;cursor:pointer;">
-                Xác nhận thanh toán
-            </button>
-
-            <div style="text-align: center; margin-top: 16px;">
-                <a href="{{ route('products.index') }}" style="color: #6B7280; text-decoration: none; font-size: 14px;">Quay lại cửa hàng</a>
-            </div>
         </form>
     </div>
 </div>
 
+@push('scripts')
 <script nonce="{{ $cspNonce ?? '' }}">
     document.addEventListener('DOMContentLoaded', function() {
-        const qtyInput = document.getElementById('quantity');
-        const totalDisplay = document.getElementById('total-price-display');
-        const unitPrice = {{ $product->cost_price }};
+        const unitPrice = {{ (float) $product->cost_price }};
+        const maxStock = {{ (int) $product->stock_quantity }};
+        const orderCode = 'SL' + Math.floor(100000 + Math.random() * 900000);
+        let selectedPayment = 'qr';
 
-        qtyInput.addEventListener('input', function() {
-            let qty = parseInt(this.value);
-            if (isNaN(qty) || qty < 1) qty = 1;
+        const qtyInput = document.getElementById('quantity');
+        const btnMinus = document.getElementById('btn-qty-minus');
+        const btnPlus = document.getElementById('btn-qty-plus');
+
+        const btnToStep2 = document.getElementById('btn-to-step2');
+        const btnToStep3 = document.getElementById('btn-to-step-3');
+        const btnBackStep1 = document.getElementById('btn-back-step-1');
+        const btnBackStep2 = document.getElementById('btn-back-step-2');
+
+        const stepNav1 = document.getElementById('step-nav-1');
+        const stepNav2 = document.getElementById('step-nav-2');
+        const stepNav3 = document.getElementById('step-nav-3');
+
+        function updateCalculations() {
+            let qty = parseInt(qtyInput.value) || 1;
+            if (qty < 1) qty = 1;
+            if (qty > maxStock) qty = maxStock;
+            qtyInput.value = qty;
 
             const total = qty * unitPrice;
-            totalDisplay.textContent = new Intl.NumberFormat('vi-VN', { style: 'decimal' }).format(total) + 'đ';
+            const formattedTotal = new Intl.NumberFormat('vi-VN', { style: 'decimal' }).format(total) + '₫';
+
+            document.querySelectorAll('.total-display-tag').forEach(el => {
+                el.textContent = formattedTotal;
+            });
+
+            const amountEl = document.getElementById('bank-amount');
+            if (amountEl) amountEl.textContent = formattedTotal;
+
+            const momoAmountEl = document.getElementById('momo-amount');
+            if (momoAmountEl) momoAmountEl.textContent = formattedTotal;
+
+            const memoEl = document.getElementById('bank-memo');
+            if (memoEl) memoEl.textContent = orderCode;
+
+            const momoMemoEl = document.getElementById('momo-memo');
+            if (momoMemoEl) momoMemoEl.textContent = orderCode;
+        }
+
+        // Quantity Buttons
+        if (btnMinus) {
+            btnMinus.addEventListener('click', function(e) {
+                e.preventDefault();
+                let val = parseInt(qtyInput.value) || 1;
+                if (val > 1) {
+                    qtyInput.value = val - 1;
+                    updateCalculations();
+                }
+            });
+        }
+
+        if (btnPlus) {
+            btnPlus.addEventListener('click', function(e) {
+                e.preventDefault();
+                let val = parseInt(qtyInput.value) || 1;
+                if (val < maxStock) {
+                    qtyInput.value = val + 1;
+                    updateCalculations();
+                }
+            });
+        }
+
+        if (qtyInput) {
+            qtyInput.addEventListener('input', updateCalculations);
+            qtyInput.addEventListener('change', updateCalculations);
+        }
+
+        // Step navigation
+        function goToStep(step) {
+            document.getElementById('step-section-1').style.display = (step === 1) ? 'block' : 'none';
+            document.getElementById('step-section-2').style.display = (step === 2) ? 'block' : 'none';
+            document.getElementById('step-section-3').style.display = (step === 3) ? 'block' : 'none';
+
+            for (let i = 1; i <= 3; i++) {
+                const item = document.getElementById('step-nav-' + i);
+                const num = document.getElementById('step-num-' + i);
+                if (!item || !num) continue;
+                item.classList.remove('active', 'completed');
+
+                if (i < step) {
+                    item.classList.add('completed');
+                    num.innerHTML = '<i class="ti ti-check"></i>';
+                } else if (i === step) {
+                    item.classList.add('active');
+                    num.textContent = i;
+                } else {
+                    num.textContent = i;
+                }
+            }
+
+            window.scrollTo({ top: 120, behavior: 'smooth' });
+        }
+
+        function validateAndGoToStep3() {
+            const nameEl = document.getElementById('customer_name');
+            const phoneEl = document.getElementById('customer_phone');
+            const addressEl = document.getElementById('shipping_address');
+
+            const name = nameEl ? nameEl.value.trim() : '';
+            const phone = phoneEl ? phoneEl.value.trim() : '';
+            const address = addressEl ? addressEl.value.trim() : '';
+
+            let valid = true;
+            const errName = document.getElementById('err-name');
+            const errPhone = document.getElementById('err-phone');
+            const errAddress = document.getElementById('err-address');
+
+            if (!name) {
+                if (errName) errName.style.display = 'block';
+                valid = false;
+            } else if (errName) {
+                errName.style.display = 'none';
+            }
+
+            if (!phone || phone.length < 9) {
+                if (errPhone) errPhone.style.display = 'block';
+                valid = false;
+            } else if (errPhone) {
+                errPhone.style.display = 'none';
+            }
+
+            if (!address) {
+                if (errAddress) errAddress.style.display = 'block';
+                valid = false;
+            } else if (errAddress) {
+                errAddress.style.display = 'none';
+            }
+
+            if (!valid) return;
+
+            updateCalculations();
+            goToStep(3);
+            startCountdown();
+        }
+
+        // Stepper click handlers
+        if (btnToStep2) btnToStep2.addEventListener('click', function() { goToStep(2); });
+        if (btnToStep3) btnToStep3.addEventListener('click', validateAndGoToStep3);
+        if (btnBackStep1) btnBackStep1.addEventListener('click', function() { goToStep(1); });
+        if (btnBackStep2) btnBackStep2.addEventListener('click', function() { goToStep(2); });
+
+        if (stepNav1) stepNav1.addEventListener('click', function() { goToStep(1); });
+        if (stepNav2) stepNav2.addEventListener('click', function() { goToStep(2); });
+        if (stepNav3) stepNav3.addEventListener('click', validateAndGoToStep3);
+
+        // Switch between Bank QR and MoMo QR
+        function switchToMoMoQR() {
+            const bankView = document.getElementById('bank-qr-view');
+            const momoView = document.getElementById('momo-qr-view');
+            const pillBank = document.getElementById('pill-bank');
+            const pillMoMo = document.getElementById('pill-momo');
+            const qrBox = document.getElementById('qr-display-box');
+
+            if (bankView) bankView.style.display = 'none';
+            if (momoView) momoView.style.display = 'block';
+
+            if (pillBank) pillBank.classList.remove('active-bank');
+            if (pillMoMo) pillMoMo.classList.add('active-momo');
+            if (qrBox) {
+                qrBox.style.borderColor = '#FBCFE8';
+                qrBox.style.background = 'linear-gradient(135deg, #FFF1F2 0%, #FDF2F8 100%)';
+            }
+        }
+
+        function switchToBankQR() {
+            const bankView = document.getElementById('bank-qr-view');
+            const momoView = document.getElementById('momo-qr-view');
+            const pillBank = document.getElementById('pill-bank');
+            const pillMoMo = document.getElementById('pill-momo');
+            const qrBox = document.getElementById('qr-display-box');
+
+            if (bankView) bankView.style.display = 'block';
+            if (momoView) momoView.style.display = 'none';
+
+            if (pillBank) pillBank.classList.add('active-bank');
+            if (pillMoMo) pillMoMo.classList.remove('active-momo');
+            if (qrBox) {
+                qrBox.style.borderColor = '#BFDBFE';
+                qrBox.style.background = 'linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%)';
+            }
+        }
+
+        const pillBank = document.getElementById('pill-bank');
+        if (pillBank) pillBank.addEventListener('click', switchToBankQR);
+
+        const pillMoMo = document.getElementById('pill-momo');
+        if (pillMoMo) pillMoMo.addEventListener('click', switchToMoMoQR);
+
+        // Payment Method Radio Handlers
+        const radios = document.querySelectorAll('input[name="payment_method"]');
+        radios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                selectedPayment = this.value;
+                document.querySelectorAll('.payment-option-card').forEach(card => card.classList.remove('selected'));
+                const parent = this.closest('.payment-option-card');
+                if (parent) parent.classList.add('selected');
+
+                const qrBox = document.getElementById('qr-display-box');
+                const codBox = document.getElementById('cod-display-box');
+                const btnFinal = document.getElementById('btn-final-confirm');
+
+                if (selectedPayment === 'cod') {
+                    if (btnToStep3) btnToStep3.innerHTML = 'Tiếp tục: Xác nhận đơn COD <i class="ti ti-arrow-right"></i>';
+                    if (qrBox) qrBox.style.display = 'none';
+                    if (codBox) codBox.style.display = 'block';
+                    if (btnFinal) btnFinal.innerHTML = '<i class="ti ti-check"></i> Xác nhận đặt đơn hàng (COD)';
+                } else if (selectedPayment === 'momo') {
+                    if (btnToStep3) btnToStep3.innerHTML = 'Tiếp tục: Quét mã QR MoMo <i class="ti ti-arrow-right"></i>';
+                    if (qrBox) qrBox.style.display = 'block';
+                    if (codBox) codBox.style.display = 'none';
+                    if (btnFinal) btnFinal.innerHTML = '<i class="ti ti-circle-check"></i> Tôi đã thanh toán MoMo - Xác nhận đặt hàng';
+                    switchToMoMoQR();
+                } else {
+                    if (btnToStep3) btnToStep3.innerHTML = 'Tiếp tục: Quét mã QR thanh toán <i class="ti ti-arrow-right"></i>';
+                    if (qrBox) qrBox.style.display = 'block';
+                    if (codBox) codBox.style.display = 'none';
+                    if (btnFinal) btnFinal.innerHTML = '<i class="ti ti-circle-check"></i> Tôi đã thanh toán - Xác nhận đặt hàng';
+                    switchToBankQR();
+                }
+            });
         });
+
+        // Size Pill Handlers
+        const sizePills = document.querySelectorAll('.size-pill-label');
+        sizePills.forEach(pill => {
+            pill.addEventListener('click', function() {
+                sizePills.forEach(p => p.classList.remove('selected'));
+                this.classList.add('selected');
+                const size = this.dataset.size;
+                const noteInput = document.getElementById('order_note');
+                if (noteInput) {
+                    let text = noteInput.value.replace(/Size [A-Z]+/g, '').trim();
+                    if (text.endsWith(',')) text = text.slice(0, -1).trim();
+                    noteInput.value = (text ? text + ', ' : '') + 'Size ' + size;
+                }
+            });
+        });
+
+        // Copy buttons
+        function copyText(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                const old = btn.textContent;
+                btn.textContent = 'Đã chép!';
+                btn.style.background = '#178A4C';
+                btn.style.color = '#fff';
+                setTimeout(() => {
+                    btn.textContent = old;
+                    btn.style.background = '';
+                    btn.style.color = '';
+                }, 2000);
+            });
+        }
+
+        const btnCopyAcc = document.getElementById('btn-copy-acc');
+        if (btnCopyAcc) {
+            btnCopyAcc.addEventListener('click', function() {
+                copyText('10006118170', this);
+            });
+        }
+
+        const btnCopyAmount = document.getElementById('btn-copy-amount');
+        if (btnCopyAmount) {
+            btnCopyAmount.addEventListener('click', function() {
+                let qty = parseInt(qtyInput.value) || 1;
+                copyText((qty * unitPrice).toString(), this);
+            });
+        }
+
+        const btnCopyMemo = document.getElementById('btn-copy-memo');
+        if (btnCopyMemo) {
+            btnCopyMemo.addEventListener('click', function() {
+                copyText(orderCode, this);
+            });
+        }
+
+        // MoMo Copy Buttons
+        const btnCopyMoMoAcc = document.getElementById('btn-copy-momo-acc');
+        if (btnCopyMoMoAcc) {
+            btnCopyMoMoAcc.addEventListener('click', function() {
+                copyText('PSP2615713900000057', this);
+            });
+        }
+
+        const btnCopyMoMoAmount = document.getElementById('btn-copy-momo-amount');
+        if (btnCopyMoMoAmount) {
+            btnCopyMoMoAmount.addEventListener('click', function() {
+                let qty = parseInt(qtyInput.value) || 1;
+                copyText((qty * unitPrice).toString(), this);
+            });
+        }
+
+        const btnCopyMoMoMemo = document.getElementById('btn-copy-momo-memo');
+        if (btnCopyMoMoMemo) {
+            btnCopyMoMoMemo.addEventListener('click', function() {
+                copyText(orderCode, this);
+            });
+        }
+
+        // Countdown Timer
+        let timerInterval = null;
+        function startCountdown() {
+            if (timerInterval) clearInterval(timerInterval);
+            let duration = 15 * 60;
+            const timerEl = document.getElementById('countdown-timer');
+
+            timerInterval = setInterval(() => {
+                const mins = Math.floor(duration / 60);
+                const secs = duration % 60;
+                if (timerEl) {
+                    timerEl.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                }
+                if (--duration < 0) {
+                    clearInterval(timerInterval);
+                    if (timerEl) timerEl.textContent = 'Mã đã hết hạn, vui lòng tải lại';
+                }
+            }, 1000);
+        }
+
+        // Initial update
+        updateCalculations();
     });
 </script>
+@endpush
 
 @endsection

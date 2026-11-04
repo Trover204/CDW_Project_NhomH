@@ -51,9 +51,9 @@
 
         <div class="form-group">
             <label class="form-label">Ảnh sản phẩm</label>
-            @if($product->image)
+            @if($product->image_url)
                 <div style="margin-bottom: 10px;">
-                    <img src="{{ asset('storage/' . $product->image) }}" alt="Current Image" style="max-width: 200px; border-radius: 8px;">
+                    <img src="{{ $product->image_url }}" alt="Current Image" style="max-width: 200px; border-radius: 8px;">
                 </div>
             @endif
             <input type="file" name="image" class="form-control" accept="image/*">
