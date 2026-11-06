@@ -95,7 +95,7 @@
         border-radius: 16px;
         overflow: hidden;
         margin-bottom: 32px;
-        background: #0D382E;
+        background: #181824;
     }
     .article-featured-media img {
         width: 100%;
@@ -192,12 +192,12 @@
     }
     .related-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 12px 28px rgba(13, 56, 46, 0.08);
-        border-color: #B5D9C4;
+        box-shadow: 0 12px 28px rgba(236, 72, 153, 0.12);
+        border-color: #F472B6;
     }
     .related-card-img {
         height: 150px;
-        background: #EEF7F2;
+        background: #FDF2F8;
         overflow: hidden;
     }
     .related-card-img img {

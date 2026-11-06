@@ -5,49 +5,100 @@
 @section('content')
 
     {{-- =====================================================
-         HERO SECTION
+         HERO SECTION (BANNER.JPG LAYOUT + FLOATING SEARCH BAR)
     ====================================================== --}}
-    <section class="hero hero-enhanced">
+    <section class="hero hero-enhanced hero-nhomh-banner">
+        <div class="hero-slash-top" aria-hidden="true"></div>
+        <div class="hero-slash-bottom-left" aria-hidden="true"></div>
+        <div class="hero-slash-bottom-right" aria-hidden="true"></div>
+
         <div class="wrap">
-            <div class="hero-inner">
+            <div class="hero-inner hero-banner-layout">
+                {{-- LEFT COLUMN: BRAND BADGE, SKEWED HEADING, SUBTITLE, FEATURE ICONS, CTA & STATS --}}
                 <div class="hero-content-box">
 
-                    <div class="eyebrow">
-                        <i class="ti ti-trophy"></i> {{ __('Score Big with Sân Nhóm H') }}
+                    {{-- Brand Badge & Eyebrow --}}
+                    <div class="hero-brand-row">
+                        <div class="hero-brand-mark">
+                            <span class="hero-h-icon">H</span>
+                            <div class="hero-brand-text">
+                                <strong>NHOM H</strong>
+                                <small>Play • Book • Shop</small>
+                            </div>
+                        </div>
+
+                        <div class="eyebrow">
+                            <i class="ti ti-trophy"></i> {{ __('Score Big with Sân Nhóm H') }}
+                        </div>
                     </div>
 
-                    <h1>
-                        {{ __('Ra sân trong 30 giây, không cần gọi điện hỏi lịch') }}
-                    </h1>
+                    {{-- Skewed Brush Banner Title + Highlighted Subtitle matching banner.jpg --}}
+                    <div class="hero-banner-headings">
+                        <div class="hero-brush-tag">
+                            <span>{{ __('Đặt sân thể thao') }}</span>
+                        </div>
+                        <h1>
+                            {{ __('Ra sân trong 30 giây, không cần gọi điện hỏi lịch') }}
+                        </h1>
+                    </div>
 
-                    <p>
+                    <p class="hero-script-lead">
                         {{ __('Bóng đá, cầu lông, pickleball, bóng chuyền — hàng trăm sân quanh TP.HCM, giữ chỗ và thanh toán ngay trên điện thoại.') }}
                     </p>
 
-                    {{-- CTA Buttons --}}
+                    {{-- 3 Feature Pills with Circular Icons (Exact layout from banner.jpg) --}}
+                    <div class="hero-banner-perks">
+                        <div class="hero-perk-item">
+                            <div class="hero-perk-icon">
+                                <i class="ti ti-ball-football"></i>
+                            </div>
+                            <div class="hero-perk-label">
+                                <strong>{{ __('Đặt sân') }}</strong>
+                                <span>{{ __('nhanh chóng') }}</span>
+                            </div>
+                        </div>
+
+                        <div class="hero-perk-divider"></div>
+
+                        <div class="hero-perk-item">
+                            <div class="hero-perk-icon">
+                                <i class="ti ti-shirt-sport"></i>
+                            </div>
+                            <div class="hero-perk-label">
+                                <strong>{{ __('Quần áo') }}</strong>
+                                <span>{{ __('thể thao chất lượng') }}</span>
+                            </div>
+                        </div>
+
+                        <div class="hero-perk-divider"></div>
+
+                        <div class="hero-perk-item">
+                            <div class="hero-perk-icon">
+                                <i class="ti ti-calendar-Bolt"></i>
+                                <i class="ti ti-calendar-event"></i>
+                            </div>
+                            <div class="hero-perk-label">
+                                <strong>{{ __('Lịch sân') }}</strong>
+                                <span>{{ __('linh hoạt') }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- CTA Buttons (Pink Pill Button with streak lines like banner.jpg) --}}
                     <div class="hero-actions-group">
-                        <a href="{{ route('courts.index') }}" class="btn-hero">
-                            <i class="ti ti-calendar-event"></i>
-                            <span>{{ __('Đặt sân ngay') }}</span>
-                        </a>
+                        <div class="hero-cta-streak-wrap">
+                            <span class="cta-speed-lines" aria-hidden="true"></span>
+                            <a href="{{ route('courts.index') }}" class="btn-hero">
+                                <i class="ti ti-calendar-event"></i>
+                                <span>{{ __('Đặt sân ngay') }}</span>
+                                <i class="ti ti-chevron-right"></i>
+                            </a>
+                        </div>
                         <a href="{{ route('plans.index') }}" class="btn-hero-ghost">
                             <i class="ti ti-crown"></i>
                             <span>{{ __('Xem gói ưu đãi') }}</span>
                         </a>
                     </div>
-
-                    {{-- SEARCH BAR (PASTEL LIME PILL) --}}
-                    <form action="{{ route('courts.search') }}" method="GET" class="search-card">
-                        <div class="field">
-                            <i class="ti ti-search" style="font-size:18px; color:var(--turf-dark); margin-right:4px;"></i>
-                            <input type="text" name="q" value="{{ request('q') }}" placeholder="{{ __('Tìm kiếm sân thể thao, địa chỉ hoặc tin tức...') }}" autocomplete="off">
-                        </div>
-
-                        <button type="submit" class="search-btn">
-                            <span>{{ __('Tìm kiếm') }}</span>
-                            <i class="ti ti-arrow-right"></i>
-                        </button>
-                    </form>
 
                     {{-- STATISTICS --}}
                     <div class="scoreboard">
@@ -68,9 +119,40 @@
                     </div>
 
                 </div>
+
+                {{-- RIGHT COLUMN: VISUAL SHOWCASE FROM BANNER.JPG --}}
+                <div class="hero-visual-showcase" aria-hidden="true">
+                    <div class="hero-slogan-badge">
+                        <i class="ti ti-crown hero-crown-icon"></i>
+                        <div class="hero-slogan-title">NHÓM H</div>
+                        <div class="hero-slogan-sub">Play Hard<br>Live Strong</div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
+
+    {{-- FLOATING QUICK SEARCH BAR OVERLAPPING BOTTOM OF HERO (LIKE HOME.JPG) --}}
+    <div class="hero-floating-search-wrap">
+        <div class="wrap">
+            <form action="{{ route('courts.search') }}" method="GET" class="search-card search-card-sportzone">
+                <div class="search-quick-badge">
+                    <span>{{ __('Đặt sân nhanh') }}</span>
+                </div>
+
+                <div class="field">
+                    <i class="ti ti-search" style="font-size:18px; color:var(--turf-teal); margin-right:4px;"></i>
+                    <input type="text" name="q" value="{{ request('q') }}" placeholder="{{ __('Tìm kiếm sân thể thao, địa chỉ hoặc tin tức...') }}" autocomplete="off">
+                </div>
+
+                <button type="submit" class="search-btn">
+                    <i class="ti ti-search"></i>
+                    <span>{{ __('Tìm kiếm') }}</span>
+                    <i class="ti ti-arrow-right"></i>
+                </button>
+            </form>
+        </div>
+    </div>
 
     {{-- =====================================================
          SPORTS QUICK CATEGORIES
@@ -132,7 +214,7 @@
 
                             {{-- TAG --}}
                             <span class="court-tag" style="display:flex; justify-content:space-between; width: calc(100% - 40px); z-index: 2;">
-                                <span>{{ $court->sportType->name ?? __('Thể thao') }}</span>
+                                <span><i class="ti ti-star-filled" style="font-size:11px;margin-right:3px;"></i> {{ $court->sportType->name ?? __('Thể thao') }}</span>
                                 @auth
                                     @php
                                         $isFavorited = auth()->user()->favoriteCourts->contains($court->id);
@@ -140,18 +222,18 @@
                                     <form action="{{ route('favorites.toggle', $court->id) }}" method="POST" style="margin:0;" data-stop-propagation>
                                         @csrf
                                         <button type="submit" style="background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center;">
-                                            <i class="ti {{ $isFavorited ? 'ti-heart-filled' : 'ti-heart' }}" style="font-size:18px;color:{{ $isFavorited ? '#F97316' : '#6B7A70' }};" aria-hidden="true"></i>
+                                            <i class="ti {{ $isFavorited ? 'ti-heart-filled' : 'ti-heart' }}" style="font-size:18px;color:{{ $isFavorited ? '#FFE4E6' : '#FFFFFF' }};" aria-hidden="true"></i>
                                         </button>
                                     </form>
                                 @else
                                     <a href="{{ route('login') }}" style="background:none;border:none;cursor:pointer;padding:0;text-decoration:none;display:flex;align-items:center;" data-stop-propagation>
-                                        <i class="ti ti-heart" style="font-size:18px;color:#6B7A70;" aria-hidden="true"></i>
+                                        <i class="ti ti-heart" style="font-size:18px;color:#FFFFFF;" aria-hidden="true"></i>
                                     </a>
                                 @endauth
                             </span>
 
                             {{-- ICON / MEDIA --}}
-                            <div class="court-media" style="overflow: hidden; background: #E6F0FA; position: relative;">
+                            <div class="court-media" style="overflow: hidden; background: #FDF2F8; position: relative;">
                                 @if($court->images && $court->images->isNotEmpty())
                                     @php
                                         $primaryImg = $court->images->firstWhere('is_primary', true) ?? $court->images->first();
@@ -510,51 +592,418 @@
 
 @push('styles')
 <style>
+/* =====================================================
+   NHOM H BANNER.JPG HERO LAYOUT & SPORTZONE SEARCH BAR
+===================================================== */
+.hero-nhomh-banner {
+    position: relative;
+    padding: 54px 0 88px;
+    background-color: #12121C;
+    background-image:
+        linear-gradient(90deg, rgba(10, 10, 18, 0.92) 0%, rgba(15, 15, 25, 0.72) 46%, rgba(15, 15, 25, 0.15) 75%, rgba(15, 15, 25, 0.05) 100%),
+        url('{{ asset("img_new/banner.jpg") }}');
+    background-size: cover;
+    background-position: center center;
+    border-bottom: 3px solid rgba(255, 46, 147, 0.35);
+}
+
+.hero-slash-top {
+    position: absolute;
+    top: 0;
+    left: 29%;
+    width: 115px;
+    height: 22px;
+    background: repeating-linear-gradient(
+        -45deg,
+        #FF2E93,
+        #FF2E93 12px,
+        transparent 12px,
+        transparent 20px
+    );
+    z-index: 1;
+    pointer-events: none;
+}
+
+.hero-slash-bottom-left {
+    position: absolute;
+    bottom: -15px;
+    left: -30px;
+    width: 240px;
+    height: 75px;
+    background: linear-gradient(135deg, #FF2E93 0%, #12121C 75%);
+    transform: rotate(14deg);
+    opacity: 0.75;
+    z-index: 1;
+    pointer-events: none;
+    border-top: 4px solid #FFFFFF;
+}
+
+.hero-slash-bottom-right {
+    position: absolute;
+    bottom: -25px;
+    right: -40px;
+    width: 340px;
+    height: 110px;
+    background: linear-gradient(135deg, rgba(255, 46, 147, 0.85) 0%, rgba(219, 39, 119, 0.92) 100%);
+    transform: rotate(-16deg);
+    z-index: 1;
+    pointer-events: none;
+    box-shadow: 0 -8px 28px rgba(255, 46, 147, 0.35);
+}
+
+.hero-banner-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 32px;
+    align-items: center;
+}
+
+.hero-brand-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+
+.hero-brand-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px 6px 8px;
+    background: rgba(18, 18, 28, 0.78);
+    border: 1px solid rgba(255, 46, 147, 0.45);
+    border-radius: 12px;
+    backdrop-filter: blur(8px);
+}
+
+.hero-h-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #FF2E93 0%, #BE185D 100%);
+    color: #FFFFFF;
+    font-family: 'Oswald', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    font-style: italic;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(255, 46, 147, 0.45);
+    transform: skewX(-10deg);
+}
+
+.hero-brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+}
+
+.hero-brand-text strong {
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    font-style: italic;
+    letter-spacing: 0.8px;
+    color: #FF2E93;
+}
+
+.hero-brand-text small {
+    font-size: 11px;
+    color: #E2E8F0;
+    letter-spacing: 0.5px;
+}
+
+.hero-brand-row .eyebrow {
+    margin-bottom: 0;
+}
+
+.hero-banner-headings {
+    margin-bottom: 14px;
+}
+
+.hero-brush-tag {
+    display: inline-block;
+    background: linear-gradient(90deg, #FF1E8A 0%, #EC4899 88%, rgba(236, 72, 153, 0.2) 100%);
+    padding: 8px 34px 8px 22px;
+    transform: skewX(-12deg) rotate(-1.5deg);
+    border-radius: 6px;
+    margin-bottom: 12px;
+    box-shadow: 0 8px 24px rgba(255, 30, 138, 0.42);
+    border-left: 4px solid #FFFFFF;
+}
+
+.hero-brush-tag span {
+    display: inline-block;
+    transform: skewX(12deg);
+    font-family: 'Oswald', 'Be Vietnam Pro', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.hero-nhomh-banner h1 {
+    font-family: 'Oswald', 'Be Vietnam Pro', sans-serif;
+    font-size: 40px;
+    line-height: 1.18;
+    font-weight: 800;
+    font-style: italic;
+    margin: 0;
+    color: #FF47A3;
+    text-shadow: 0 4px 18px rgba(0, 0, 0, 0.75);
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.hero-nhomh-banner h1::after {
+    content: "";
+    display: block;
+    width: 240px;
+    height: 4px;
+    margin-top: 10px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #FFFFFF 0%, rgba(255, 255, 255, 0.1) 100%);
+}
+
+.hero-script-lead {
+    font-size: 16px !important;
+    font-style: italic;
+    font-weight: 500;
+    color: #F8FAFC !important;
+    margin: 0 0 22px !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.65);
+}
+
+/* 3 Horizontal Feature Perks from banner.jpg */
+.hero-banner-perks {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 12px 18px;
+    margin-bottom: 24px;
+    background: rgba(15, 15, 24, 0.68);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 16px;
+    backdrop-filter: blur(8px);
+}
+
+.hero-perk-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hero-perk-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1.5px solid #FF2E93;
+    background: rgba(255, 46, 147, 0.15);
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+    box-shadow: 0 0 12px rgba(255, 46, 147, 0.35);
+    flex-shrink: 0;
+}
+
+.hero-perk-icon .ti-calendar-Bolt {
+    display: none;
+}
+
+.hero-perk-label {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+}
+
+.hero-perk-label strong {
+    font-size: 13px;
+    font-weight: 700;
+    color: #FFFFFF;
+}
+
+.hero-perk-label span {
+    font-size: 11.5px;
+    color: #E2E8F0;
+}
+
+.hero-perk-divider {
+    width: 1px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.22);
+}
+
 .hero-actions-group {
     display: flex;
     align-items: center;
     gap: 14px;
-    margin-bottom: 24px;
+    margin-bottom: 10px;
     flex-wrap: wrap;
 }
+
+.hero-cta-streak-wrap {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+}
+
+.cta-speed-lines {
+    width: 38px;
+    height: 22px;
+    margin-right: -10px;
+    background:
+        linear-gradient(90deg, transparent 0%, #FF2E93 100%) 0 2px / 100% 3px no-repeat,
+        linear-gradient(90deg, transparent 20%, #FF2E93 100%) 0 10px / 85% 3px no-repeat,
+        linear-gradient(90deg, transparent 10%, #FF2E93 100%) 0 18px / 95% 3px no-repeat;
+    opacity: 0.85;
+    pointer-events: none;
+}
+
 .btn-hero {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 26px;
-    background: var(--turf-accent);
-    color: var(--turf-accent-ink);
-    border-radius: 12px;
-    font-weight: 700;
+    padding: 13px 30px;
+    margin-bottom: 0;
+    background: linear-gradient(90deg, #FF2E93 0%, #EC4899 100%);
+    color: #FFFFFF;
+    border-radius: 9999px;
+    font-weight: 800;
     font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
     transition: all 0.2s ease;
     text-decoration: none;
+    box-shadow: 0 8px 25px rgba(255, 46, 147, 0.48);
 }
+
 .btn-hero:hover {
-    background: var(--turf-accent-hover);
+    background: linear-gradient(90deg, #E01A70 0%, #DB2777 100%);
     transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(255, 46, 147, 0.6);
 }
+
 .btn-hero-ghost {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 24px;
-    background: rgba(255, 255, 255, 0.1);
+    padding: 13px 24px;
+    background: rgba(18, 18, 28, 0.65);
     color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 15px;
+    border: 1.5px solid rgba(255, 46, 147, 0.5);
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 14.5px;
     transition: all 0.2s ease;
     text-decoration: none;
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(6px);
 }
+
 .btn-hero-ghost:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: #ffffff;
+    background: rgba(255, 46, 147, 0.22);
+    border-color: #FF2E93;
 }
+
+/* Right Showcase Column in Hero */
+.hero-visual-showcase {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+    min-height: 360px;
+    position: relative;
+}
+
+.hero-slogan-badge {
+    text-align: right;
+    padding: 14px 20px;
+    background: rgba(15, 15, 24, 0.45);
+    border-radius: 18px;
+    border: 1px solid rgba(255, 46, 147, 0.3);
+    backdrop-filter: blur(4px);
+    transform: rotate(-4deg);
+}
+
+.hero-crown-icon {
+    font-size: 32px;
+    color: #FFFFFF;
+    display: inline-block;
+    margin-bottom: 2px;
+    filter: drop-shadow(0 2px 8px rgba(255, 46, 147, 0.6));
+}
+
+.hero-slogan-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 34px;
+    font-weight: 800;
+    font-style: italic;
+    color: #FF2E93;
+    line-height: 1;
+    letter-spacing: 1px;
+    text-shadow: 0 3px 12px rgba(0, 0, 0, 0.65);
+}
+
+.hero-slogan-sub {
+    font-size: 18px;
+    font-weight: 700;
+    font-style: italic;
+    color: #FFFFFF;
+    line-height: 1.2;
+    margin-top: 4px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.65);
+}
+
+/* Floating Quick Search Bar (Like home.jpg) */
+.hero-floating-search-wrap {
+    position: relative;
+    z-index: 15;
+    margin-top: -36px;
+    margin-bottom: 18px;
+}
+
+.search-card-sportzone {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 14px;
+    padding: 10px 14px 10px 10px;
+    background: #FFFFFF;
+    border-radius: 9999px;
+    box-shadow:
+        0 18px 40px -10px rgba(24, 24, 36, 0.18),
+        0 4px 16px rgba(236, 72, 153, 0.15);
+    border: 2px solid #FCE7F3;
+    align-items: center;
+}
+
+[data-theme="dark"] .search-card-sportzone {
+    background: #181824;
+    border-color: #2D2D42;
+}
+
+.search-quick-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 46px;
+    padding: 0 26px 0 22px;
+    background: linear-gradient(135deg, #FF2E93 0%, #EC4899 100%);
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 800;
+    border-radius: 9999px 24px 9999px 9999px;
+    white-space: nowrap;
+    box-shadow: 0 6px 16px rgba(255, 46, 147, 0.32);
+}
+
 .quick-sports-section {
-    padding: 30px 0;
+    padding: 26px 0;
     background: var(--surface);
     border-bottom: 1px solid var(--line);
 }
@@ -605,8 +1054,8 @@
     width: 36px;
     height: 36px;
     border-radius: 10px;
-    background: #FEF3C7;
-    color: #D97706;
+    background: #FCE7F3;
+    color: #DB2777;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -625,8 +1074,8 @@
     color: var(--ink-soft);
 }
 .view-all-pill .sport-pill-icon {
-    background: var(--turf-teal-soft);
-    color: var(--turf-teal);
+    background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
+    color: #FFFFFF;
 }
 .head-sub-badge {
     display: inline-flex;
@@ -636,6 +1085,7 @@
     font-weight: 700;
     color: var(--turf-teal);
     background: var(--turf-teal-soft);
+    border: 1px solid #FBCFE8;
     padding: 3px 10px;
     border-radius: 999px;
     margin-bottom: 6px;
@@ -646,10 +1096,11 @@
     gap: 6px;
     font-size: 14px;
     font-weight: 700;
-    color: var(--turf-teal);
+    color: var(--turf-dark);
     text-decoration: none;
 }
 .view-all-link:hover {
+    color: var(--turf-teal);
     gap: 9px;
 }
 .court-slots {
@@ -657,34 +1108,57 @@
     align-items: center;
     gap: 4px;
 }
+
+/* Soft Pink Value Proposition Strip (Matching "VÌ SAO CHỌN SPORTZONE?" in home.jpg) */
 .home-features-banner {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     margin: 40px 0 30px;
-    padding-top: 30px;
-    border-top: 1px solid var(--line);
+    padding: 28px;
+    background: linear-gradient(90deg, #FDF2F8 0%, #FCE7F3 50%, #FBCFE8 100%);
+    border: 1px solid #F9A8D4;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(236, 72, 153, 0.08);
 }
+
+[data-theme="dark"] .home-features-banner {
+    background: linear-gradient(90deg, #1E1E2E 0%, #261B2A 100%);
+    border-color: rgba(236, 72, 153, 0.3);
+}
+
 .hf-item {
-    background: var(--bg-page);
-    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(236, 72, 153, 0.18);
     border-radius: 16px;
     padding: 22px;
     display: flex;
     gap: 16px;
+    backdrop-filter: blur(4px);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+[data-theme="dark"] .hf-item {
+    background: rgba(24, 24, 36, 0.85);
+}
+
+.hf-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(236, 72, 153, 0.14);
+}
+
 .hf-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    background: var(--surface);
-    color: var(--turf-teal);
-    font-size: 22px;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
+    color: #FFFFFF;
+    font-size: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(16, 103, 100, 0.08);
+    box-shadow: 0 6px 14px rgba(236, 72, 153, 0.3);
 }
 .hf-content h4 {
     margin: 0 0 6px;
@@ -710,7 +1184,7 @@
     border: 1px solid var(--line);
     border-radius: 24px;
     padding: 36px 40px;
-    box-shadow: 0 6px 24px rgba(13, 56, 46, 0.04);
+    box-shadow: 0 6px 24px rgba(24, 24, 36, 0.04);
 }
 .faq-head {
     display: flex;
@@ -744,12 +1218,12 @@
     transition: all 0.25s ease;
 }
 .faq-item-accordion:hover {
-    border-color: #B5D9C4;
+    border-color: #F472B6;
 }
 .faq-item-accordion.active {
     border-color: var(--turf-teal);
     background: var(--surface);
-    box-shadow: 0 4px 18px rgba(16, 103, 100, 0.06);
+    box-shadow: 0 4px 18px rgba(236, 72, 153, 0.08);
 }
 .faq-question-btn {
     width: 100%;
@@ -782,7 +1256,7 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: var(--surface);
+    background: var(--turf-teal-soft);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -813,9 +1287,26 @@
     color: var(--ink-soft);
 }
 
+@media (max-width: 960px) {
+    .hero-banner-layout {
+        grid-template-columns: 1fr;
+    }
+    .hero-visual-showcase {
+        display: none;
+    }
+    .search-card-sportzone {
+        grid-template-columns: 1fr auto;
+        border-radius: 24px;
+    }
+    .search-quick-badge {
+        display: none;
+    }
+}
+
 @media (max-width: 900px) {
     .home-features-banner {
         grid-template-columns: 1fr;
+        padding: 18px;
     }
     .faq-panel {
         padding: 24px 20px;
@@ -825,6 +1316,21 @@
     }
     .faq-answer-content p {
         padding-left: 22px;
+    }
+}
+
+@media (max-width: 600px) {
+    .hero-perk-divider {
+        display: none;
+    }
+    .hero-brush-tag span {
+        font-size: 19px;
+    }
+    .hero-nhomh-banner h1 {
+        font-size: 30px;
+    }
+    .search-card-sportzone {
+        grid-template-columns: 1fr;
     }
 }
 </style>

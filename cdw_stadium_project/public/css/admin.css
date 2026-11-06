@@ -1,32 +1,32 @@
 :root {
-    /* Theme màu chủ đạo: Trắng, Xanh lá cây (Turf Green), Xanh nhạt (Mint/Lime) & Đen */
-    --bg: #F4F7F5;                  /* Nền tổng thể: trắng ngà nhẹ tươi mát */
+    /* Theme màu chủ đạo: Hồng (Hot Pink / Magenta), Đen than (Dark Charcoal) & Trắng */
+    --bg: #FAF7F9;                  /* Nền tổng thể */
     --surface: #FFFFFF;             /* Nền card, bảng, form: trắng tinh khiết */
-    --surface-alt: #F0F6F2;         /* Nền tiêu đề bảng, ô phụ: xanh nhạt phớt */
-    --surface-hover: #F8FBF9;       /* Hover hàng bảng */
-    --border: #E1E8E3;              /* Viền nhẹ nhàng sạch sẽ */
-    --border-strong: #C8D6CD;       /* Viền input, ô chọn */
+    --surface-alt: #FDF2F8;         /* Nền tiêu đề bảng, ô phụ: hồng nhạt phớt */
+    --surface-hover: #FCE7F3;       /* Hover hàng bảng */
+    --border: #F1E4EC;              /* Viền nhẹ nhàng sạch sẽ */
+    --border-strong: #E5D4E0;       /* Viền input, ô chọn */
 
-    --sidebar: #0D3E2E;             /* Sidebar xanh cỏ đậm (như mảng xanh turf banner của ảnh) */
-    --sidebar-text: #D2E7DC;        /* Màu chữ sidebar */
-    --sidebar-muted: #8AA89B;       /* Màu chữ phụ sidebar */
-    --sidebar-active-bg: rgba(255, 255, 255, 0.12); /* Nền menu active */
-    --sidebar-active-text: #BEF264; /* Chữ & icon active: xanh chanh sáng (Lime) như nút 'Book Now' */
+    --sidebar: #181824;             /* Sidebar đen than hiện đại */
+    --sidebar-text: #E2D8DF;        /* Màu chữ sidebar */
+    --sidebar-muted: #9CA3AF;       /* Màu chữ phụ sidebar */
+    --sidebar-active-bg: rgba(255, 46, 147, 0.16); /* Nền menu active */
+    --sidebar-active-text: #FF2E93; /* Chữ & icon active: hồng nổi bật */
 
-    --primary: #0D5C40;             /* Xanh lá đậm chủ đạo (nút chính, điểm nhấn, link) */
-    --primary-hover: #08432E;       /* Xanh lá đậm khi hover */
-    --primary-light: #EBF8F1;       /* Nền xanh rất nhạt */
+    --primary: #EC4899;             /* Hồng đậm chủ đạo (nút chính, điểm nhấn, link) */
+    --primary-hover: #DB2777;       /* Hồng đậm khi hover */
+    --primary-light: #FDF2F8;       /* Nền hồng rất nhạt */
 
-    --green-light: #DCFCE7;         /* Xanh nhạt (pastel mint) cho badge, tag, icon */
-    --green-light-text: #0D5C40;    /* Chữ trên nền xanh nhạt */
-    --lime: #BEF264;                /* Xanh chanh tươi sáng (điểm nhấn đặc trưng ảnh) */
+    --green-light: #FCE7F3;         /* Hồng pastel cho badge, tag, icon */
+    --green-light-text: #BE185D;    /* Chữ trên nền hồng nhạt */
+    --lime: #FF2E93;                /* Hồng tươi sáng (điểm nhấn đặc trưng ảnh) */
 
-    --text: #111827;                /* Màu chữ chính: đen than / charcoal */
+    --text: #181824;                /* Màu chữ chính: đen than / charcoal */
     --text-secondary: #374151;      /* Màu chữ phụ */
     --muted: #6B7280;               /* Màu chữ làm mờ */
 
-    --success: #16A34A;
-    --success-bg: #DCFCE7;
+    --success: #DB2777;
+    --success-bg: #FCE7F3;
     --warning: #B45309;
     --warning-bg: #FEF3C7;
     --danger: #B91C1C;

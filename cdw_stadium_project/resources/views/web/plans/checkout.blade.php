@@ -54,16 +54,16 @@
         box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
     .step-item.active .step-number {
-        background: #178A4C;
-        border-color: #178A4C;
+        background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
+        border-color: #EC4899;
         color: #FFFFFF;
-        box-shadow: 0 4px 14px rgba(23, 138, 76, 0.4);
+        box-shadow: 0 4px 14px rgba(236, 72, 153, 0.4);
         transform: scale(1.08);
     }
     .step-item.completed .step-number {
-        background: #DCFCE7;
-        border-color: #178A4C;
-        color: #15803D;
+        background: #FCE7F3;
+        border-color: #EC4899;
+        color: #BE185D;
     }
     .step-label {
         font-size: 13.5px;
@@ -73,14 +73,14 @@
         transition: color 0.3s ease;
     }
     .step-item.active .step-label {
-        color: #178A4C;
+        color: #EC4899;
         font-weight: 700;
     }
 
     /* Checkout Card */
     .checkout-card {
         background: var(--bg-white, #FFFFFF);
-        border: 1px solid var(--line, #E3ECE6);
+        border: 1px solid var(--line, #F1E4EC);
         border-radius: 24px;
         padding: 36px 32px;
         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
@@ -92,23 +92,23 @@
         align-items: center;
         gap: 18px;
         padding: 20px 22px;
-        background: var(--bg-page, #F8FAFC);
+        background: var(--bg-page, #FAF7F9);
         border-radius: 16px;
-        border: 1px solid var(--line, #E5E7EB);
+        border: 1px solid var(--line, #F1E4EC);
         margin-bottom: 28px;
     }
     .checkout-plan-icon {
         width: 72px;
         height: 72px;
-        background: linear-gradient(135deg, #E6F6F4 0%, #D2F85A33 100%);
+        background: linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 100%);
         border-radius: 16px;
-        border: 1px solid rgba(16, 103, 100, 0.15);
+        border: 1px solid rgba(236, 72, 153, 0.2);
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
         font-size: 32px;
-        color: #178A4C;
+        color: #EC4899;
     }
 
     /* Payment Radio Cards */
@@ -126,26 +126,26 @@
         user-select: none;
     }
     .payment-option-card:hover {
-        border-color: #178A4C;
-        background: #F0FDF4;
+        border-color: #EC4899;
+        background: #FDF2F8;
     }
     .payment-option-card.selected {
-        border-color: #178A4C;
-        background: #F0FDF4;
-        box-shadow: 0 4px 14px rgba(23, 138, 76, 0.12);
+        border-color: #EC4899;
+        background: #FDF2F8;
+        box-shadow: 0 4px 14px rgba(236, 72, 153, 0.14);
     }
     .payment-option-card input[type="radio"] {
         margin-right: 14px;
         width: 20px;
         height: 20px;
-        accent-color: #178A4C;
+        accent-color: #EC4899;
         cursor: pointer;
     }
 
     /* QR Code Display Frame */
     .qr-payment-frame {
-        background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%);
-        border: 2px solid #BFDBFE;
+        background: linear-gradient(135deg, #FDF2F8 0%, #FAF7F9 100%);
+        border: 2px solid #FBCFE8;
         border-radius: 20px;
         padding: 26px;
         margin-bottom: 28px;
@@ -183,10 +183,10 @@
         box-shadow: 0 4px 10px rgba(0,0,0,0.08);
     }
     .qr-switch-pill.active-bank {
-        background: #178A4C;
+        background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
         color: #FFFFFF;
-        border-color: #178A4C;
-        box-shadow: 0 4px 12px rgba(23, 138, 76, 0.25);
+        border-color: #EC4899;
+        box-shadow: 0 4px 12px rgba(236, 72, 153, 0.28);
     }
     .qr-switch-pill.active-momo {
         background: #A50064;
@@ -246,9 +246,9 @@
     }
 
     .btn-copy {
-        background: #E2E8F0;
+        background: #FCE7F3;
         border: none;
-        color: #334155;
+        color: #BE185D;
         font-size: 11.5px;
         font-weight: 600;
         padding: 4px 9px;
@@ -259,7 +259,7 @@
         float: right;
     }
     .btn-copy:hover {
-        background: #178A4C;
+        background: #EC4899;
         color: #FFFFFF;
     }
 
@@ -268,7 +268,7 @@
         height: 52px;
         padding: 0 32px;
         border-radius: 12px;
-        background: #178A4C;
+        background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
         color: #FFFFFF;
         border: none;
         font-size: 15.5px;
@@ -277,14 +277,14 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        box-shadow: 0 4px 14px rgba(23, 138, 76, 0.35);
+        box-shadow: 0 4px 14px rgba(236, 72, 153, 0.35);
         transition: all 0.2s ease;
         text-decoration: none;
     }
     .btn-checkout-primary:hover {
-        background: #13733F;
+        background: linear-gradient(135deg, #DB2777 0%, #BE185D 100%);
         transform: translateY(-2px);
-        box-shadow: 0 6px 18px rgba(23, 138, 76, 0.45);
+        box-shadow: 0 6px 18px rgba(236, 72, 153, 0.45);
     }
     .btn-checkout-back {
         height: 52px;
@@ -315,7 +315,7 @@
         display: block;
         font-size: 14px;
         font-weight: 700;
-        color: var(--ink, #11201B);
+        color: var(--ink, #181824);
         margin-bottom: 8px;
     }
     .form-input-custom {
@@ -326,13 +326,13 @@
         border-radius: 12px;
         font-size: 14.5px;
         background: var(--bg-white, #FFFFFF);
-        color: var(--ink, #11201B);
+        color: var(--ink, #181824);
         outline: none;
         transition: all 0.2s;
     }
     .form-input-custom:focus {
-        border-color: #178A4C;
-        box-shadow: 0 0 0 3px rgba(23, 138, 76, 0.12);
+        border-color: #EC4899;
+        box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.14);
     }
 
     @media (max-width: 640px) {
@@ -359,12 +359,12 @@
 <div class="checkout-container">
 
     {{-- Breadcrumb --}}
-    <div style="margin-bottom: 22px; font-size: 14px; color: var(--ink-soft, #5E726A); display: flex; align-items: center; gap: 8px;">
-        <a href="{{ route('plans.index') }}" style="color: #178A4C; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+    <div style="margin-bottom: 22px; font-size: 14px; color: var(--ink-soft, #525266); display: flex; align-items: center; gap: 8px;">
+        <a href="{{ route('plans.index') }}" style="color: #EC4899; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
             <i class="ti ti-arrow-left"></i> {{ __('Gói thành viên') }}
         </a>
         <span>/</span>
-        <span style="color: var(--ink, #11201B); font-weight: 500;">{{ __('Quy trình kích hoạt & Thanh toán') }}</span>
+        <span style="color: var(--ink, #181824); font-weight: 500;">{{ __('Quy trình kích hoạt & Thanh toán') }}</span>
     </div>
 
     @if(session('error'))
@@ -398,17 +398,17 @@
             </div>
 
             <div style="flex-grow: 1;">
-                <span style="display: inline-block; background: #DCFCE7; color: #15803D; font-size: 11.5px; font-weight: 700; padding: 3px 10px; border-radius: 999px; margin-bottom: 6px;">
+                <span style="display: inline-block; background: #FCE7F3; color: #BE185D; font-size: 11.5px; font-weight: 700; padding: 3px 10px; border-radius: 999px; margin-bottom: 6px;">
                     <i class="ti ti-sparkles" style="font-size: 11px;"></i> {{ __('Thời hạn :days ngày', ['days' => $plan->duration_days]) }}
                 </span>
-                <div style="font-weight: 800; color: var(--ink, #111827); font-size: 18px; margin-bottom: 6px; font-family: 'Oswald', sans-serif;">
+                <div style="font-weight: 800; color: var(--ink, #181824); font-size: 18px; margin-bottom: 6px; font-family: 'Oswald', sans-serif;">
                     {{ $plan->name }}
                 </div>
                 <div style="display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-                    <span style="font-size: 13.5px; color: #15803D; font-weight: 600;">
+                    <span style="font-size: 13.5px; color: #DB2777; font-weight: 600;">
                         <i class="ti ti-discount-2" style="font-size: 14px;"></i> {{ __('Đặc quyền giảm :percent% cho mọi lượt đặt sân', ['percent' => $plan->discount_percent]) }}
                     </span>
-                    <span style="font-size: 24px; font-weight: 800; color: #EA580C; font-family: 'Oswald', sans-serif;" id="plan-price-display">
+                    <span style="font-size: 24px; font-weight: 800; color: #EC4899; font-family: 'Oswald', sans-serif;" id="plan-price-display">
                         {{ number_format($plan->price, 0, ',', '.') }}₫
                     </span>
                 </div>
@@ -423,8 +423,8 @@
                  BƯỚC 1: CHỌN PHƯƠNG THỨC THANH TOÁN
             ======================================================== --}}
             <div id="step-section-1">
-                <h3 style="font-size: 18px; font-weight: 700; color: var(--ink, #11201B); margin: 0 0 18px; display: flex; align-items: center; gap: 8px;">
-                    <i class="ti ti-credit-card" style="color: #178A4C;"></i> {{ __('Bước 1: Chọn phương thức thanh toán') }}
+                <h3 style="font-size: 18px; font-weight: 700; color: var(--ink, #181824); margin: 0 0 18px; display: flex; align-items: center; gap: 8px;">
+                    <i class="ti ti-credit-card" style="color: #EC4899;"></i> {{ __('Bước 1: Chọn phương thức thanh toán') }}
                 </h3>
 
                 {{-- Payment Options --}}
@@ -432,14 +432,14 @@
                     {{-- VietQR Bank Transfer --}}
                     <label class="payment-option-card selected" id="opt-bank_transfer">
                         <input type="radio" name="payment_method" value="bank_transfer" checked>
-                        <div style="width: 40px; height: 40px; border-radius: 10px; background: #EFF6FF; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #2563EB; margin-right: 14px; flex-shrink: 0;">
+                        <div style="width: 40px; height: 40px; border-radius: 10px; background: #FDF2F8; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #EC4899; margin-right: 14px; flex-shrink: 0;">
                             <i class="ti ti-building-bank"></i>
                         </div>
                         <div style="flex-grow: 1;">
-                            <div style="font-weight: 700; font-size: 14.5px; color: var(--ink, #111827);">{{ __('Quét mã QR Ngân Hàng (VietQR / Chuyển khoản 24/7)') }}</div>
+                            <div style="font-weight: 700; font-size: 14.5px; color: var(--ink, #181824);">{{ __('Quét mã QR Ngân Hàng (VietQR / Chuyển khoản 24/7)') }}</div>
                             <div style="font-size: 12.5px; color: var(--ink-soft, #6B7280);">{{ __('Quét mã chuyển tiền tức thì từ TPBank, MB Bank, Vietcombank, Techcombank, BIDV...') }}</div>
                         </div>
-                        <span style="font-size: 11.5px; font-weight: 700; background: #DCFCE7; color: #15803D; padding: 2px 8px; border-radius: 4px;">{{ __('Khuyên dùng') }}</span>
+                        <span style="font-size: 11.5px; font-weight: 700; background: #FCE7F3; color: #BE185D; padding: 2px 8px; border-radius: 4px;">{{ __('Khuyên dùng') }}</span>
                     </label>
 
                     {{-- MoMo --}}
@@ -480,18 +480,18 @@
                 </div>
 
                 {{-- Price summary in step 1 --}}
-                <div style="background: var(--bg-page, #F9FAFB); border-radius: 14px; padding: 18px 20px; border: 1px solid var(--line, #E5E7EB); margin-bottom: 24px;">
+                <div style="background: var(--bg-page, #FAF7F9); border-radius: 14px; padding: 18px 20px; border: 1px solid var(--line, #F1E4EC); margin-bottom: 24px;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; color: var(--ink-soft, #6B7280);">
                         <span>{{ __('Gói thành viên:') }}</span>
-                        <strong style="color: var(--ink, #111827);">{{ $plan->name }} ({{ $plan->duration_days }} {{ __('ngày') }})</strong>
+                        <strong style="color: var(--ink, #181824);">{{ $plan->name }} ({{ $plan->duration_days }} {{ __('ngày') }})</strong>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; color: var(--ink-soft, #6B7280);">
                         <span>{{ __('Ưu đãi chiết khấu:') }}</span>
-                        <span style="color: #16A34A; font-weight: 700;">{{ __('Giảm :percent% mỗi lượt đặt', ['percent' => $plan->discount_percent]) }}</span>
+                        <span style="color: #EC4899; font-weight: 700;">{{ __('Giảm :percent% mỗi lượt đặt', ['percent' => $plan->discount_percent]) }}</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; align-items: baseline; border-top: 1px dashed var(--line, #E5E7EB); padding-top: 12px; margin-top: 8px;">
-                        <span style="font-weight: 700; font-size: 15px; color: var(--ink, #111827);">{{ __('Tổng thanh toán:') }}</span>
-                        <span style="font-size: 24px; font-weight: 800; color: #EA580C; font-family: 'Oswald', sans-serif;">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline; border-top: 1px dashed var(--line, #F1E4EC); padding-top: 12px; margin-top: 8px;">
+                        <span style="font-weight: 700; font-size: 15px; color: var(--ink, #181824);">{{ __('Tổng thanh toán:') }}</span>
+                        <span style="font-size: 24px; font-weight: 800; color: #EC4899; font-family: 'Oswald', sans-serif;">
                             {{ number_format($plan->price, 0, ',', '.') }}₫
                         </span>
                     </div>
@@ -511,11 +511,11 @@
                  BƯỚC 2: XÁC NHẬN THÔNG TIN THÀNH VIÊN
             ======================================================== --}}
             <div id="step-section-2" style="display: none;">
-                <h3 style="font-size: 18px; font-weight: 700; color: var(--ink, #11201B); margin: 0 0 18px; display: flex; align-items: center; gap: 8px;">
-                    <i class="ti ti-user-check" style="color: #178A4C;"></i> {{ __('Bước 2: Xác nhận thông tin tài khoản kích hoạt') }}
+                <h3 style="font-size: 18px; font-weight: 700; color: var(--ink, #181824); margin: 0 0 18px; display: flex; align-items: center; gap: 8px;">
+                    <i class="ti ti-user-check" style="color: #EC4899;"></i> {{ __('Bước 2: Xác nhận thông tin tài khoản kích hoạt') }}
                 </h3>
 
-                <div style="background: var(--bg-page, #F8FAFC); padding: 20px; border-radius: 14px; border: 1px solid var(--line, #E5E7EB); margin-bottom: 24px;">
+                <div style="background: var(--bg-page, #FAF7F9); padding: 20px; border-radius: 14px; border: 1px solid var(--line, #F1E4EC); margin-bottom: 24px;">
                     <div class="form-group-custom">
                         <label class="form-label-custom">{{ __('Họ và tên thành viên') }}</label>
                         <input type="text" class="form-input-custom" value="{{ Auth::user()->name }}" readonly style="background: #F3F4F6; cursor: not-allowed;">
@@ -526,9 +526,9 @@
                         <input type="email" class="form-input-custom" value="{{ Auth::user()->email }}" readonly style="background: #F3F4F6; cursor: not-allowed;">
                     </div>
 
-                    <div style="background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 12px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start;">
-                        <i class="ti ti-shield-check" style="color: #059669; font-size: 22px; flex-shrink: 0; margin-top: 2px;"></i>
-                        <div style="font-size: 13px; color: #065F46; line-height: 1.5;">
+                    <div style="background: #FDF2F8; border: 1px solid #FBCFE8; border-radius: 12px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start;">
+                        <i class="ti ti-shield-check" style="color: #EC4899; font-size: 22px; flex-shrink: 0; margin-top: 2px;"></i>
+                        <div style="font-size: 13px; color: #9D174D; line-height: 1.5;">
                             <strong>{{ __('Kích hoạt tự động ngay sau khi thanh toán:') }}</strong>
                             {{ __('Gói cước sẽ được gắn trực tiếp vào tài khoản này, giảm giá tự động được kích hoạt cho mọi đơn đặt sân trong vòng :days ngày.', ['days' => $plan->duration_days]) }}
                         </div>
@@ -549,8 +549,8 @@
                  BƯỚC 3: MÃ QR THANH TOÁN (NGÂN HÀNG & MOMO) & XÁC NHẬN
             ======================================================== --}}
             <div id="step-section-3" style="display: none;">
-                <h3 style="font-size: 18px; font-weight: 700; color: var(--ink, #11201B); margin: 0 0 18px; display: flex; align-items: center; gap: 8px;">
-                    <i class="ti ti-qrcode" style="color: #178A4C;"></i> {{ __('Bước 3: Quét mã QR & Xác nhận kích hoạt gói') }}
+                <h3 style="font-size: 18px; font-weight: 700; color: var(--ink, #181824); margin: 0 0 18px; display: flex; align-items: center; gap: 8px;">
+                    <i class="ti ti-qrcode" style="color: #EC4899;"></i> {{ __('Bước 3: Quét mã QR & Xác nhận kích hoạt gói') }}
                 </h3>
 
                 @php
@@ -580,7 +580,7 @@
                     ========================================= --}}
                     <div id="bank-qr-view">
                         <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px;">
-                            <span style="background: #178A4C; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;">
+                            <span style="background: #EC4899; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;">
                                 VIETQR CHUẨN QUỐC GIA
                             </span>
                             <span style="font-size: 13px; color: #475569; font-weight: 600;">
@@ -604,7 +604,7 @@
                                 <td>{{ __('Ngân hàng:') }}</td>
                                 <td>
                                     <strong>TPBank (Ngân hàng Tiên Phong)</strong>
-                                    <span style="font-size: 11px; color: #178A4C; margin-left: 8px;">24/7 Tức thì</span>
+                                    <span style="font-size: 11px; color: #DB2777; margin-left: 8px;">24/7 Tức thì</span>
                                 </td>
                             </tr>
                             <tr>
@@ -623,20 +623,20 @@
                             <tr>
                                 <td>{{ __('Số tiền cần chuyển:') }}</td>
                                 <td>
-                                    <span id="bank-amount" style="color: #EA580C; font-weight: 800; font-size: 16px;">{{ number_format($planAmount, 0, ',', '.') }}₫</span>
+                                    <span id="bank-amount" style="color: #EC4899; font-weight: 800; font-size: 16px;">{{ number_format($planAmount, 0, ',', '.') }}₫</span>
                                     <button type="button" class="btn-copy" id="btn-copy-amount">{{ __('Sao chép') }}</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td>{{ __('Nội dung chuyển khoản:') }}</td>
                                 <td>
-                                    <span id="bank-memo" style="color: #178A4C; font-weight: 700; font-family: monospace; font-size: 15px;">{{ $planMemo }}</span>
+                                    <span id="bank-memo" style="color: #DB2777; font-weight: 700; font-family: monospace; font-size: 15px;">{{ $planMemo }}</span>
                                     <button type="button" class="btn-copy" id="btn-copy-memo">{{ __('Sao chép') }}</button>
                                 </td>
                             </tr>
                         </table>
 
-                        <div style="background: rgba(23,138,76,0.08); border-radius: 10px; padding: 12px; font-size: 13px; color: #166534; line-height: 1.5; max-width: 480px; margin: 0 auto; text-align: left;">
+                        <div style="background: rgba(236,72,153,0.08); border-radius: 10px; padding: 12px; font-size: 13px; color: #9D174D; line-height: 1.5; max-width: 480px; margin: 0 auto; text-align: left;">
                             <i class="ti ti-info-circle" style="margin-right: 4px;"></i>
                             <strong>{{ __('Hướng dẫn:') }}</strong> {{ __('Quý khách mở App Ngân hàng (TPBank, MB, VCB, BIDV, Techcombank...) hoặc MoMo, chọn Quét mã QR để quét mã trên. Vui lòng giữ nguyên nội dung chuyển khoản để hệ thống tự động kích hoạt gói ngay lập tức.') }}
                         </div>
@@ -711,11 +711,11 @@
                 </div>
 
                 {{-- Real-time Payment Status Notice Box --}}
-                <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 14px; padding: 14px 18px; margin-bottom: 22px; display: flex; align-items: center; gap: 12px;">
-                    <div style="width: 38px; height: 38px; border-radius: 50%; background: #DCFCE7; color: #15803D; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
+                <div style="background: #FDF2F8; border: 1px solid #FBCFE8; border-radius: 14px; padding: 14px 18px; margin-bottom: 22px; display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 38px; height: 38px; border-radius: 50%; background: #FCE7F3; color: #DB2777; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
                         <i class="ti ti-bell-ringing"></i>
                     </div>
-                    <div style="font-size: 13px; color: #166534; line-height: 1.45;">
+                    <div style="font-size: 13px; color: #9D174D; line-height: 1.45;">
                         <strong>{{ __('Thông báo xác nhận thanh toán tự động:') }}</strong>
                         {{ __('Sau khi quét mã chuyển khoản thành công, quý khách nhấn nút "Tôi đã thanh toán" bên dưới để hệ thống phát hành biên lai & kích hoạt gói thành viên VIP ngay lập tức.') }}
                     </div>
@@ -739,24 +739,24 @@
 </div>
 
 {{-- Copy Notification Toast --}}
-<div id="copy-toast-notification" style="position: fixed; bottom: 28px; right: 28px; background: #0D382E; color: #FFFFFF; padding: 12px 20px; border-radius: 12px; font-size: 13.5px; font-weight: 600; display: none; align-items: center; gap: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 99999; border: 1px solid #178A4C;">
-    <i class="ti ti-circle-check" style="color: #4ADE80; font-size: 18px;"></i>
+<div id="copy-toast-notification" style="position: fixed; bottom: 28px; right: 28px; background: #181824; color: #FFFFFF; padding: 12px 20px; border-radius: 12px; font-size: 13.5px; font-weight: 600; display: none; align-items: center; gap: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 99999; border: 1px solid #EC4899;">
+    <i class="ti ti-circle-check" style="color: #FF2E93; font-size: 18px;"></i>
     <span id="copy-toast-text">{{ __('Đã sao chép vào bộ nhớ tạm!') }}</span>
 </div>
 
 {{-- Payment Verification Overlay Modal when submitting --}}
 <div id="payment-verifying-overlay" style="position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 999999; padding: 20px;">
-    <div style="background: var(--bg-white, #FFFFFF); border-radius: 24px; max-width: 440px; width: 100%; padding: 32px 26px; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.3); border: 1px solid var(--line, #E3ECE6);">
-        <div style="width: 72px; height: 72px; border-radius: 50%; background: #DCFCE7; color: #16A34A; display: inline-flex; align-items: center; justify-content: center; font-size: 38px; margin-bottom: 16px; box-shadow: 0 8px 20px rgba(22,163,74,0.25);">
+    <div style="background: var(--bg-white, #FFFFFF); border-radius: 24px; max-width: 440px; width: 100%; padding: 32px 26px; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.3); border: 1px solid var(--line, #F1E4EC);">
+        <div style="width: 72px; height: 72px; border-radius: 50%; background: #FCE7F3; color: #EC4899; display: inline-flex; align-items: center; justify-content: center; font-size: 38px; margin-bottom: 16px; box-shadow: 0 8px 20px rgba(236,72,153,0.25);">
             <i class="ti ti-shield-check"></i>
         </div>
-        <h3 style="margin: 0 0 8px; font-size: 21px; font-weight: 800; color: var(--ink, #11201B); font-family: 'Oswald', sans-serif; letter-spacing: 0.4px;">
+        <h3 style="margin: 0 0 8px; font-size: 21px; font-weight: 800; color: var(--ink, #181824); font-family: 'Oswald', sans-serif; letter-spacing: 0.4px;">
             {{ __('ĐANG XÁC THỰC THANH TOÁN & KÍCH HOẠT GÓI...') }}
         </h3>
-        <p style="margin: 0 0 18px; font-size: 14px; color: var(--ink-soft, #5E726A); line-height: 1.5;">
+        <p style="margin: 0 0 18px; font-size: 14px; color: var(--ink-soft, #525266); line-height: 1.5;">
             {{ __('Hệ thống đang ghi nhận giao dịch và kích hoạt đặc quyền hội viên VIP cho tài khoản của bạn. Vui lòng đợi trong giây lát!') }}
         </p>
-        <div style="background: #F0FDF4; border: 1px solid #86EFAC; border-radius: 12px; padding: 10px 14px; font-size: 13px; color: #15803D; font-weight: 700;">
+        <div style="background: #FDF2F8; border: 1px solid #FBCFE8; border-radius: 12px; padding: 10px 14px; font-size: 13px; color: #DB2777; font-weight: 700;">
             <i class="ti ti-qrcode"></i> <span id="verifying-memo-display">Mã đối soát: {{ $planMemo }} • Số tiền: {{ number_format($planAmount, 0, ',', '.') }}₫</span>
         </div>
     </div>
@@ -891,7 +891,7 @@ document.addEventListener('DOMContentLoaded', function () {
             navigator.clipboard.writeText(val).then(() => {
                 const orig = btn.innerText;
                 btn.innerText = 'Đã chép!';
-                btn.style.background = '#178A4C';
+                btn.style.background = '#EC4899';
                 btn.style.color = '#fff';
                 showCopyToast(label || val);
                 setTimeout(() => {

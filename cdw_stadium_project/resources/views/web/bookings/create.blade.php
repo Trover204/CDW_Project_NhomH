@@ -281,12 +281,12 @@
             <div id="booking-checkout-wizard" class="checkout-container" style="display: none;">
 
                 {{-- Breadcrumb --}}
-                <div style="margin-bottom: 22px; font-size: 14px; color: var(--ink-soft, #5E726A); display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                    <button type="button" id="btn-breadcrumb-back-stage1" style="background: none; border: none; padding: 0; cursor: pointer; color: #178A4C; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; font-family: inherit;">
+                <div style="margin-bottom: 22px; font-size: 14px; color: var(--ink-soft, #525266); display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" id="btn-breadcrumb-back-stage1" style="background: none; border: none; padding: 0; cursor: pointer; color: #EC4899; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; font-family: inherit;">
                         <i class="ti ti-arrow-left"></i> {{ __('Thông tin đặt sân') }}
                     </button>
                     <span>/</span>
-                    <span style="color: var(--ink, #11201B); font-weight: 500;">{{ __('Quy trình xác nhận & Thanh toán đặt sân') }}</span>
+                    <span style="color: var(--ink, #181824); font-weight: 500;">{{ __('Quy trình xác nhận & Thanh toán đặt sân') }}</span>
                 </div>
 
                 {{-- 3-Step Wizard Stepper --}}
@@ -313,13 +313,13 @@
                             @if($primaryImg)
                                 <img src="{{ asset($primaryImg->image_path) }}" alt="{{ $court->name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
                             @else
-                                <i class="ti ti-ball-football" style="font-size: 36px; color: #178A4C;"></i>
+                                <i class="ti ti-ball-football" style="font-size: 36px; color: #EC4899;"></i>
                             @endif
                         </div>
 
                         <div style="flex-grow: 1; min-width: 0;">
                             <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px;">
-                                <span style="display: inline-flex; align-items: center; gap: 4px; background: #DCFCE7; color: #15803D; font-size: 11.5px; font-weight: 700; padding: 3px 10px; border-radius: 999px;">
+                                <span style="display: inline-flex; align-items: center; gap: 4px; background: #FCE7F3; color: #BE185D; font-size: 11.5px; font-weight: 700; padding: 3px 10px; border-radius: 999px;">
                                     <i class="ti ti-sparkles" style="font-size: 11px;"></i> {{ $court->sportType->name ?? __('Thể thao') }}
                                 </span>
                                 <span style="display: inline-flex; align-items: center; gap: 4px; background: #EFF6FF; color: #1D4ED8; font-size: 11.5px; font-weight: 700; padding: 3px 10px; border-radius: 999px;" id="chk-badge-schedule">
@@ -327,15 +327,15 @@
                                 </span>
                             </div>
 
-                            <div style="font-weight: 800; color: var(--ink, #111827); font-size: 18px; margin-bottom: 4px; font-family: 'Oswald', sans-serif;">
+                            <div style="font-weight: 800; color: var(--ink, #181824); font-size: 18px; margin-bottom: 4px; font-family: 'Oswald', sans-serif;">
                                 {{ $court->name }}
                             </div>
 
                             <div style="display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-                                <span style="font-size: 13px; color: #15803D; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                                <span style="font-size: 13px; color: #DB2777; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
                                     <i class="ti ti-map-pin" style="font-size: 14px;"></i> {{ $court->facility->address ?? __('Cơ sở Sân Nhóm H') }}
                                 </span>
-                                <span style="font-size: 24px; font-weight: 800; color: #EA580C; font-family: 'Oswald', sans-serif;" class="total-display-tag">
+                                <span style="font-size: 24px; font-weight: 800; color: #EC4899; font-family: 'Oswald', sans-serif;" class="total-display-tag">
                                     {{ number_format($court->price ?? 120000, 0, ',', '.') }}₫
                                 </span>
                             </div>
@@ -346,22 +346,22 @@
                          BƯỚC 1: CHỌN PHƯƠNG THỨC THANH TOÁN
                     ======================================================== --}}
                     <div id="step-section-1">
-                        <h3 style="font-size: 18px; font-weight: 700; color: var(--ink, #11201B); margin: 0 0 18px; display: flex; align-items: center; gap: 8px;">
-                            <i class="ti ti-credit-card" style="color: #178A4C;"></i> {{ __('Bước 1: Chọn phương thức thanh toán') }}
+                        <h3 style="font-size: 18px; font-weight: 700; color: var(--ink, #181824); margin: 0 0 18px; display: flex; align-items: center; gap: 8px;">
+                            <i class="ti ti-credit-card" style="color: #EC4899;"></i> {{ __('Bước 1: Chọn phương thức thanh toán') }}
                         </h3>
 
                         <div style="margin-bottom: 24px;">
                             {{-- VietQR Bank Transfer (Recommended) --}}
                             <label class="payment-option-card selected" id="opt-qr">
                                 <input type="radio" name="payment_method" value="qr" checked>
-                                <div style="width: 40px; height: 40px; border-radius: 10px; background: #EFF6FF; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #2563EB; margin-right: 14px; flex-shrink: 0;">
+                                <div style="width: 40px; height: 40px; border-radius: 10px; background: #FDF2F8; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #EC4899; margin-right: 14px; flex-shrink: 0;">
                                     <i class="ti ti-building-bank"></i>
                                 </div>
                                 <div style="flex-grow: 1;">
-                                    <div style="font-weight: 700; font-size: 14.5px; color: var(--ink, #111827);">{{ __('Quét mã QR Ngân Hàng (VietQR / Chuyển khoản 24/7)') }}</div>
+                                    <div style="font-weight: 700; font-size: 14.5px; color: var(--ink, #181824);">{{ __('Quét mã QR Ngân Hàng (VietQR / Chuyển khoản 24/7)') }}</div>
                                     <div style="font-size: 12.5px; color: var(--ink-soft, #6B7280);">{{ __('Quét mã chuyển tiền tức thì từ TPBank, MB Bank, Vietcombank, Techcombank, BIDV...') }}</div>
                                 </div>
-                                <span style="font-size: 11.5px; font-weight: 700; background: #DCFCE7; color: #15803D; padding: 3px 9px; border-radius: 6px; flex-shrink: 0;">{{ __('Khuyên dùng') }}</span>
+                                <span style="font-size: 11.5px; font-weight: 700; background: #FCE7F3; color: #BE185D; padding: 3px 9px; border-radius: 6px; flex-shrink: 0;">{{ __('Khuyên dùng') }}</span>
                             </label>
 
                             {{-- MoMo --}}
@@ -414,28 +414,28 @@
                         </div>
 
                         {{-- Price summary in Step 1 (Giống y hệt giao diện Plans & Merch Checkout) --}}
-                        <div style="background: var(--bg-page, #F9FAFB); border-radius: 14px; padding: 18px 20px; border: 1px solid var(--line, #E5E7EB); margin-bottom: 24px;">
+                        <div style="background: var(--bg-page, #FAF7F9); border-radius: 14px; padding: 18px 20px; border: 1px solid var(--line, #F1E4EC); margin-bottom: 24px;">
                             <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; color: var(--ink-soft, #6B7280);">
                                 <span>{{ __('Sân thi đấu:') }}</span>
-                                <strong style="color: var(--ink, #111827);">{{ $court->name }} ({{ $court->sportType->name ?? __('Thể thao') }})</strong>
+                                <strong style="color: var(--ink, #181824);">{{ $court->name }} ({{ $court->sportType->name ?? __('Thể thao') }})</strong>
                             </div>
                             <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; color: var(--ink-soft, #6B7280);">
                                 <span>{{ __('Khung giờ & Ngày đặt:') }}</span>
-                                <strong style="color: #178A4C;" id="chk-step1-schedule">18:00 - 19:00</strong>
+                                <strong style="color: #DB2777;" id="chk-step1-schedule">18:00 - 19:00</strong>
                             </div>
                             <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; color: var(--ink-soft, #6B7280);">
                                 <span>{{ __('Thời lượng thi đấu:') }}</span>
-                                <strong style="color: var(--ink, #111827);" id="chk-step1-duration">1 giờ</strong>
+                                <strong style="color: var(--ink, #181824);" id="chk-step1-duration">1 giờ</strong>
                             </div>
                             @if(isset($subscription) && $subscription && $subscription->plan && $subscription->plan->discount_percent > 0)
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; color: var(--ink-soft, #6B7280);">
                                     <span>{{ __('Ưu đãi hội viên VIP:') }}</span>
-                                    <span style="color: #16A34A; font-weight: 700;" id="chk-step1-discount">Giảm {{ $subscription->plan->discount_percent }}% ({{ $subscription->plan->name }})</span>
+                                    <span style="color: #EC4899; font-weight: 700;" id="chk-step1-discount">Giảm {{ $subscription->plan->discount_percent }}% ({{ $subscription->plan->name }})</span>
                                 </div>
                             @endif
-                            <div style="display: flex; justify-content: space-between; align-items: baseline; border-top: 1px dashed var(--line, #E5E7EB); padding-top: 12px; margin-top: 8px;">
-                                <span style="font-weight: 700; font-size: 15px; color: var(--ink, #111827);">{{ __('Tổng thanh toán:') }}</span>
-                                <span style="font-size: 24px; font-weight: 800; color: #EA580C; font-family: 'Oswald', sans-serif;" class="total-display-tag">
+                            <div style="display: flex; justify-content: space-between; align-items: baseline; border-top: 1px dashed var(--line, #F1E4EC); padding-top: 12px; margin-top: 8px;">
+                                <span style="font-weight: 700; font-size: 15px; color: var(--ink, #181824);">{{ __('Tổng thanh toán:') }}</span>
+                                <span style="font-size: 24px; font-weight: 800; color: #EC4899; font-family: 'Oswald', sans-serif;" class="total-display-tag">
                                     {{ number_format($court->price ?? 120000, 0, ',', '.') }}₫
                                 </span>
                             </div>
@@ -455,11 +455,11 @@
                          BƯỚC 2: XÁC NHẬN THÔNG TIN ĐẶT SÂN
                     ======================================================== --}}
                     <div id="step-section-2" style="display: none;">
-                        <h3 style="font-size: 18px; font-weight: 700; color: var(--ink, #11201B); margin: 0 0 18px; display: flex; align-items: center; gap: 8px;">
-                            <i class="ti ti-user-check" style="color: #178A4C;"></i> {{ __('Bước 2: Kiểm tra & Xác nhận thông tin giữ chỗ') }}
+                        <h3 style="font-size: 18px; font-weight: 700; color: var(--ink, #181824); margin: 0 0 18px; display: flex; align-items: center; gap: 8px;">
+                            <i class="ti ti-user-check" style="color: #EC4899;"></i> {{ __('Bước 2: Kiểm tra & Xác nhận thông tin giữ chỗ') }}
                         </h3>
 
-                        <div style="background: var(--bg-page, #F8FAFC); padding: 22px; border-radius: 16px; border: 1px solid var(--line, #E5E7EB); margin-bottom: 24px;">
+                        <div style="background: var(--bg-page, #FAF7F9); padding: 22px; border-radius: 16px; border: 1px solid var(--line, #F1E4EC); margin-bottom: 24px;">
                             <div class="form-grid-2" style="margin-bottom: 16px;">
                                 <div class="form-group-custom" style="margin-bottom: 0;">
                                     <label class="form-label-custom">{{ __('Họ và tên người đặt sân') }}</label>
@@ -478,18 +478,18 @@
                                 </div>
                                 <div class="form-group-custom" style="margin-bottom: 0;">
                                     <label class="form-label-custom">{{ __('Lịch thi đấu & Khung giờ') }}</label>
-                                    <input type="text" id="confirm-schedule-text" class="form-input-custom" readonly style="background: #F0FDF4; color: #15803D; font-weight: 700; border-color: #86EFAC;">
+                                    <input type="text" id="confirm-schedule-text" class="form-input-custom" readonly style="background: #FDF2F8; color: #DB2777; font-weight: 700; border-color: #FBCFE8;">
                                 </div>
                             </div>
 
                             <div class="form-group-custom" style="margin-bottom: 16px;">
                                 <label class="form-label-custom">{{ __('Phương thức thanh toán đã chọn') }}</label>
-                                <input type="text" id="confirm-payment-method-text" class="form-input-custom" readonly style="background: #F3F4F6; font-weight: 700; color: #178A4C;">
+                                <input type="text" id="confirm-payment-method-text" class="form-input-custom" readonly style="background: #F3F4F6; font-weight: 700; color: #EC4899;">
                             </div>
 
-                            <div style="background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 12px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start;">
-                                <i class="ti ti-shield-check" style="color: #059669; font-size: 22px; flex-shrink: 0; margin-top: 2px;"></i>
-                                <div style="font-size: 13px; color: #065F46; line-height: 1.5;">
+                            <div style="background: #FDF2F8; border: 1px solid #FBCFE8; border-radius: 12px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start;">
+                                <i class="ti ti-shield-check" style="color: #EC4899; font-size: 22px; flex-shrink: 0; margin-top: 2px;"></i>
+                                <div style="font-size: 13px; color: #9D174D; line-height: 1.5;">
                                     <strong>{{ __('Xác nhận giữ chỗ tự động ngay sau khi thanh toán:') }}</strong>
                                     {{ __('Mã vé điện tử sẽ được cấp trực tiếp cho tài khoản của bạn và gửi thông báo xác nhận ngay khi hoàn tất bước tiếp theo.') }}
                                 </div>
@@ -510,8 +510,8 @@
                          BƯỚC 3: MÃ QR THANH TOÁN & XÁC NHẬN HOÀN TẤT ĐẶT SÂN
                     ======================================================== --}}
                     <div id="step-section-3" style="display: none;">
-                        <h3 style="font-size: 18px; font-weight: 700; color: var(--ink, #11201B); margin: 0 0 18px; display: flex; align-items: center; gap: 8px;">
-                            <i class="ti ti-qrcode" style="color: #178A4C;"></i> {{ __('Bước 3: Quét mã QR & Xác nhận thanh toán đặt sân') }}
+                        <h3 style="font-size: 18px; font-weight: 700; color: var(--ink, #181824); margin: 0 0 18px; display: flex; align-items: center; gap: 8px;">
+                            <i class="ti ti-qrcode" style="color: #EC4899;"></i> {{ __('Bước 3: Quét mã QR & Xác nhận thanh toán đặt sân') }}
                         </h3>
 
                         {{-- QR Payment Container (Visible for QR / Bank / MoMo / Visa / PayPal) --}}
@@ -536,7 +536,7 @@
                             ========================================= --}}
                             <div id="bank-qr-view">
                                 <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
-                                    <span style="background: #178A4C; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;">
+                                    <span style="background: #EC4899; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;">
                                         VIETQR CHUẨN QUỐC GIA
                                     </span>
                                     <span style="font-size: 13px; color: #475569; font-weight: 600;">
@@ -560,7 +560,7 @@
                                         <td>{{ __('Ngân hàng:') }}</td>
                                         <td>
                                             <strong>TPBank (Ngân hàng Tiên Phong)</strong>
-                                            <span style="font-size: 11px; color: #178A4C; margin-left: 8px;">24/7 Tức thì</span>
+                                            <span style="font-size: 11px; color: #DB2777; margin-left: 8px;">24/7 Tức thì</span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -579,20 +579,20 @@
                                     <tr>
                                         <td>{{ __('Số tiền cần chuyển:') }}</td>
                                         <td>
-                                            <span id="bank-amount" style="color: #EA580C; font-weight: 800; font-size: 16px;"></span>
+                                            <span id="bank-amount" style="color: #EC4899; font-weight: 800; font-size: 16px;"></span>
                                             <button type="button" class="btn-copy" id="btn-copy-amount">{{ __('Sao chép') }}</button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>{{ __('Nội dung chuyển khoản:') }}</td>
                                         <td>
-                                            <span id="bank-memo" style="color: #178A4C; font-weight: 700; font-family: monospace; font-size: 15px;"></span>
+                                            <span id="bank-memo" style="color: #DB2777; font-weight: 700; font-family: monospace; font-size: 15px;"></span>
                                             <button type="button" class="btn-copy" id="btn-copy-memo">{{ __('Sao chép') }}</button>
                                         </td>
                                     </tr>
                                 </table>
 
-                                <div style="background: rgba(23,138,76,0.08); border-radius: 10px; padding: 12px; font-size: 13px; color: #166534; line-height: 1.5; max-width: 480px; margin: 0 auto; text-align: left;">
+                                <div style="background: rgba(236,72,153,0.08); border-radius: 10px; padding: 12px; font-size: 13px; color: #9D174D; line-height: 1.5; max-width: 480px; margin: 0 auto; text-align: left;">
                                     <i class="ti ti-info-circle" style="margin-right: 4px;"></i>
                                     <strong>{{ __('Hướng dẫn:') }}</strong> {{ __('Quý khách mở App Ngân hàng (TPBank, MB, VCB, BIDV, Techcombank...) hoặc MoMo, chọn Quét mã QR để quét mã trên. Vui lòng giữ nguyên nội dung chuyển khoản để lịch đặt sân được xác nhận tức thì.') }}
                                 </div>
@@ -681,11 +681,11 @@
                         </div>
 
                         {{-- Real-time Payment Status Notice Box --}}
-                        <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 14px; padding: 14px 18px; margin-bottom: 22px; display: flex; align-items: center; gap: 12px;">
-                            <div style="width: 38px; height: 38px; border-radius: 50%; background: #DCFCE7; color: #15803D; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
+                        <div style="background: #FDF2F8; border: 1px solid #FBCFE8; border-radius: 14px; padding: 14px 18px; margin-bottom: 22px; display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 38px; height: 38px; border-radius: 50%; background: #FCE7F3; color: #DB2777; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
                                 <i class="ti ti-bell-ringing"></i>
                             </div>
-                            <div style="font-size: 13px; color: #166534; line-height: 1.45;">
+                            <div style="font-size: 13px; color: #9D174D; line-height: 1.45;">
                                 <strong>{{ __('Thông báo xác nhận thanh toán tự động:') }}</strong>
                                 {{ __('Sau khi quét mã chuyển khoản thành công, quý khách nhấn nút "Tôi đã thanh toán" bên dưới để hệ thống phát hành biên lai & mã vé giữ chỗ ngay lập tức.') }}
                             </div>
@@ -712,24 +712,24 @@
 </div>
 
 {{-- Copy Notification Toast --}}
-<div id="copy-toast-notification" style="position: fixed; bottom: 28px; right: 28px; background: #0D382E; color: #FFFFFF; padding: 12px 20px; border-radius: 12px; font-size: 13.5px; font-weight: 600; display: none; align-items: center; gap: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 99999; border: 1px solid #178A4C;">
-    <i class="ti ti-circle-check" style="color: #4ADE80; font-size: 18px;"></i>
+<div id="copy-toast-notification" style="position: fixed; bottom: 28px; right: 28px; background: #181824; color: #FFFFFF; padding: 12px 20px; border-radius: 12px; font-size: 13.5px; font-weight: 600; display: none; align-items: center; gap: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 99999; border: 1px solid #EC4899;">
+    <i class="ti ti-circle-check" style="color: #FF2E93; font-size: 18px;"></i>
     <span id="copy-toast-text">{{ __('Đã sao chép vào bộ nhớ tạm!') }}</span>
 </div>
 
 {{-- Payment Verification Overlay Modal when submitting --}}
 <div id="payment-verifying-overlay" style="position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 999999; padding: 20px;">
-    <div style="background: var(--bg-white, #FFFFFF); border-radius: 24px; max-width: 440px; width: 100%; padding: 32px 26px; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.3); border: 1px solid var(--line, #E3ECE6);">
-        <div style="width: 72px; height: 72px; border-radius: 50%; background: #DCFCE7; color: #16A34A; display: inline-flex; align-items: center; justify-content: center; font-size: 38px; margin-bottom: 16px; box-shadow: 0 8px 20px rgba(22,163,74,0.25);">
+    <div style="background: var(--bg-white, #FFFFFF); border-radius: 24px; max-width: 440px; width: 100%; padding: 32px 26px; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.3); border: 1px solid var(--line, #F1E4EC);">
+        <div style="width: 72px; height: 72px; border-radius: 50%; background: #FCE7F3; color: #EC4899; display: inline-flex; align-items: center; justify-content: center; font-size: 38px; margin-bottom: 16px; box-shadow: 0 8px 20px rgba(236,72,153,0.25);">
             <i class="ti ti-shield-check"></i>
         </div>
-        <h3 style="margin: 0 0 8px; font-size: 21px; font-weight: 800; color: var(--ink, #11201B); font-family: 'Oswald', sans-serif; letter-spacing: 0.4px;">
+        <h3 style="margin: 0 0 8px; font-size: 21px; font-weight: 800; color: var(--ink, #181824); font-family: 'Oswald', sans-serif; letter-spacing: 0.4px;">
             {{ __('ĐANG XÁC THỰC THANH TOÁN & GIỮ CHỖ...') }}
         </h3>
-        <p style="margin: 0 0 18px; font-size: 14px; color: var(--ink-soft, #5E726A); line-height: 1.5;">
+        <p style="margin: 0 0 18px; font-size: 14px; color: var(--ink-soft, #525266); line-height: 1.5;">
             {{ __('Hệ thống đang ghi nhận giao dịch và khởi tạo mã vé điện tử cho khung giờ của bạn. Vui lòng đợi trong giây lát!') }}
         </p>
-        <div style="background: #F0FDF4; border: 1px solid #86EFAC; border-radius: 12px; padding: 10px 14px; font-size: 13px; color: #15803D; font-weight: 700;">
+        <div style="background: #FDF2F8; border: 1px solid #FBCFE8; border-radius: 12px; padding: 10px 14px; font-size: 13px; color: #DB2777; font-weight: 700;">
             <i class="ti ti-qrcode"></i> <span id="verifying-memo-display"></span>
         </div>
     </div>
@@ -747,14 +747,14 @@
 }
 .booking-steps-banner {
     background: var(--surface, #fff);
-    border: 1px solid var(--line, #E3ECE6);
+    border: 1px solid var(--line, #F1E4EC);
     border-radius: 20px;
     padding: 20px 32px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 30px;
-    box-shadow: 0 4px 18px rgba(13, 56, 46, 0.03);
+    box-shadow: 0 4px 18px rgba(24, 24, 36, 0.03);
 }
 .step-node {
     display: flex;
@@ -765,19 +765,19 @@
     width: 38px;
     height: 38px;
     border-radius: 50%;
-    background: var(--bg-page, #F6F8F6);
-    color: var(--ink-muted, #879C94);
+    background: var(--bg-page, #FAF7F9);
+    color: var(--ink-muted, #8E8EA0);
     font-size: 15px;
     font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid var(--line, #E3ECE6);
+    border: 2px solid var(--line, #F1E4EC);
 }
 .step-node.active .step-num {
-    background: var(--turf-dark, #0D382E);
+    background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
     color: #fff;
-    border-color: var(--turf-dark, #0D382E);
+    border-color: #EC4899;
 }
 .step-text {
     display: flex;
@@ -787,25 +787,25 @@
     font-size: 11.5px;
     font-weight: 700;
     text-transform: uppercase;
-    color: var(--ink-muted, #879C94);
+    color: var(--ink-muted, #8E8EA0);
     letter-spacing: 0.5px;
 }
 .step-node.active .step-title {
-    color: var(--turf-teal, #106764);
+    color: #EC4899;
 }
 .step-sub {
     font-size: 14px;
     font-weight: 600;
-    color: var(--ink, #11201B);
+    color: var(--ink, #181824);
 }
 .step-connector {
     flex: 1;
     height: 2px;
-    background: var(--line, #E3ECE6);
+    background: var(--line, #F1E4EC);
     margin: 0 20px;
 }
 .step-connector.active {
-    background: var(--turf-teal, #106764);
+    background: #EC4899;
 }
 .form-alert-error {
     background: #FEF2F2;
@@ -840,10 +840,10 @@
 }
 .form-card-section {
     background: var(--surface, #fff);
-    border: 1px solid var(--line, #E3ECE6);
+    border: 1px solid var(--line, #F1E4EC);
     border-radius: 20px;
     padding: 26px 28px;
-    box-shadow: 0 4px 18px rgba(13, 56, 46, 0.03);
+    box-shadow: 0 4px 18px rgba(24, 24, 36, 0.03);
 }
 .card-section-head {
     display: flex;
@@ -851,22 +851,22 @@
     gap: 14px;
     margin-bottom: 22px;
     padding-bottom: 16px;
-    border-bottom: 1px solid var(--line, #E3ECE6);
+    border-bottom: 1px solid var(--line, #F1E4EC);
 }
 .card-section-head i {
     font-size: 28px;
-    color: var(--turf-teal, #106764);
+    color: #EC4899;
 }
 .card-section-head h3 {
     margin: 0 0 4px;
     font-size: 18px;
     font-weight: 700;
-    color: var(--turf-dark, #0D382E);
+    color: var(--ink, #181824);
 }
 .card-section-head p {
     margin: 0;
     font-size: 13px;
-    color: var(--ink-soft, #5E726A);
+    color: var(--ink-soft, #525266);
 }
 .form-grid-2 {
     display: grid;
@@ -892,7 +892,7 @@
 .form-label {
     font-size: 13px;
     font-weight: 600;
-    color: var(--turf-dark, #0D382E);
+    color: var(--ink, #181824);
 }
 .form-label .req {
     color: #ef4444;
@@ -900,15 +900,15 @@
 .input-with-icon {
     display: flex;
     align-items: center;
-    background: var(--bg-page, #F6F8F6);
-    border: 1px solid #C7D3CA;
+    background: var(--bg-page, #FAF7F9);
+    border: 1px solid #E5D5DF;
     border-radius: 12px;
     padding: 0 12px;
     transition: all 0.2s ease;
 }
 .input-with-icon i {
     font-size: 18px;
-    color: var(--ink-muted, #879C94);
+    color: var(--ink-muted, #8E8EA0);
     margin-right: 10px;
     flex-shrink: 0;
 }
@@ -919,36 +919,36 @@
     outline: none;
     background: transparent;
     font-size: 14px;
-    color: var(--ink, #11201B);
+    color: var(--ink, #181824);
     font-family: inherit;
 }
 .input-with-icon:focus-within {
-    border-color: var(--turf-teal, #106764);
+    border-color: #EC4899;
     background: #ffffff;
-    box-shadow: 0 0 0 3px rgba(16, 103, 100, 0.12);
+    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.14);
 }
 .input-field-group textarea {
     width: 100%;
-    border: 1px solid #C7D3CA;
-    background: var(--bg-page, #F6F8F6);
+    border: 1px solid #E5D5DF;
+    background: var(--bg-page, #FAF7F9);
     border-radius: 12px;
     padding: 12px;
     font-size: 13.5px;
-    color: var(--ink, #11201B);
+    color: var(--ink, #181824);
     outline: none;
     font-family: inherit;
     resize: vertical;
     transition: all 0.2s;
 }
 .input-field-group textarea:focus {
-    border-color: var(--turf-teal, #106764);
+    border-color: #EC4899;
     background: #ffffff;
-    box-shadow: 0 0 0 3px rgba(16, 103, 100, 0.12);
+    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.14);
 }
 .agreement-checkbox-row {
     margin-top: 14px;
     padding-top: 14px;
-    border-top: 1px dashed var(--line, #E3ECE6);
+    border-top: 1px dashed var(--line, #F1E4EC);
 }
 .checkbox-container {
     display: flex;
@@ -957,26 +957,26 @@
     cursor: pointer;
     user-select: none;
     font-size: 13px;
-    color: var(--ink-soft, #5E726A);
+    color: var(--ink-soft, #525266);
     line-height: 1.5;
 }
 .checkbox-container input {
     margin-top: 3px;
     width: 16px;
     height: 16px;
-    accent-color: var(--turf-teal, #106764);
+    accent-color: #EC4899;
 }
 .agreement-text a {
-    color: var(--turf-teal, #106764);
+    color: #EC4899;
     font-weight: 600;
     text-decoration: underline;
 }
 .summary-card {
     background: var(--surface, #fff);
-    border: 1px solid var(--line, #E3ECE6);
+    border: 1px solid var(--line, #F1E4EC);
     border-radius: 20px;
     padding: 24px;
-    box-shadow: 0 6px 24px rgba(13, 56, 46, 0.05);
+    box-shadow: 0 6px 24px rgba(24, 24, 36, 0.05);
     position: sticky;
     top: 90px;
 }
@@ -989,8 +989,8 @@
     gap: 6px;
     font-size: 11.5px;
     font-weight: 700;
-    color: var(--turf-teal, #106764);
-    background: var(--turf-teal-soft, #E6F6F4);
+    color: #DB2777;
+    background: #FDF2F8;
     padding: 4px 10px;
     border-radius: 20px;
     margin-bottom: 8px;
@@ -999,14 +999,14 @@
     margin: 0;
     font-size: 18px;
     font-weight: 700;
-    color: var(--turf-dark, #0D382E);
+    color: var(--ink, #181824);
 }
 .court-summary-item {
     display: flex;
     gap: 14px;
     align-items: center;
-    background: var(--bg-page, #F6F8F6);
-    border: 1px solid var(--line, #E3ECE6);
+    background: var(--bg-page, #FAF7F9);
+    border: 1px solid var(--line, #F1E4EC);
     border-radius: 14px;
     padding: 12px;
     margin-bottom: 20px;
@@ -1016,7 +1016,7 @@
     height: 64px;
     border-radius: 10px;
     overflow: hidden;
-    background: #E6F0FA;
+    background: #FDF2F8;
     flex-shrink: 0;
 }
 .court-summary-thumb img {
@@ -1031,7 +1031,7 @@
     align-items: center;
     justify-content: center;
     font-size: 28px;
-    color: var(--turf-teal, #106764);
+    color: #EC4899;
 }
 .court-summary-info {
     flex: 1;
@@ -1040,13 +1040,13 @@
 .sport-chip {
     font-size: 11px;
     font-weight: 700;
-    color: var(--turf-teal, #106764);
+    color: #EC4899;
 }
 .court-summary-title {
     margin: 2px 0 4px;
     font-size: 14.5px;
     font-weight: 700;
-    color: var(--turf-dark, #0D382E);
+    color: var(--ink, #181824);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1056,7 +1056,7 @@
     align-items: center;
     gap: 4px;
     font-size: 12px;
-    color: var(--ink-soft, #5E726A);
+    color: var(--ink-soft, #525266);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1071,30 +1071,30 @@
     display: flex;
     justify-content: space-between;
     font-size: 13.5px;
-    color: var(--ink-soft, #5E726A);
+    color: var(--ink-soft, #525266);
 }
 .fee-value {
     font-weight: 600;
-    color: var(--ink, #11201B);
+    color: var(--ink, #181824);
 }
 .text-green {
-    color: #16A34A !important;
+    color: #DB2777 !important;
 }
 .fee-divider {
     height: 1px;
-    background: var(--line, #E3ECE6);
+    background: var(--line, #F1E4EC);
     margin: 4px 0;
 }
 .fee-total-row {
     align-items: baseline;
     font-size: 15px;
     font-weight: 700;
-    color: var(--turf-dark, #0D382E);
+    color: var(--ink, #181824);
 }
 .total-amount {
     font-size: 22px;
     font-weight: 800;
-    color: #F97316;
+    color: #EC4899;
     font-family: 'Oswald', sans-serif;
 }
 .summary-action-box {
@@ -1108,7 +1108,7 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    background: #F97316;
+    background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
     color: #fff;
     border: none;
     font-size: 15px;
@@ -1116,13 +1116,13 @@
     padding: 14px;
     border-radius: 12px;
     cursor: pointer;
-    box-shadow: 0 4px 14px rgba(249, 115, 22, 0.3);
+    box-shadow: 0 4px 14px rgba(236, 72, 153, 0.3);
     transition: all 0.2s ease;
 }
 .btn-submit-order:hover {
-    background: #ea580c;
+    background: linear-gradient(135deg, #DB2777 0%, #BE185D 100%);
     transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(249, 115, 22, 0.4);
+    box-shadow: 0 6px 18px rgba(236, 72, 153, 0.42);
 }
 .btn-back-link {
     display: flex;
@@ -1130,11 +1130,11 @@
     justify-content: center;
     gap: 6px;
     font-size: 13px;
-    color: var(--ink-soft, #5E726A);
+    color: var(--ink-soft, #525266);
     padding: 8px;
 }
 .btn-back-link:hover {
-    color: var(--turf-dark, #0D382E);
+    color: #EC4899;
 }
 .summary-security-note {
     display: flex;
@@ -1142,14 +1142,14 @@
     gap: 8px;
     margin-top: 18px;
     padding-top: 14px;
-    border-top: 1px solid var(--line, #E3ECE6);
+    border-top: 1px solid var(--line, #F1E4EC);
     font-size: 11.5px;
-    color: var(--ink-muted, #879C94);
+    color: var(--ink-muted, #8E8EA0);
     line-height: 1.4;
 }
 .summary-security-note i {
     font-size: 16px;
-    color: var(--turf-teal, #106764);
+    color: #EC4899;
     flex-shrink: 0;
 }
 
@@ -1175,7 +1175,7 @@
     left: 40px;
     right: 40px;
     height: 3px;
-    background: var(--line, #E3ECE6);
+    background: var(--line, #F1E4EC);
     z-index: 1;
 }
 .step-item {
@@ -1204,16 +1204,16 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 .step-item.active .step-number {
-    background: #178A4C;
-    border-color: #178A4C;
+    background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
+    border-color: #EC4899;
     color: #FFFFFF;
-    box-shadow: 0 4px 14px rgba(23, 138, 76, 0.4);
+    box-shadow: 0 4px 14px rgba(236, 72, 153, 0.4);
     transform: scale(1.08);
 }
 .step-item.completed .step-number {
-    background: #DCFCE7;
-    border-color: #178A4C;
-    color: #15803D;
+    background: #FCE7F3;
+    border-color: #EC4899;
+    color: #BE185D;
 }
 .step-label {
     font-size: 13.5px;
@@ -1223,12 +1223,12 @@
     transition: color 0.3s ease;
 }
 .step-item.active .step-label {
-    color: #178A4C;
+    color: #EC4899;
     font-weight: 700;
 }
 .checkout-card {
     background: var(--bg-white, #FFFFFF);
-    border: 1px solid var(--line, #E3ECE6);
+    border: 1px solid var(--line, #F1E4EC);
     border-radius: 24px;
     padding: 36px 32px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
@@ -1238,9 +1238,9 @@
     align-items: center;
     gap: 18px;
     padding: 18px 20px;
-    background: var(--bg-page, #F9FAFB);
+    background: var(--bg-page, #FAF7F9);
     border-radius: 16px;
-    border: 1px solid var(--line, #E5E7EB);
+    border: 1px solid var(--line, #F1E4EC);
     margin-bottom: 28px;
 }
 .checkout-prod-img {
@@ -1248,7 +1248,7 @@
     height: 80px;
     background: #FFFFFF;
     border-radius: 14px;
-    border: 1px solid var(--line, #E5E7EB);
+    border: 1px solid var(--line, #F1E4EC);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1270,19 +1270,19 @@
     user-select: none;
 }
 .payment-option-card:hover {
-    border-color: #178A4C;
-    background: #F0FDF4;
+    border-color: #EC4899;
+    background: #FDF2F8;
 }
 .payment-option-card.selected {
-    border-color: #178A4C;
-    background: #F0FDF4;
-    box-shadow: 0 4px 14px rgba(23, 138, 76, 0.12);
+    border-color: #EC4899;
+    background: #FDF2F8;
+    box-shadow: 0 4px 14px rgba(236, 72, 153, 0.14);
 }
 .payment-option-card input[type="radio"] {
     margin-right: 14px;
     width: 20px;
     height: 20px;
-    accent-color: #178A4C;
+    accent-color: #EC4899;
     cursor: pointer;
 }
 .form-group-custom {
@@ -1292,7 +1292,7 @@
     display: block;
     font-size: 13.5px;
     font-weight: 700;
-    color: var(--ink, #11201B);
+    color: var(--ink, #181824);
     margin-bottom: 6px;
 }
 .form-input-custom {
@@ -1303,12 +1303,12 @@
     border-radius: 12px;
     font-size: 14px;
     background: var(--bg-white, #FFFFFF);
-    color: var(--ink, #11201B);
+    color: var(--ink, #181824);
     outline: none;
 }
 .qr-payment-frame {
-    background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%);
-    border: 2px solid #BFDBFE;
+    background: linear-gradient(135deg, #FDF2F8 0%, #FAF7F9 100%);
+    border: 2px solid #FBCFE8;
     border-radius: 20px;
     padding: 26px;
     margin-bottom: 24px;
@@ -1346,10 +1346,10 @@
     box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
 .qr-switch-pill.active-bank {
-    background: #178A4C;
+    background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
     color: #FFFFFF;
-    border-color: #178A4C;
-    box-shadow: 0 4px 12px rgba(23, 138, 76, 0.25);
+    border-color: #EC4899;
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.28);
 }
 .qr-switch-pill.active-momo {
     background: #A50064;
@@ -1392,9 +1392,9 @@
     font-weight: 700;
 }
 .btn-copy {
-    background: #E2E8F0;
+    background: #FCE7F3;
     border: none;
-    color: #334155;
+    color: #BE185D;
     font-size: 11.5px;
     font-weight: 600;
     padding: 4px 9px;
@@ -1405,14 +1405,14 @@
     float: right;
 }
 .btn-copy:hover {
-    background: #178A4C;
+    background: #EC4899;
     color: #FFFFFF;
 }
 .btn-checkout-primary {
     height: 52px;
     padding: 0 28px;
     border-radius: 12px;
-    background: linear-gradient(135deg, #178A4C 0%, #12723E 100%);
+    background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
     color: #FFFFFF;
     border: none;
     font-size: 15.5px;
@@ -1423,11 +1423,11 @@
     justify-content: center;
     gap: 8px;
     transition: all 0.2s;
-    box-shadow: 0 4px 14px rgba(23, 138, 76, 0.28);
+    box-shadow: 0 4px 14px rgba(236, 72, 153, 0.3);
 }
 .btn-checkout-primary:hover {
-    background: linear-gradient(135deg, #137740 0%, #0D562E 100%);
-    box-shadow: 0 6px 18px rgba(23, 138, 76, 0.4);
+    background: linear-gradient(135deg, #DB2777 0%, #BE185D 100%);
+    box-shadow: 0 6px 18px rgba(236, 72, 153, 0.42);
     transform: translateY(-1px);
 }
 .btn-checkout-back {
@@ -1880,7 +1880,7 @@ document.addEventListener('DOMContentLoaded', function() {
         navigator.clipboard.writeText(text).then(() => {
             const old = btn.textContent;
             btn.textContent = 'Đã chép!';
-            btn.style.background = '#178A4C';
+            btn.style.background = '#EC4899';
             btn.style.color = '#fff';
             showCopyToast(label || text);
             setTimeout(() => {

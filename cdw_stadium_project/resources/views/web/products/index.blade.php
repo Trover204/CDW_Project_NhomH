@@ -16,13 +16,14 @@
     /* Hero Banner */
     .merch-hero {
         position: relative;
-        background: linear-gradient(135deg, #092820 0%, #0D382E 40%, #178A4C 100%);
+        background: linear-gradient(135deg, #12121C 0%, #181824 50%, #2D182A 100%);
         border-radius: 24px;
         padding: 48px 40px;
         color: #FFFFFF;
         overflow: hidden;
         margin-bottom: 28px;
-        box-shadow: 0 12px 36px rgba(13, 56, 46, 0.25);
+        box-shadow: 0 12px 36px rgba(24, 24, 36, 0.25);
+        border: 1px solid rgba(255, 46, 147, 0.25);
     }
     .merch-hero::before {
         content: "";
@@ -31,7 +32,7 @@
         right: -60px;
         width: 320px;
         height: 320px;
-        background: radial-gradient(circle, rgba(210, 248, 90, 0.18) 0%, rgba(210, 248, 90, 0) 70%);
+        background: radial-gradient(circle, rgba(255, 46, 147, 0.25) 0%, rgba(255, 46, 147, 0) 70%);
         border-radius: 50%;
         pointer-events: none;
     }
@@ -44,9 +45,9 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        background: rgba(255, 255, 255, 0.14);
+        background: rgba(255, 46, 147, 0.16);
         backdrop-filter: blur(8px);
-        color: #D2F85A;
+        color: #FF2E93;
         font-size: 12.5px;
         font-weight: 700;
         letter-spacing: 0.8px;
@@ -54,7 +55,7 @@
         padding: 6px 14px;
         border-radius: 30px;
         margin-bottom: 14px;
-        border: 1px solid rgba(210, 248, 90, 0.3);
+        border: 1px solid rgba(255, 46, 147, 0.4);
     }
     .merch-hero-title {
         font-family: 'Oswald', sans-serif;
@@ -90,7 +91,7 @@
     }
     .merch-feature-item {
         background: var(--bg-white, #FFFFFF);
-        border: 1px solid var(--line, #E3ECE6);
+        border: 1px solid var(--line, #F1E4EC);
         border-radius: 16px;
         padding: 16px 18px;
         display: flex;
@@ -101,15 +102,15 @@
     }
     .merch-feature-item:hover {
         transform: translateY(-2px);
-        border-color: #178A4C;
-        box-shadow: 0 6px 16px rgba(23, 138, 76, 0.08);
+        border-color: #EC4899;
+        box-shadow: 0 6px 16px rgba(236, 72, 153, 0.12);
     }
     .merch-feature-icon {
         width: 44px;
         height: 44px;
         border-radius: 12px;
-        background: #F0FDF4;
-        color: #178A4C;
+        background: #FDF2F8;
+        color: #EC4899;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -120,18 +121,18 @@
         margin: 0 0 2px 0;
         font-size: 14px;
         font-weight: 700;
-        color: var(--ink, #11201B);
+        color: var(--ink, #181824);
     }
     .merch-feature-text p {
         margin: 0;
         font-size: 12px;
-        color: var(--ink-soft, #5E726A);
+        color: var(--ink-soft, #525266);
     }
 
     /* Filter Toolbar */
     .merch-filter-card {
         background: var(--bg-white, #FFFFFF);
-        border: 1px solid var(--line, #E3ECE6);
+        border: 1px solid var(--line, #F1E4EC);
         border-radius: 20px;
         padding: 22px;
         margin-bottom: 24px;
@@ -152,24 +153,24 @@
         left: 16px;
         top: 50%;
         transform: translateY(-50%);
-        color: #879C94;
+        color: #8E8EA0;
         font-size: 18px;
     }
     .merch-search-input {
         width: 100%;
         height: 46px;
         padding: 0 16px 0 46px;
-        border: 1.5px solid var(--line, #E3ECE6);
+        border: 1.5px solid var(--line, #F1E4EC);
         border-radius: 12px;
         font-size: 14.5px;
         background: var(--bg-white, #FFFFFF);
-        color: var(--ink, #11201B);
+        color: var(--ink, #181824);
         outline: none;
         transition: border-color 0.2s, box-shadow 0.2s;
     }
     .merch-search-input:focus {
-        border-color: #178A4C;
-        box-shadow: 0 0 0 3px rgba(23, 138, 76, 0.12);
+        border-color: #EC4899;
+        box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.14);
     }
     .merch-select-wrap {
         flex: 0 1 200px;
@@ -178,22 +179,22 @@
         width: 100%;
         height: 46px;
         padding: 0 14px;
-        border: 1.5px solid var(--line, #E3ECE6);
+        border: 1.5px solid var(--line, #F1E4EC);
         border-radius: 12px;
         font-size: 14px;
         background: var(--bg-white, #FFFFFF);
-        color: var(--ink, #11201B);
+        color: var(--ink, #181824);
         outline: none;
         cursor: pointer;
         transition: border-color 0.2s;
     }
     .merch-select:focus {
-        border-color: #178A4C;
+        border-color: #EC4899;
     }
     .merch-btn-filter {
         height: 46px;
         padding: 0 22px;
-        background: #178A4C;
+        background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
         color: #FFFFFF;
         border: none;
         border-radius: 12px;
@@ -206,15 +207,15 @@
         transition: all 0.2s;
     }
     .merch-btn-filter:hover {
-        background: #12723E;
-        box-shadow: 0 4px 12px rgba(23, 138, 76, 0.25);
+        background: linear-gradient(135deg, #DB2777 0%, #BE185D 100%);
+        box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
     }
     .merch-btn-reset {
         height: 46px;
         padding: 0 18px;
-        background: var(--bg-page, #F6F8F6);
-        color: var(--ink-soft, #5E726A);
-        border: 1.5px solid var(--line, #E3ECE6);
+        background: var(--bg-page, #FAF7F9);
+        color: var(--ink-soft, #525266);
+        border: 1.5px solid var(--line, #F1E4EC);
         border-radius: 12px;
         font-size: 14px;
         font-weight: 500;
@@ -226,8 +227,8 @@
         transition: all 0.2s;
     }
     .merch-btn-reset:hover {
-        background: var(--line, #E3ECE6);
-        color: var(--ink, #11201B);
+        background: var(--line, #F1E4EC);
+        color: var(--ink, #181824);
     }
 
     /* Quick Filter Chips */
@@ -237,7 +238,7 @@
         overflow-x: auto;
         padding-top: 14px;
         margin-top: 14px;
-        border-top: 1px dashed var(--line, #E3ECE6);
+        border-top: 1px dashed var(--line, #F1E4EC);
         scrollbar-width: thin;
     }
     .merch-chip {
@@ -249,22 +250,22 @@
         font-size: 13px;
         font-weight: 600;
         white-space: nowrap;
-        background: var(--bg-page, #F6F8F6);
-        color: var(--ink-soft, #5E726A);
-        border: 1px solid var(--line, #E3ECE6);
+        background: var(--bg-page, #FAF7F9);
+        color: var(--ink-soft, #525266);
+        border: 1px solid var(--line, #F1E4EC);
         text-decoration: none;
         transition: all 0.2s;
     }
     .merch-chip:hover {
-        border-color: #178A4C;
-        color: #178A4C;
-        background: #F0FDF4;
+        border-color: #EC4899;
+        color: #EC4899;
+        background: #FDF2F8;
     }
     .merch-chip.active {
-        background: #178A4C;
+        background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
         color: #FFFFFF;
-        border-color: #178A4C;
-        box-shadow: 0 2px 8px rgba(23, 138, 76, 0.25);
+        border-color: #EC4899;
+        box-shadow: 0 2px 8px rgba(236, 72, 153, 0.28);
     }
 
     /* Product Grid & Cards */
@@ -276,7 +277,7 @@
     }
     .merch-card {
         background: var(--bg-white, #FFFFFF);
-        border: 1px solid var(--line, #E3ECE6);
+        border: 1px solid var(--line, #F1E4EC);
         border-radius: 20px;
         padding: 18px;
         display: flex;
@@ -287,13 +288,13 @@
     }
     .merch-card:hover {
         transform: translateY(-6px);
-        border-color: rgba(23, 138, 76, 0.4);
-        box-shadow: 0 16px 32px rgba(13, 56, 46, 0.1);
+        border-color: rgba(236, 72, 153, 0.45);
+        box-shadow: 0 16px 32px rgba(236, 72, 153, 0.12);
     }
 
     /* Card Image */
     .merch-card-img-wrap {
-        background: linear-gradient(180deg, #F9FAFB 0%, #EEF2F6 100%);
+        background: linear-gradient(180deg, #FDF2F8 0%, #F9FAFB 100%);
         border-radius: 14px;
         height: 240px;
         display: flex;
@@ -302,7 +303,7 @@
         overflow: hidden;
         position: relative;
         margin-bottom: 16px;
-        border: 1px solid rgba(0, 0, 0, 0.03);
+        border: 1px solid rgba(236, 72, 153, 0.08);
     }
     [data-theme="dark"] .merch-card-img-wrap {
         background: linear-gradient(180deg, #242424 0%, #1a1a1a 100%);
@@ -324,7 +325,7 @@
         position: absolute;
         top: 12px;
         left: 12px;
-        background: rgba(17, 32, 27, 0.85);
+        background: rgba(24, 24, 36, 0.88);
         backdrop-filter: blur(6px);
         color: #FFFFFF;
         font-size: 11px;
@@ -345,9 +346,9 @@
         z-index: 2;
     }
     .merch-badge-stock.in-stock {
-        background: #DCFCE7;
-        color: #15803D;
-        border: 1px solid #BBF7D0;
+        background: #FCE7F3;
+        color: #BE185D;
+        border: 1px solid #FBCFE8;
     }
     .merch-badge-stock.out-stock {
         background: #FEE2E2;
@@ -362,23 +363,23 @@
         gap: 5px;
         font-size: 12.5px;
         font-weight: 600;
-        color: #178A4C;
-        background: #F0FDF4;
+        color: #DB2777;
+        background: #FDF2F8;
         padding: 3px 10px;
         border-radius: 6px;
-        border: 1px solid #DCFCE7;
+        border: 1px solid #FCE7F3;
         margin-bottom: 8px;
         align-self: flex-start;
     }
     [data-theme="dark"] .merch-card-team {
-        background: rgba(23, 138, 76, 0.15);
-        border-color: rgba(23, 138, 76, 0.3);
-        color: #4ADE80;
+        background: rgba(236, 72, 153, 0.15);
+        border-color: rgba(236, 72, 153, 0.3);
+        color: #F472B6;
     }
     .merch-card-title {
         font-size: 16.5px;
         font-weight: 700;
-        color: var(--ink, #11201B);
+        color: var(--ink, #181824);
         line-height: 1.4;
         margin-bottom: 12px;
         flex-grow: 1;
@@ -394,19 +395,19 @@
         justify-content: space-between;
         padding-top: 10px;
         margin-bottom: 14px;
-        border-top: 1px dashed var(--line, #E3ECE6);
+        border-top: 1px dashed var(--line, #F1E4EC);
     }
     .merch-card-price {
         font-size: 22px;
         font-weight: 800;
-        color: #EA580C;
+        color: #EC4899;
         font-family: 'Oswald', sans-serif;
         letter-spacing: 0.3px;
     }
     .merch-card-tag {
         font-size: 12px;
         font-weight: 500;
-        color: var(--ink-muted, #879C94);
+        color: var(--ink-muted, #8E8EA0);
         display: inline-flex;
         align-items: center;
         gap: 4px;
@@ -417,7 +418,7 @@
         width: 100%;
         height: 42px;
         border-radius: 10px;
-        background: linear-gradient(135deg, #178A4C 0%, #12723E 100%);
+        background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
         color: #FFFFFF;
         font-size: 14.5px;
         font-weight: 600;
@@ -429,11 +430,11 @@
         border: none;
         cursor: pointer;
         transition: all 0.2s;
-        box-shadow: 0 2px 8px rgba(23, 138, 76, 0.2);
+        box-shadow: 0 2px 8px rgba(236, 72, 153, 0.25);
     }
     .merch-btn-buy:hover {
-        background: linear-gradient(135deg, #137740 0%, #0D562E 100%);
-        box-shadow: 0 6px 16px rgba(23, 138, 76, 0.35);
+        background: linear-gradient(135deg, #DB2777 0%, #BE185D 100%);
+        box-shadow: 0 6px 16px rgba(236, 72, 153, 0.4);
         transform: translateY(-1px);
         color: #FFFFFF;
     }
@@ -442,8 +443,8 @@
         height: 42px;
         border-radius: 10px;
         background: var(--bg-white, #FFFFFF);
-        color: #178A4C;
-        border: 1.5px solid #178A4C;
+        color: #EC4899;
+        border: 1.5px solid #EC4899;
         font-size: 14px;
         font-weight: 600;
         display: flex;
@@ -454,8 +455,8 @@
         transition: all 0.2s;
     }
     .merch-btn-login:hover {
-        background: #F0FDF4;
-        color: #12723E;
+        background: #FDF2F8;
+        color: #DB2777;
         transform: translateY(-1px);
     }
     .merch-btn-disabled {
@@ -489,12 +490,12 @@
     }
     .admin-pagination .pagination-info {
         font-size: 13.5px !important;
-        color: var(--ink-soft, #5E726A) !important;
+        color: var(--ink-soft, #525266) !important;
         font-weight: 600 !important;
         background: var(--bg-white, #FFFFFF) !important;
         padding: 8px 18px !important;
         border-radius: 30px !important;
-        border: 1px solid var(--line, #E3ECE6) !important;
+        border: 1px solid var(--line, #F1E4EC) !important;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03) !important;
         white-space: nowrap !important;
         margin: 0 !important;
@@ -531,26 +532,26 @@
         border-radius: 12px !important;
         font-size: 14.5px !important;
         font-weight: 600 !important;
-        color: var(--ink, #11201B) !important;
+        color: var(--ink, #181824) !important;
         background: var(--bg-white, #FFFFFF) !important;
-        border: 1.5px solid var(--line, #E3ECE6) !important;
+        border: 1.5px solid var(--line, #F1E4EC) !important;
         text-decoration: none !important;
         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
     }
     .admin-pagination .page-link:hover {
-        color: #178A4C !important;
-        border-color: #178A4C !important;
+        color: #EC4899 !important;
+        border-color: #EC4899 !important;
         background: var(--bg-white, #FFFFFF) !important;
         transform: translateY(-2px) !important;
-        box-shadow: 0 4px 12px rgba(23, 138, 76, 0.18) !important;
+        box-shadow: 0 4px 12px rgba(236, 72, 153, 0.2) !important;
     }
     .admin-pagination .page-item.active .page-link {
         color: #FFFFFF !important;
-        background: linear-gradient(135deg, #178A4C 0%, #0D562E 100%) !important;
-        border-color: #178A4C !important;
+        background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%) !important;
+        border-color: #EC4899 !important;
         font-weight: 700 !important;
-        box-shadow: 0 4px 14px rgba(23, 138, 76, 0.35) !important;
+        box-shadow: 0 4px 14px rgba(236, 72, 153, 0.35) !important;
         transform: translateY(-1px) !important;
     }
     .admin-pagination .page-item.disabled .page-link {
@@ -605,7 +606,7 @@
 
     {{-- Flash Notifications --}}
     @if(session('success'))
-        <div style="background: #178A4C; color: white; padding: 14px 22px; border-radius: 14px; margin-bottom: 24px; text-align: center; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 16px rgba(23,138,76,0.2);">
+        <div style="background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%); color: white; padding: 14px 22px; border-radius: 14px; margin-bottom: 24px; text-align: center; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 16px rgba(236,72,153,0.25);">
             <i class="ti ti-circle-check" style="font-size: 20px;"></i>
             {{ session('success') }}
         </div>
@@ -750,14 +751,14 @@
     </div>
 
     {{-- Result stats --}}
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; font-size: 14px; color: var(--ink-soft, #5E726A);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; font-size: 14px; color: var(--ink-soft, #525266);">
         <div>
             Hiển thị <strong>{{ $products->firstItem() ?? 0 }}-{{ $products->lastItem() ?? 0 }}</strong> trên tổng số <strong>{{ $products->total() }}</strong> sản phẩm
             @if(request('team'))
-                &bull; Đội bóng: <span style="color: #178A4C; font-weight: 700;">{{ request('team') }}</span>
+                &bull; Đội bóng: <span style="color: #EC4899; font-weight: 700;">{{ request('team') }}</span>
             @endif
             @if(request('search'))
-                &bull; Từ khóa: "<span style="color: #178A4C; font-weight: 700;">{{ request('search') }}</span>"
+                &bull; Từ khóa: "<span style="color: #EC4899; font-weight: 700;">{{ request('search') }}</span>"
             @endif
         </div>
     </div>
@@ -813,7 +814,7 @@
                         {{ number_format($product->cost_price, 0, ',', '.') }}₫
                     </span>
                     <span class="merch-card-tag">
-                        <i class="ti ti-rosette-discount-check" style="color:#178A4C; font-size:14px;"></i> Chính hãng
+                        <i class="ti ti-rosette-discount-check" style="color:#EC4899; font-size:14px;"></i> Chính hãng
                     </span>
                 </div>
 

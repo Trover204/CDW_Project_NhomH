@@ -17,20 +17,20 @@
         </div>
         <div>
             <div style="font-size:22px;font-weight:700;line-height:1.4;margin-bottom:12px;">Khôi phục mật khẩu</div>
-            <div style="font-size:14px;color:#BFE0CC;">Nhập email của bạn và chúng tôi sẽ gửi liên kết khôi phục mật khẩu.</div>
+            <div style="font-size:14px;color:#FBCFE8;">Nhập email của bạn và chúng tôi sẽ gửi liên kết khôi phục mật khẩu.</div>
         </div>
         <div style="display:flex;gap:8px;">
             <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.3);"></div>
-            <div style="width:10px;height:10px;border-radius:50%;background:#fff;"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:#EC4899;"></div>
             <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.3);"></div>
         </div>
     </div>
 
     <div class="right-panel">
         <div class="tabs">
-            <a href="{{ route('login') }}" class="tab active" style="color:#6B7A70; border:none; text-decoration:none;">Đăng nhập</a>
-            <a href="{{ route('login') }}?form=register" class="tab" style="color:#6B7A70; border:none; text-decoration:none;">Đăng ký</a>
-            <div class="tab active" style="color:#178A4C; border-bottom:2px solid #178A4C; cursor:default;">Quên mật khẩu</div>
+            <a href="{{ route('login') }}" class="tab active" style="color:#6E687A; border:none; text-decoration:none;">Đăng nhập</a>
+            <a href="{{ route('login') }}?form=register" class="tab" style="color:#6E687A; border:none; text-decoration:none;">Đăng ký</a>
+            <div class="tab active" style="color:#EC4899; border-bottom:2px solid #EC4899; cursor:default;">Quên mật khẩu</div>
         </div>
 
         <form id="forgotPasswordForm" action="#" method="POST">

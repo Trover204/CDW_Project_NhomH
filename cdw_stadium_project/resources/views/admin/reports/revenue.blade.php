@@ -65,12 +65,12 @@
     }
 
     .btn-excel {
-        background: #178A4C;
+        background: #EC4899;
         color: #FFFFFF;
     }
 
     .btn-excel:hover {
-        background: #0f6235;
+        background: #DB2777;
         color: #FFFFFF;
     }
 
@@ -190,18 +190,18 @@
     .chart-bar-pillar {
         width: 100%;
         max-width: 24px;
-        background: #BEE3CB;
+        background: #FBCFE8;
         border-radius: 4px 4px 0 0;
         transition: height 0.3s ease, background-color 0.2s;
         cursor: pointer;
     }
 
     .chart-bar-pillar.max {
-        background: #178A4C;
+        background: #EC4899;
     }
 
     .chart-bar-pillar:hover {
-        background: #0D5C40;
+        background: #DB2777;
     }
 
     .chart-bar-label {
@@ -401,9 +401,9 @@
 
 {{-- Hàng 2: Phân rã doanh thu theo 3 phần (Đặt sân, Bán hàng, Gói thành viên) --}}
 <div class="source-kpi-grid">
-    <div class="kpi-card" style="border-left: 4px solid #178A4C;">
+    <div class="kpi-card" style="border-left: 4px solid #EC4899;">
         <div class="kpi-label">Doanh thu Đặt sân (Booking)</div>
-        <div class="kpi-value" style="font-size: 20px; color: #178A4C;">{{ number_format($bookingRevenue ?? 0, 0, ',', '.') }}đ</div>
+        <div class="kpi-value" style="font-size: 20px; color: #EC4899;">{{ number_format($bookingRevenue ?? 0, 0, ',', '.') }}đ</div>
         <div class="kpi-trend neutral">
             <span>{{ $bookingPaymentsCount ?? 0 }} giao dịch ({{ $totalRevenue > 0 ? round((($bookingRevenue ?? 0) / $totalRevenue) * 100, 1) : 0 }}%)</span>
         </div>
