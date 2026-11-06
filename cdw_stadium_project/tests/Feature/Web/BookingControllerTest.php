@@ -92,6 +92,42 @@ class BookingControllerTest extends TestCase
         ]);
     }
 
+    public function test_store_creates_booking_with_qr_payment_as_paid()
+    {
+        $bookingDate = Carbon::tomorrow()->toDateString();
+        $startTime = '18:00';
+        $endTime = '19:00';
+
+        $payload = [
+            'customer_name' => 'Nguyen Chi Hai',
+            'customer_phone' => '0328579018',
+            'customer_email' => 'admin@gmail.com',
+            'booking_date' => $bookingDate,
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+            'payment_method' => 'qr',
+            'payment_memo' => 'BK1T12345',
+            'note' => 'Thanh toán QR TPBank',
+        ];
+
+        $response = $this->actingAs($this->user)->post(route('bookings.store', $this->court), $payload);
+
+        $response->assertRedirect(route('home'));
+        $response->assertSessionHas('success', 'Đặt sân thành công!');
+        $response->assertSessionHas('booking_success');
+
+        $booking = Booking::where('user_id', $this->user->id)->where('court_id', $this->court->id)->latest('id')->first();
+        $this->assertNotNull($booking);
+
+        $this->assertDatabaseHas('payments', [
+            'payable_type' => $booking->getMorphClass(),
+            'payable_id' => $booking->id,
+            'user_id' => $this->user->id,
+            'payment_method' => 'qr',
+            'status' => 'paid',
+        ]);
+    }
+
     public function test_store_validation_failures()
     {
         $payload = [

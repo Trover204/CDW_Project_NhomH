@@ -237,23 +237,46 @@
 
                         <div class="booking-price-breakdown">
                             <div class="breakdown-row">
-                                <span>{{ __('Đơn giá sân (1 giờ)') }}</span>
-                                <strong>{{ number_format($court->price ?? 120000, 0, ',', '.') }}đ</strong>
+                                <span id="detail-slot-label">{{ __('Đơn giá sân (1 giờ)') }}</span>
+                                <strong id="detail-unit-price">{{ number_format($court->price ?? 120000, 0, ',', '.') }}đ</strong>
                             </div>
                             <div class="breakdown-row">
                                 <span>{{ __('Phí dịch vụ & tiện ích') }}</span>
                                 <span class="free-badge">{{ __('Miễn phí') }}</span>
                             </div>
+                            @if(isset($subscription) && $subscription && $subscription->plan && $subscription->plan->discount_percent > 0)
+                                <div class="breakdown-row">
+                                    <span style="color: #16A34A; font-weight: 600;">
+                                        <i class="ti ti-crown"></i> {{ __('Ưu đãi VIP (:name)', ['name' => $subscription->plan->name]) }}
+                                    </span>
+                                    <span style="color: #16A34A; font-weight: 700;">-{{ $subscription->plan->discount_percent }}%</span>
+                                </div>
+                            @endif
                             <div class="breakdown-total">
                                 <span>{{ __('Tạm tính tổng cộng') }}</span>
-                                <span class="total-number">{{ number_format($court->price ?? 120000, 0, ',', '.') }}đ</span>
+                                <span class="total-number" id="detail-total-price">{{ number_format($court->price ?? 120000, 0, ',', '.') }}đ</span>
                             </div>
                         </div>
 
                         <button type="submit" class="btn-proceed-booking">
-                            <span>{{ __('Tiến hành đặt sân') }}</span>
+                            <span>{{ __('Tiến hành xác nhận & thanh toán') }}</span>
                             <i class="ti ti-arrow-right"></i>
                         </button>
+
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line, #E3ECE6);">
+                            <span style="font-size: 11px; font-weight: 700; background: #DCFCE7; color: #15803D; padding: 3px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 3px;">
+                                <i class="ti ti-qrcode"></i> VietQR 24/7
+                            </span>
+                            <span style="font-size: 11px; font-weight: 700; background: #FDF2F8; color: #A50064; padding: 3px 8px; border-radius: 6px;">
+                                MoMo
+                            </span>
+                            <span style="font-size: 11px; font-weight: 700; background: #EFF6FF; color: #1D4ED8; padding: 3px 8px; border-radius: 6px;">
+                                Visa/Master
+                            </span>
+                            <span style="font-size: 11px; font-weight: 700; background: #FEF3C7; color: #B45309; padding: 3px 8px; border-radius: 6px;">
+                                Tiền mặt (COD)
+                            </span>
+                        </div>
                     </form>
 
                     <div class="booking-guarantees">
@@ -840,6 +863,76 @@
 <script nonce="{{ $cspNonce ?? '' }}">
 document.addEventListener('DOMContentLoaded', function() {
     const dateInput = document.getElementById('courtBookingDate');
+    const slotRadios = document.querySelectorAll('input[name="time"]');
+    const slotLabel = document.getElementById('detail-slot-label');
+    const unitPriceEl = document.getElementById('detail-unit-price');
+    const totalPriceEl = document.getElementById('detail-total-price');
+
+    const priceRules = @json($priceRules ?? []);
+    const fallbackPrice = {{ (int) ($court->price ?? 120000) }};
+    const discountPercent = {{ (int) (isset($subscription) && $subscription && $subscription->plan ? $subscription->plan->discount_percent : 0) }};
+
+    function isWeekend(dateStr) {
+        if (!dateStr) return false;
+        const d = new Date(dateStr);
+        const day = d.getDay();
+        return day === 0 || day === 6;
+    }
+
+    function updateSlotPrice() {
+        const checkedRadio = document.querySelector('input[name="time"]:checked');
+        if (!checkedRadio) return;
+
+        const timeVal = checkedRadio.value;
+        const dVal = dateInput ? dateInput.value : '';
+        const h = parseInt(timeVal.split(':')[0], 10);
+        const nextH = (h + 1) % 24;
+        const nextTimeStr = (nextH < 10 ? '0' + nextH : nextH) + ':00';
+
+        if (slotLabel) {
+            slotLabel.textContent = 'Đơn giá (' + timeVal + ' - ' + nextTimeStr + ')';
+        }
+
+        const dayType = isWeekend(dVal) ? 'weekend' : 'weekday';
+        const hourStr = (h < 10 ? '0' + h : h) + ':00:00';
+        let slotPrice = fallbackPrice;
+
+        if (priceRules && priceRules.length > 0) {
+            for (let r of priceRules) {
+                if (r.day_type === dayType && r.start_time <= hourStr && r.end_time > hourStr) {
+                    slotPrice = Number(r.price);
+                    break;
+                }
+            }
+        }
+
+        const discount = discountPercent > 0 ? Math.round(slotPrice * (discountPercent / 100)) : 0;
+        const finalTotal = Math.max(0, slotPrice - discount);
+
+        if (unitPriceEl) {
+            unitPriceEl.textContent = new Intl.NumberFormat('vi-VN').format(slotPrice) + 'đ';
+        }
+        if (totalPriceEl) {
+            totalPriceEl.textContent = new Intl.NumberFormat('vi-VN').format(finalTotal) + 'đ';
+        }
+    }
+
+    slotRadios.forEach(r => r.addEventListener('change', updateSlotPrice));
+    updateSlotPrice();
+
+    // Gallery thumbnail switcher
+    const thumbs = document.querySelectorAll('.thumb-item[data-gallery-src]');
+    const mainImg = document.getElementById('main-court-img');
+    thumbs.forEach(item => {
+        item.addEventListener('click', function() {
+            thumbs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            if (mainImg && this.dataset.gallerySrc) {
+                mainImg.src = this.dataset.gallerySrc;
+            }
+        });
+    });
+
     if (dateInput) {
         dateInput.addEventListener('change', function() {
             const url = new URL(window.location.href);

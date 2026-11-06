@@ -179,37 +179,78 @@
         </script>
     @endif
 
-    {{-- Booking Success Modal --}}
+    {{-- Booking Success Modal & Floating Payment Notification --}}
     @if(session('booking_success'))
-        @php $bk = session('booking_success'); @endphp
+        @php
+            $bk = session('booking_success');
+            $isPaidOnline = ($bk['payment_status'] ?? 'pending') === 'paid';
+        @endphp
+
+        {{-- Top-right Toast Banner for Payment & Booking Notification --}}
+        <div id="bookingPaymentToast" style="position: fixed; top: 24px; right: 24px; z-index: 1000000; background: #0D382E; color: #FFFFFF; border-radius: 16px; padding: 16px 20px; display: flex; align-items: center; gap: 14px; box-shadow: 0 18px 40px rgba(13, 56, 46, 0.35); border: 1.5px solid #178A4C; max-width: 420px; animation: popIn 0.35s ease;">
+            <div style="width: 42px; height: 42px; border-radius: 12px; background: #178A4C; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
+                <i class="ti ti-bell-check"></i>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+                <div style="font-size: 13.5px; font-weight: 800; color: #4ADE80; text-transform: uppercase; letter-spacing: 0.4px;">
+                    {{ $isPaidOnline ? 'Thông báo: Đã nhận thanh toán!' : 'Thông báo: Đã giữ chỗ sân!' }}
+                </div>
+                <div style="font-size: 13px; color: #E2E8F0; line-height: 1.4; margin-top: 2px;">
+                    Mã vé <strong>#{{ $bk['reference'] ?? 'BK-SUCCESS' }}</strong> ({{ $bk['court_name'] }}) đã được kích hoạt thành công.
+                </div>
+            </div>
+        </div>
+
         <div id="bookingSuccessModal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; z-index: 999999; padding: 20px;">
-            <div style="background: var(--bg-white, #FFFFFF); border-radius: 24px; max-width: 520px; width: 100%; padding: 32px; box-shadow: 0 25px 60px rgba(0,0,0,0.3); border: 1px solid var(--line, #E3ECE6); position: relative; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-align: center;">
+            <div style="background: var(--bg-white, #FFFFFF); border-radius: 24px; max-width: 540px; width: 100%; padding: 32px; box-shadow: 0 25px 60px rgba(0,0,0,0.3); border: 1px solid var(--line, #E3ECE6); position: relative; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-align: center; max-height: 92vh; overflow-y: auto;">
 
                 <button type="button" id="btn-close-booking-modal" style="position: absolute; right: 18px; top: 18px; width: 34px; height: 34px; border-radius: 50%; border: none; background: var(--bg-page, #F3F4F6); color: var(--ink-soft, #6B7280); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
                     <i class="ti ti-x"></i>
                 </button>
 
-                {{-- Success Icon & Title --}}
-                <div style="width: 76px; height: 76px; border-radius: 50%; background: #DCFCE7; color: #16A34A; display: inline-flex; align-items: center; justify-content: center; font-size: 42px; margin-bottom: 16px; box-shadow: 0 8px 20px rgba(22,163,74,0.25);">
-                    <i class="ti ti-ticket"></i>
+                {{-- Success Icon & Status Pill --}}
+                <div style="width: 76px; height: 76px; border-radius: 50%; background: #DCFCE7; color: #16A34A; display: inline-flex; align-items: center; justify-content: center; font-size: 42px; margin-bottom: 12px; box-shadow: 0 8px 20px rgba(22,163,74,0.25);">
+                    <i class="ti ti-circle-check"></i>
+                </div>
+
+                <div style="margin-bottom: 10px;">
+                    @if($isPaidOnline)
+                        <span style="display: inline-flex; align-items: center; gap: 6px; background: #DCFCE7; color: #15803D; font-size: 12px; font-weight: 800; padding: 5px 14px; border-radius: 999px; border: 1px solid #86EFAC;">
+                            <i class="ti ti-qrcode"></i> ĐÃ XÁC NHẬN THANH TOÁN QR / ONLINE
+                        </span>
+                    @else
+                        <span style="display: inline-flex; align-items: center; gap: 6px; background: #FEF3C7; color: #B45309; font-size: 12px; font-weight: 800; padding: 5px 14px; border-radius: 999px; border: 1px solid #FDE68A;">
+                            <i class="ti ti-cash"></i> ĐÃ GIỮ CHỖ — THANH TOÁN TẠI SÂN
+                        </span>
+                    @endif
                 </div>
 
                 <h2 style="font-size: 24px; font-weight: 800; color: var(--ink, #11201B); margin: 0 0 6px; font-family: 'Oswald', sans-serif; letter-spacing: 0.5px;">
-                    ĐẶT SÂN THÀNH CÔNG!
+                    {{ $isPaidOnline ? 'THANH TOÁN & ĐẶT SÂN THÀNH CÔNG!' : 'XÁC NHẬN GIỮ CHỖ SÂN THÀNH CÔNG!' }}
                 </h2>
-                <p style="font-size: 14px; color: var(--ink-soft, #5E726A); margin: 0 0 20px; line-height: 1.5;">
-                    Lịch đặt sân của bạn đã được hệ thống xác nhận và giữ chỗ tự động. Vui lòng đến trước 10 phút để nhận sân thuận lợi nhất!
+                <p style="font-size: 13.5px; color: var(--ink-soft, #5E726A); margin: 0 0 20px; line-height: 1.5;">
+                    Biên lai thanh toán và mã vé giữ chỗ điện tử của bạn đã được hệ thống kích hoạt tự động. Vui lòng đến trước 10 phút để nhận sân thuận lợi nhất!
                 </p>
 
-                {{-- Booking Details --}}
+                {{-- Booking & Payment Receipt Details --}}
                 <div style="background: var(--bg-page, #F9FAFB); border-radius: 16px; border: 1px solid var(--line, #E5E7EB); padding: 18px; text-align: left; margin-bottom: 24px;">
                     <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--line, #E5E7EB); padding-bottom: 10px; margin-bottom: 10px; font-size: 13.5px;">
-                        <span style="color: var(--ink-soft, #6B7280);">Mã giữ chỗ:</span>
-                        <strong style="color: #178A4C;">#{{ $bk['reference'] ?? 'BK-SUCCESS' }}</strong>
+                        <span style="color: var(--ink-soft, #6B7280);">Mã vé giữ chỗ:</span>
+                        <strong style="color: #178A4C; font-size: 14.5px;">#{{ $bk['reference'] ?? 'BK-SUCCESS' }}</strong>
+                    </div>
+                    @if(!empty($bk['transaction_code']))
+                        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--line, #E5E7EB); padding-bottom: 10px; margin-bottom: 10px; font-size: 13.5px;">
+                            <span style="color: var(--ink-soft, #6B7280);">Mã giao dịch thanh toán:</span>
+                            <strong style="color: var(--ink, #111827); font-family: monospace;">{{ $bk['transaction_code'] }}</strong>
+                        </div>
+                    @endif
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--line, #E5E7EB); padding-bottom: 10px; margin-bottom: 10px; font-size: 13.5px;">
+                        <span style="color: var(--ink-soft, #6B7280);">Phương thức thanh toán:</span>
+                        <strong style="color: #178A4C; text-align: right; max-width: 62%;">{{ $bk['payment_method_label'] ?? strtoupper($bk['payment_method'] ?? 'QR') }}</strong>
                     </div>
                     <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--line, #E5E7EB); padding-bottom: 10px; margin-bottom: 10px; font-size: 13.5px;">
-                        <span style="color: var(--ink-soft, #6B7280);">Sân & Môn:</span>
-                        <strong style="color: var(--ink, #111827);">{{ $bk['court_name'] }} ({{ $bk['sport_type'] ?? 'Thể thao' }})</strong>
+                        <span style="color: var(--ink-soft, #6B7280);">Sân & Bộ môn:</span>
+                        <strong style="color: var(--ink, #111827); text-align: right;">{{ $bk['court_name'] }} ({{ $bk['sport_type'] ?? 'Thể thao' }})</strong>
                     </div>
                     <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--line, #E5E7EB); padding-bottom: 10px; margin-bottom: 10px; font-size: 13.5px;">
                         <span style="color: var(--ink-soft, #6B7280);">Thời gian thi đấu:</span>
@@ -217,17 +258,17 @@
                     </div>
                     <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--line, #E5E7EB); padding-bottom: 10px; margin-bottom: 10px; font-size: 13.5px;">
                         <span style="color: var(--ink-soft, #6B7280);">Người đặt sân:</span>
-                        <span style="color: var(--ink, #111827);">{{ $bk['customer_name'] }} ({{ $bk['customer_phone'] }})</span>
+                        <span style="color: var(--ink, #111827); font-weight: 600;">{{ $bk['customer_name'] }} ({{ $bk['customer_phone'] }})</span>
                     </div>
                     @if(!empty($bk['discount_amount']) && $bk['discount_amount'] > 0)
                         <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--line, #E5E7EB); padding-bottom: 10px; margin-bottom: 10px; font-size: 13.5px;">
-                            <span style="color: var(--ink-soft, #6B7280);">Ưu đãi VIP:</span>
+                            <span style="color: var(--ink-soft, #6B7280);">Ưu đãi hội viên VIP:</span>
                             <span style="color: #16A34A; font-weight: 700;">-{{ number_format($bk['discount_amount'], 0, ',', '.') }}₫</span>
                         </div>
                     @endif
                     <div style="display: flex; justify-content: space-between; align-items: baseline; padding-top: 8px; font-size: 14.5px;">
-                        <span style="font-weight: 700; color: var(--ink, #111827);">Tổng tiền:</span>
-                        <span style="font-size: 20px; font-weight: 800; color: #EA580C; font-family: 'Oswald', sans-serif;">
+                        <span style="font-weight: 700; color: var(--ink, #111827);">{{ $isPaidOnline ? 'Tổng tiền đã thanh toán:' : 'Tổng tiền thanh toán:' }}</span>
+                        <span style="font-size: 22px; font-weight: 800; color: #EA580C; font-family: 'Oswald', sans-serif;">
                             {{ number_format($bk['total_price'], 0, ',', '.') }}₫
                         </span>
                     </div>
@@ -248,10 +289,16 @@
             document.addEventListener('DOMContentLoaded', function() {
                 const btnCloseBk = document.getElementById('btn-close-booking-modal');
                 const bkModal = document.getElementById('bookingSuccessModal');
+                const bkToast = document.getElementById('bookingPaymentToast');
                 if (btnCloseBk && bkModal) {
                     btnCloseBk.addEventListener('click', function() {
                         bkModal.style.display = 'none';
                     });
+                }
+                if (bkToast) {
+                    setTimeout(function() {
+                        bkToast.style.display = 'none';
+                    }, 7000);
                 }
             });
         </script>

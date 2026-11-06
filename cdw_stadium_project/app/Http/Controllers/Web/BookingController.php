@@ -33,9 +33,25 @@ class BookingController extends Controller
             ->whereDate('booking_date', $selectedDate)
             ->whereNotIn('status', ['cancelled', 'rejected'])
             ->get(['start_time', 'end_time'])
-            ->map(function ($b) {
-                return substr($b->start_time, 0, 5);
+            ->flatMap(function ($b) {
+                $slots = [];
+                $startH = (int) substr((string) $b->start_time, 0, 2);
+                $endH = (int) substr((string) $b->end_time, 0, 2);
+                $endM = (int) substr((string) $b->end_time, 3, 2);
+                if ($endM > 0) {
+                    $endH++;
+                }
+                if ($endH <= $startH) {
+                    return [substr((string) $b->start_time, 0, 5)];
+                }
+                for ($h = $startH; $h < $endH; $h++) {
+                    $slots[] = str_pad((string) $h, 2, '0', STR_PAD_LEFT) . ':00';
+                }
+
+                return $slots;
             })
+            ->unique()
+            ->values()
             ->all();
 
         // Kiểm tra xem user hiện tại có gói thành viên hoạt động không
@@ -130,10 +146,14 @@ class BookingController extends Controller
 
         $totalPrice = max(0, $subtotal - $discountAmount);
         $paymentMethod = $validated['payment_method'] ?? 'cod';
+        $paymentMemo = ! empty($validated['payment_memo']) ? trim($validated['payment_memo']) : null;
+        $isOnlinePaid = in_array($paymentMethod, ['qr', 'bank_transfer', 'momo', 'visa', 'paypal', 'vnpay'], true);
+        $paymentStatus = $isOnlinePaid ? 'paid' : 'pending';
 
         // 5. Kiểm tra trùng lặp lịch & Transaction lưu đơn
+        $createdPayment = null;
         try {
-            $createdBooking = DB::transaction(function () use ($court, $user, $validated, $bookingDate, $startTime, $endTime, $subtotal, $discountAmount, $totalPrice, $subscription, $paymentMethod) {
+            $createdBooking = DB::transaction(function () use ($court, $user, $validated, $bookingDate, $startTime, $endTime, $subtotal, $discountAmount, $totalPrice, $subscription, $paymentMethod, $paymentMemo, $paymentStatus, $isOnlinePaid, &$createdPayment) {
                 // Khóa kiểm tra chồng lấn
                 $conflict = Booking::where('court_id', $court->id)
                     ->where('booking_date', $bookingDate)
@@ -174,11 +194,17 @@ class BookingController extends Controller
                     ]);
                 }
 
+                $paymentNote = $paymentMemo
+                    ? "Đặt sân #{$booking->id} ({$court->name}) - Nội dung CK: {$paymentMemo}"
+                    : ($validated['note'] ?? null);
+
                 // Đồng bộ sang bảng payments
-                $this->paymentService->syncFromPayable(
+                $createdPayment = $this->paymentService->syncFromPayable(
                     $booking,
                     paymentMethod: $paymentMethod,
-                    status: 'pending',
+                    status: $paymentStatus,
+                    paidAt: $isOnlinePaid ? now() : null,
+                    note: $paymentNote,
                 );
 
                 return $booking;
@@ -194,10 +220,23 @@ class BookingController extends Controller
             throw $qe;
         }
 
+        $methodLabels = [
+            'qr' => 'Quét mã QR Ngân Hàng (VietQR 24/7)',
+            'bank_transfer' => 'Chuyển khoản Ngân Hàng (VietQR 24/7)',
+            'momo' => 'Ví điện tử MoMo (Napas 247)',
+            'visa' => 'Thẻ Quốc tế (Visa / MasterCard)',
+            'paypal' => 'Cổng thanh toán PayPal',
+            'vnpay' => 'Cổng thanh toán VNPay',
+            'cod' => 'Thanh toán trực tiếp tại sân (COD)',
+            'cash' => 'Tiền mặt tại sân',
+        ];
+
         // Chuẩn bị thông tin vé đặt sân hiển thị popup xác nhận chuyên nghiệp
         $bookingSuccessData = [
             'booking_id' => $createdBooking->id,
             'reference' => 'BK-' . str_pad((string) $createdBooking->id, 5, '0', STR_PAD_LEFT),
+            'transaction_code' => $createdPayment?->transaction_code ?? ('BK-' . now()->format('ymdHis')),
+            'payment_memo' => $paymentMemo ?? ('BK' . str_pad((string) $createdBooking->id, 5, '0', STR_PAD_LEFT)),
             'court_name' => $court->name,
             'facility_name' => $court->facility->name ?? 'Cơ sở Sân Nhóm H',
             'facility_address' => $court->facility->address ?? '',
@@ -212,6 +251,8 @@ class BookingController extends Controller
             'customer_phone' => $validated['customer_phone'],
             'customer_email' => $validated['customer_email'],
             'payment_method' => $paymentMethod,
+            'payment_method_label' => $methodLabels[$paymentMethod] ?? strtoupper($paymentMethod),
+            'payment_status' => $paymentStatus,
             'created_at' => now()->format('H:i - d/m/Y'),
         ];
 
