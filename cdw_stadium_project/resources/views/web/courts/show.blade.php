@@ -169,14 +169,14 @@
                         </div>
                     </div>
 
-                    <form action="{{ route('bookings.create', $court->id) }}" method="GET" class="booking-selection-form">
+                    <form action="{{ route('bookings.create', $court->id) }}" method="GET" class="booking-selection-form" id="courtBookingForm">
                         <div class="form-input-group">
                             <label class="group-label">
                                 <i class="ti ti-calendar-event"></i>
                                 <span>{{ __('Chọn ngày muốn chơi') }}</span>
                             </label>
                             <div class="date-picker-wrap">
-                                <input type="date" name="date" value="{{ request('date', \Carbon\Carbon::now()->format('Y-m-d')) }}" required min="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
+                                <input type="date" name="date" id="courtBookingDate" value="{{ $selectedDate ?? request('date', \Carbon\Carbon::now()->format('Y-m-d')) }}" required min="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
                             </div>
                         </div>
 
@@ -191,31 +191,43 @@
 
                             <div class="time-slots-modern-grid">
                                 @php
-                                    $slots = [
-                                        '16:00' => true,
-                                        '17:00' => true,
-                                        '18:00' => true,
-                                        '19:00' => true,
-                                        '20:00' => false, // booked slot simulation
-                                        '21:00' => true,
-                                        '22:00' => true,
+                                    $allPossibleSlots = [
+                                        '06:00', '07:00', '08:00', '09:00', '10:00',
+                                        '14:00', '15:00', '16:00', '17:00', '18:00',
+                                        '19:00', '20:00', '21:00', '22:00'
                                     ];
+                                    $bookedSet = isset($bookedSlots) && is_array($bookedSlots) ? $bookedSlots : [];
+                                    $isToday = ($selectedDate ?? date('Y-m-d')) === date('Y-m-d');
+                                    $currentH = (int) date('H');
+                                    $foundFirstAvailable = false;
                                 @endphp
 
-                                @foreach($slots as $time => $available)
-                                    @if($available)
+                                @foreach($allPossibleSlots as $time)
+                                    @php
+                                        $slotH = (int) substr($time, 0, 2);
+                                        $isPastTime = $isToday && ($slotH <= $currentH);
+                                        $isAlreadyBooked = in_array($time, $bookedSet, true);
+                                        $isAvailable = !$isPastTime && !$isAlreadyBooked;
+                                        $shouldCheck = false;
+                                        if ($isAvailable && !$foundFirstAvailable) {
+                                            $shouldCheck = true;
+                                            $foundFirstAvailable = true;
+                                        }
+                                    @endphp
+
+                                    @if($isAvailable)
                                         <label class="slot-tile">
-                                            <input type="radio" name="time" value="{{ $time }}" {{ $loop->first ? 'checked' : '' }} required>
+                                            <input type="radio" name="time" value="{{ $time }}" {{ $shouldCheck ? 'checked' : '' }} required>
                                             <span class="slot-tile-inner">
                                                 <span class="slot-time">{{ $time }}</span>
                                                 <span class="slot-hint">{{ __('Còn chỗ') }}</span>
                                             </span>
                                         </label>
                                     @else
-                                        <div class="slot-tile slot-disabled" title="{{ __('Khung giờ này đã có người đặt') }}">
+                                        <div class="slot-tile slot-disabled" title="{{ $isAlreadyBooked ? __('Khung giờ này đã có người đặt') : __('Khung giờ này đã qua') }}">
                                             <span class="slot-tile-inner">
                                                 <span class="slot-time">{{ $time }}</span>
-                                                <span class="slot-hint">{{ __('Đã kín') }}</span>
+                                                <span class="slot-hint">{{ $isAlreadyBooked ? __('Đã kín') : __('Đã qua') }}</span>
                                             </span>
                                         </div>
                                     @endif
@@ -822,5 +834,20 @@
     }
 }
 </style>
+@endpush
+
+@push('scripts')
+<script nonce="{{ $cspNonce ?? '' }}">
+document.addEventListener('DOMContentLoaded', function() {
+    const dateInput = document.getElementById('courtBookingDate');
+    if (dateInput) {
+        dateInput.addEventListener('change', function() {
+            const url = new URL(window.location.href);
+            url.searchParams.set('date', this.value);
+            window.location.href = url.toString();
+        });
+    }
+});
+</script>
 @endpush
 @endsection

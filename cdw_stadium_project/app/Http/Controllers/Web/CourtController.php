@@ -92,6 +92,18 @@ class CourtController extends Controller
     {
         $court->load(['facility', 'sportType', 'images', 'reviews.user']);
 
-        return view('web.courts.show', compact('court'));
+        $selectedDate = request('date', now()->format('Y-m-d'));
+
+        // Lấy danh sách booking đã được đặt (không tính đã hủy/từ chối) của sân trong ngày được chọn
+        $bookedSlots = \App\Models\Booking::where('court_id', $court->id)
+            ->whereDate('booking_date', $selectedDate)
+            ->whereNotIn('status', ['cancelled', 'rejected'])
+            ->get(['start_time', 'end_time'])
+            ->map(function ($booking) {
+                return substr($booking->start_time, 0, 5);
+            })
+            ->all();
+
+        return view('web.courts.show', compact('court', 'selectedDate', 'bookedSlots'));
     }
 }

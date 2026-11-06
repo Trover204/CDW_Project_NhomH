@@ -115,24 +115,42 @@
                                 <label class="form-label">{{ __('Ngày đặt sân') }} <span class="req">*</span></label>
                                 <div class="input-with-icon">
                                     <i class="ti ti-calendar"></i>
-                                    <input type="date" name="booking_date" value="{{ old('booking_date', $reqDate ?? \Carbon\Carbon::now()->format('Y-m-d')) }}" required>
+                                    <input type="date" name="booking_date" id="booking_date_input" value="{{ old('booking_date', $reqDate ?? ($selectedDate ?? \Carbon\Carbon::now()->format('Y-m-d'))) }}" min="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" required>
                                 </div>
                             </div>
                             <div class="input-field-group">
                                 <label class="form-label">{{ __('Giờ bắt đầu') }} <span class="req">*</span></label>
                                 <div class="input-with-icon">
                                     <i class="ti ti-clock"></i>
-                                    <input type="time" name="start_time" value="{{ old('start_time', $reqTime ?? '18:00') }}" required>
+                                    <input type="time" name="start_time" id="start_time_input" step="1800" value="{{ old('start_time', $reqTime ?? '18:00') }}" required>
                                 </div>
                             </div>
                             <div class="input-field-group">
                                 <label class="form-label">{{ __('Giờ kết thúc') }} <span class="req">*</span></label>
                                 <div class="input-with-icon">
                                     <i class="ti ti-clock-play"></i>
-                                    <input type="time" name="end_time" value="{{ old('end_time', $endDate ?? '19:00') }}" required>
+                                    <input type="time" name="end_time" id="end_time_input" step="1800" value="{{ old('end_time', $endDate ?? '19:00') }}" required>
                                 </div>
                             </div>
                         </div>
+
+                        {{-- Already Booked Slots Alert --}}
+                        @if(!empty($bookedSlots))
+                            <div class="booked-slots-warning-box" style="margin-top: 14px; background: #FEF2F2; border: 1.5px dashed #FCA5A5; border-radius: 12px; padding: 12px 16px; display: flex; align-items: flex-start; gap: 10px;">
+                                <i class="ti ti-alert-triangle" style="color: #DC2626; font-size: 20px; flex-shrink: 0; margin-top: 2px;"></i>
+                                <div style="font-size: 13px; color: #991B1B; line-height: 1.5;">
+                                    <strong>{{ __('Khung giờ đã có người đặt trong ngày này:') }}</strong>
+                                    <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px;">
+                                        @foreach($bookedSlots as $bs)
+                                            <span style="background: #FEE2E2; color: #B91C1C; padding: 2px 8px; border-radius: 6px; font-weight: 700; font-size: 12px; border: 1px solid #FCA5A5;">
+                                                <i class="ti ti-lock" style="font-size: 11px;"></i> {{ $bs }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                    <span style="font-size: 11.5px; color: #7F1D1D; margin-top: 4px; display: inline-block;">{{ __('Vui lòng chọn khung giờ khác để tránh bị trùng lặp giữ chỗ.') }}</span>
+                                </div>
+                            </div>
+                        @endif
 
                         <div class="input-field-group">
                             <label class="form-label">{{ __('Ghi chú thêm cho ban quản lý sân (tùy chọn)') }}</label>
@@ -187,20 +205,30 @@
                         <div class="summary-fee-list">
                             <div class="fee-row">
                                 <span class="fee-label">{{ __('Đơn giá sân') }}</span>
-                                <span class="fee-value">{{ number_format($court->price ?? 120000, 0, ',', '.') }}đ / {{ __('giờ') }}</span>
+                                <span class="fee-value" id="summary-unit-price">{{ number_format($court->price ?? 120000, 0, ',', '.') }}đ / {{ __('giờ') }}</span>
                             </div>
                             <div class="fee-row">
                                 <span class="fee-label">{{ __('Thời lượng thi đấu') }}</span>
-                                <span class="fee-value">1 {{ __('giờ') }}</span>
+                                <span class="fee-value" id="summary-duration">1 {{ __('giờ') }}</span>
                             </div>
                             <div class="fee-row">
                                 <span class="fee-label">{{ __('Phí dịch vụ & tiện ích') }}</span>
                                 <span class="fee-value text-green">{{ __('Miễn phí') }}</span>
                             </div>
+                            @if(isset($subscription) && $subscription && $subscription->plan && $subscription->plan->discount_percent > 0)
+                                <div class="fee-row" id="summary-vip-discount-row">
+                                    <span class="fee-label text-green">
+                                        <i class="ti ti-crown"></i> {{ __('Ưu đãi VIP (:name)', ['name' => $subscription->plan->name]) }}
+                                    </span>
+                                    <span class="fee-value text-green" id="summary-discount-val">
+                                        -{{ $subscription->plan->discount_percent }}%
+                                    </span>
+                                </div>
+                            @endif
                             <div class="fee-divider"></div>
                             <div class="fee-row fee-total-row">
                                 <span class="total-label">{{ __('Tổng tiền tạm tính') }}</span>
-                                <span class="total-amount">{{ number_format($court->price ?? 120000, 0, ',', '.') }}đ</span>
+                                <span class="total-amount" id="summary-total-price">{{ number_format($court->price ?? 120000, 0, ',', '.') }}đ</span>
                             </div>
                         </div>
 
@@ -666,5 +694,126 @@
     }
 }
 </style>
+@endpush
+
+@push('scripts')
+<script nonce="{{ $cspNonce ?? '' }}">
+document.addEventListener('DOMContentLoaded', function() {
+    const dateInput = document.getElementById('booking_date_input');
+    const startInput = document.getElementById('start_time_input');
+    const endInput = document.getElementById('end_time_input');
+    const durationSpan = document.getElementById('summary-duration');
+    const totalSpan = document.getElementById('summary-total-price');
+    const unitPriceSpan = document.getElementById('summary-unit-price');
+
+    // Mảng quy tắc tính giá từ server
+    const priceRules = @json($priceRules ?? []);
+    const fallbackPrice = {{ (int) ($court->price ?? 120000) }};
+    const discountPercent = {{ (int) (($subscription && $subscription->plan) ? $subscription->plan->discount_percent : 0) }};
+
+    function isWeekend(dateStr) {
+        if (!dateStr) return false;
+        const d = new Date(dateStr);
+        const day = d.getDay();
+        return day === 0 || day === 6; // 0: Chủ nhật, 6: Thứ 7
+    }
+
+    function calculateDynamicPrice() {
+        const dVal = dateInput ? dateInput.value : '';
+        const sVal = startInput ? startInput.value : '';
+        const eVal = endInput ? endInput.value : '';
+
+        if (!dVal || !sVal || !eVal) return;
+
+        const sParts = sVal.split(':').map(Number);
+        const eParts = eVal.split(':').map(Number);
+        if (sParts.length < 2 || eParts.length < 2) return;
+
+        const sMinutes = sParts[0] * 60 + sParts[1];
+        const eMinutes = eParts[0] * 60 + eParts[1];
+
+        if (eMinutes <= sMinutes) {
+            if (durationSpan) durationSpan.textContent = '0 giờ';
+            return;
+        }
+
+        const diffHours = (eMinutes - sMinutes) / 60;
+        if (durationSpan) {
+            durationSpan.textContent = diffHours + ' giờ';
+        }
+
+        // Tính subtotal theo rules
+        const dayType = isWeekend(dVal) ? 'weekend' : 'weekday';
+        let subtotal = 0;
+
+        // Lặp qua từng block 1 giờ hoặc nửa giờ
+        for (let m = sMinutes; m < eMinutes; m += 60) {
+            const h = Math.floor(m / 60);
+            const hourStr = (h < 10 ? '0' + h : h) + ':00:00';
+
+            let matchedRule = null;
+            if (priceRules && priceRules.length > 0) {
+                for (let r of priceRules) {
+                    if (r.day_type === dayType && r.start_time <= hourStr && r.end_time > hourStr) {
+                        matchedRule = r;
+                        break;
+                    }
+                }
+            }
+
+            if (matchedRule) {
+                subtotal += Number(matchedRule.price);
+            } else {
+                subtotal += fallbackPrice;
+            }
+        }
+
+        // Tính giảm giá hội viên nếu có
+        let discount = 0;
+        if (discountPercent > 0) {
+            discount = Math.round(subtotal * (discountPercent / 100));
+        }
+
+        const finalTotal = Math.max(0, subtotal - discount);
+
+        if (totalSpan) {
+            totalSpan.textContent = new Intl.NumberFormat('vi-VN').format(finalTotal) + 'đ';
+        }
+        if (unitPriceSpan && priceRules.length > 0) {
+            const avgHourPrice = Math.round(subtotal / Math.max(1, diffHours));
+            unitPriceSpan.textContent = new Intl.NumberFormat('vi-VN').format(avgHourPrice) + 'đ / giờ';
+        }
+    }
+
+    if (dateInput) {
+        dateInput.addEventListener('change', function() {
+            // Khi đổi ngày thì reload lại param date để cập nhật danh sách bookedSlots
+            const url = new URL(window.location.href);
+            url.searchParams.set('date', this.value);
+            window.location.href = url.toString();
+        });
+    }
+
+    if (startInput) {
+        startInput.addEventListener('change', function() {
+            // Tự động nhảy end_time = start_time + 1h nếu end <= start
+            const sParts = this.value.split(':').map(Number);
+            if (sParts.length >= 2 && endInput) {
+                const nextH = (sParts[0] + 1) % 24;
+                const nextHStr = (nextH < 10 ? '0' + nextH : nextH) + ':' + (sParts[1] < 10 ? '0' + sParts[1] : sParts[1]);
+                endInput.value = nextHStr;
+            }
+            calculateDynamicPrice();
+        });
+    }
+
+    if (endInput) {
+        endInput.addEventListener('change', calculateDynamicPrice);
+    }
+
+    // Initial calculation
+    calculateDynamicPrice();
+});
+</script>
 @endpush
 @endsection

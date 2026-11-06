@@ -71,7 +71,6 @@ class BookingControllerTest extends TestCase
             'customer_name' => 'John Doe',
             'customer_phone' => '0123456789',
             'customer_email' => 'johndoe@example.com',
-            'booking_date' => $bookingDate,
             'start_time' => "$startTime",
             'end_time' => "$endTime",
             'subtotal' => 240000,
@@ -115,5 +114,40 @@ class BookingControllerTest extends TestCase
         ]);
 
         $this->assertDatabaseCount('bookings', 0);
+    }
+
+    public function test_store_fails_when_slot_is_already_booked()
+    {
+        $bookingDate = Carbon::tomorrow()->toDateString();
+
+        Booking::create([
+            'user_id' => $this->user->id,
+            'court_id' => $this->court->id,
+            'customer_name' => 'Existing Customer',
+            'customer_phone' => '0987654321',
+            'customer_email' => 'exist@example.com',
+            'booking_date' => $bookingDate,
+            'start_time' => '16:00',
+            'end_time' => '17:00',
+            'subtotal' => 200000,
+            'total_price' => 200000,
+            'status' => 'pending',
+        ]);
+
+        $payload = [
+            'customer_name' => 'Second Customer',
+            'customer_phone' => '0123456789',
+            'customer_email' => 'second@example.com',
+            'booking_date' => $bookingDate,
+            'start_time' => '16:00',
+            'end_time' => '17:00',
+            'payment_method' => 'cod',
+        ];
+
+        $response = $this->actingAs($this->user)->post(route('bookings.store', $this->court), $payload);
+
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors(['start_time']);
+        $this->assertDatabaseCount('bookings', 1);
     }
 }
