@@ -832,6 +832,17 @@
                     </p>
                 </div>
 
+                {{-- Real-time Payment Status Notice Box --}}
+                <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 14px; padding: 14px 18px; margin-bottom: 22px; display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 38px; height: 38px; border-radius: 50%; background: #DCFCE7; color: #15803D; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
+                        <i class="ti ti-bell-ringing"></i>
+                    </div>
+                    <div style="font-size: 13px; color: #166534; line-height: 1.45;">
+                        <strong>Thông báo xác nhận thanh toán tự động:</strong>
+                        Sau khi quét mã chuyển khoản thành công, quý khách nhấn nút xác nhận bên dưới để hệ thống phát hành biên lai & lên đơn giao hàng ngay lập tức.
+                    </div>
+                </div>
+
                 {{-- Final Confirmation Button --}}
                 <div style="display: flex; gap: 12px;">
                     <button type="button" id="btn-back-step-2" class="btn-checkout-back">
@@ -844,6 +855,30 @@
             </div>
 
         </form>
+    </div>
+</div>
+
+{{-- Copy Notification Toast --}}
+<div id="copy-toast-notification" style="position: fixed; bottom: 28px; right: 28px; background: #0D382E; color: #FFFFFF; padding: 12px 20px; border-radius: 12px; font-size: 13.5px; font-weight: 600; display: none; align-items: center; gap: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 99999; border: 1px solid #178A4C;">
+    <i class="ti ti-circle-check" style="color: #4ADE80; font-size: 18px;"></i>
+    <span id="copy-toast-text">Đã sao chép vào bộ nhớ tạm!</span>
+</div>
+
+{{-- Payment Verification Overlay Modal when submitting --}}
+<div id="payment-verifying-overlay" style="position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 999999; padding: 20px;">
+    <div style="background: var(--bg-white, #FFFFFF); border-radius: 24px; max-width: 440px; width: 100%; padding: 32px 26px; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.3); border: 1px solid var(--line, #E3ECE6);">
+        <div style="width: 72px; height: 72px; border-radius: 50%; background: #DCFCE7; color: #16A34A; display: inline-flex; align-items: center; justify-content: center; font-size: 38px; margin-bottom: 16px; box-shadow: 0 8px 20px rgba(22,163,74,0.25);">
+            <i class="ti ti-shield-check"></i>
+        </div>
+        <h3 style="margin: 0 0 8px; font-size: 21px; font-weight: 800; color: var(--ink, #11201B); font-family: 'Oswald', sans-serif; letter-spacing: 0.4px;">
+            ĐANG XÁC THỰC THANH TOÁN & KHỞI TẠO ĐƠN...
+        </h3>
+        <p style="margin: 0 0 18px; font-size: 14px; color: var(--ink-soft, #5E726A); line-height: 1.5;">
+            Hệ thống đang ghi nhận giao dịch và khởi tạo phiếu xuất kho giao hàng cho đơn của bạn. Vui lòng đợi trong giây lát!
+        </p>
+        <div style="background: #F0FDF4; border: 1px solid #86EFAC; border-radius: 12px; padding: 10px 14px; font-size: 13px; color: #15803D; font-weight: 700;">
+            <i class="ti ti-qrcode"></i> <span id="verifying-memo-display"></span>
+        </div>
     </div>
 </div>
 
@@ -1093,13 +1128,28 @@
             });
         });
 
-        // Copy buttons
-        function copyText(text, btn) {
+        // Copy buttons with Toast Notification
+        let toastTimeout = null;
+        function showCopyToast(label) {
+            const toast = document.getElementById('copy-toast-notification');
+            const toastText = document.getElementById('copy-toast-text');
+            if (!toast || !toastText) return;
+            toastText.textContent = 'Đã sao chép: ' + label;
+            toast.style.display = 'inline-flex';
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.style.display = 'none';
+            }, 2500);
+        }
+
+        function copyText(text, btn, label) {
+            if (!navigator.clipboard) return;
             navigator.clipboard.writeText(text).then(() => {
                 const old = btn.textContent;
                 btn.textContent = 'Đã chép!';
                 btn.style.background = '#178A4C';
                 btn.style.color = '#fff';
+                showCopyToast(label || text);
                 setTimeout(() => {
                     btn.textContent = old;
                     btn.style.background = '';
@@ -1111,7 +1161,7 @@
         const btnCopyAcc = document.getElementById('btn-copy-acc');
         if (btnCopyAcc) {
             btnCopyAcc.addEventListener('click', function() {
-                copyText('10006118170', this);
+                copyText('10006118170', this, 'STK TPBank 1000 6118 170');
             });
         }
 
@@ -1119,14 +1169,15 @@
         if (btnCopyAmount) {
             btnCopyAmount.addEventListener('click', function() {
                 let qty = parseInt(qtyInput.value) || 1;
-                copyText((qty * unitPrice).toString(), this);
+                const totalVal = qty * unitPrice;
+                copyText(totalVal.toString(), this, new Intl.NumberFormat('vi-VN').format(totalVal) + '₫');
             });
         }
 
         const btnCopyMemo = document.getElementById('btn-copy-memo');
         if (btnCopyMemo) {
             btnCopyMemo.addEventListener('click', function() {
-                copyText(orderCode, this);
+                copyText(orderCode, this, 'Nội dung CK ' + orderCode);
             });
         }
 
@@ -1134,7 +1185,7 @@
         const btnCopyMoMoAcc = document.getElementById('btn-copy-momo-acc');
         if (btnCopyMoMoAcc) {
             btnCopyMoMoAcc.addEventListener('click', function() {
-                copyText('PSP2615713900000057', this);
+                copyText('PSP2615713900000057', this, 'Mã TK MoMo PSP2615713900000057');
             });
         }
 
@@ -1142,14 +1193,32 @@
         if (btnCopyMoMoAmount) {
             btnCopyMoMoAmount.addEventListener('click', function() {
                 let qty = parseInt(qtyInput.value) || 1;
-                copyText((qty * unitPrice).toString(), this);
+                const totalVal = qty * unitPrice;
+                copyText(totalVal.toString(), this, new Intl.NumberFormat('vi-VN').format(totalVal) + '₫');
             });
         }
 
         const btnCopyMoMoMemo = document.getElementById('btn-copy-momo-memo');
         if (btnCopyMoMoMemo) {
             btnCopyMoMoMemo.addEventListener('click', function() {
-                copyText(orderCode, this);
+                copyText(orderCode, this, 'Nội dung MoMo ' + orderCode);
+            });
+        }
+
+        // Show loading/verifying overlay on submit
+        const purchaseForm = document.getElementById('purchase-form');
+        if (purchaseForm) {
+            purchaseForm.addEventListener('submit', function() {
+                const overlay = document.getElementById('payment-verifying-overlay');
+                const memoDisplay = document.getElementById('verifying-memo-display');
+                let qty = parseInt(qtyInput ? qtyInput.value : 1) || 1;
+                const totalVal = qty * unitPrice;
+                if (memoDisplay) {
+                    memoDisplay.textContent = 'Mã đối soát: ' + orderCode + ' • Số tiền: ' + new Intl.NumberFormat('vi-VN').format(totalVal) + '₫';
+                }
+                if (overlay) {
+                    overlay.style.display = 'flex';
+                }
             });
         }
 

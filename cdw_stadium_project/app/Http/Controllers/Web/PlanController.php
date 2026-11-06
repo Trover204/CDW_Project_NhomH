@@ -36,7 +36,8 @@ class PlanController extends Controller
         $price = $plan->price;
 
         $createdSubscription = null;
-        DB::transaction(function () use ($user, $plan, $startsAt, $expiresAt, $price, $validated, &$createdSubscription) {
+        $createdPayment = null;
+        DB::transaction(function () use ($user, $plan, $startsAt, $expiresAt, $price, $validated, &$createdSubscription, &$createdPayment) {
             $createdSubscription = Subscription::create([
                 'user_id' => $user->id,
                 'plan_id' => $plan->id,
@@ -46,7 +47,7 @@ class PlanController extends Controller
                 'price' => $price,
             ]);
 
-            $this->paymentService->syncFromPayable(
+            $createdPayment = $this->paymentService->syncFromPayable(
                 $createdSubscription,
                 paymentMethod: $validated['payment_method'],
                 status: 'paid',
@@ -55,9 +56,20 @@ class PlanController extends Controller
             );
         });
 
+        $methodLabels = [
+            'qr' => 'Quét mã QR Ngân Hàng (VietQR 24/7)',
+            'bank_transfer' => 'Quét mã QR Ngân Hàng (VietQR 24/7)',
+            'momo' => 'Ví điện tử MoMo (Napas 247)',
+            'visa' => 'Thẻ Quốc tế (Visa / MasterCard)',
+            'paypal' => 'Cổng thanh toán PayPal',
+            'vnpay' => 'Cổng thanh toán VNPay',
+        ];
+        $pm = $validated['payment_method'];
+
         $subscriptionSuccessData = [
             'subscription_id' => $createdSubscription->id ?? null,
             'reference' => 'SUB-' . str_pad((string) ($createdSubscription->id ?? rand(1, 9999)), 5, '0', STR_PAD_LEFT),
+            'transaction_code' => $createdPayment?->transaction_code ?? ('SUB-' . now()->format('ymdHis')),
             'plan_name' => $plan->name,
             'duration_days' => $plan->duration_days,
             'discount_percent' => $plan->discount_percent,
@@ -66,7 +78,9 @@ class PlanController extends Controller
             'customer_email' => $user->email,
             'starts_at' => $startsAt->format('d/m/Y'),
             'expires_at' => $expiresAt->format('d/m/Y'),
-            'payment_method' => $validated['payment_method'],
+            'payment_method' => $pm,
+            'payment_method_label' => $methodLabels[$pm] ?? strtoupper($pm),
+            'payment_status' => 'paid',
             'created_at' => now()->format('H:i - d/m/Y'),
         ];
 

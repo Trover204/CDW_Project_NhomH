@@ -710,12 +710,23 @@
                     </div>
                 </div>
 
+                {{-- Real-time Payment Status Notice Box --}}
+                <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 14px; padding: 14px 18px; margin-bottom: 22px; display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 38px; height: 38px; border-radius: 50%; background: #DCFCE7; color: #15803D; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
+                        <i class="ti ti-bell-ringing"></i>
+                    </div>
+                    <div style="font-size: 13px; color: #166534; line-height: 1.45;">
+                        <strong>{{ __('Thông báo xác nhận thanh toán tự động:') }}</strong>
+                        {{ __('Sau khi quét mã chuyển khoản thành công, quý khách nhấn nút "Tôi đã thanh toán" bên dưới để hệ thống phát hành biên lai & kích hoạt gói thành viên VIP ngay lập tức.') }}
+                    </div>
+                </div>
+
                 {{-- Action Buttons --}}
                 <div style="display: flex; justify-content: space-between; gap: 12px;">
                     <button type="button" class="btn-checkout-back" id="btn-back-to-2">
                         <i class="ti ti-arrow-left"></i> {{ __('Quay lại') }}
                     </button>
-                    <button type="submit" class="btn-checkout-primary" id="btn-final-confirm">
+                    <button type="submit" class="btn-checkout-primary" id="btn-final-confirm" style="flex: 1; justify-content: center;">
                         <i class="ti ti-circle-check"></i> <span id="btn-final-text">{{ __('Tôi đã thanh toán — Kích hoạt ngay') }}</span>
                     </button>
                 </div>
@@ -725,6 +736,30 @@
 
     </div>
 
+</div>
+
+{{-- Copy Notification Toast --}}
+<div id="copy-toast-notification" style="position: fixed; bottom: 28px; right: 28px; background: #0D382E; color: #FFFFFF; padding: 12px 20px; border-radius: 12px; font-size: 13.5px; font-weight: 600; display: none; align-items: center; gap: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 99999; border: 1px solid #178A4C;">
+    <i class="ti ti-circle-check" style="color: #4ADE80; font-size: 18px;"></i>
+    <span id="copy-toast-text">{{ __('Đã sao chép vào bộ nhớ tạm!') }}</span>
+</div>
+
+{{-- Payment Verification Overlay Modal when submitting --}}
+<div id="payment-verifying-overlay" style="position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 999999; padding: 20px;">
+    <div style="background: var(--bg-white, #FFFFFF); border-radius: 24px; max-width: 440px; width: 100%; padding: 32px 26px; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.3); border: 1px solid var(--line, #E3ECE6);">
+        <div style="width: 72px; height: 72px; border-radius: 50%; background: #DCFCE7; color: #16A34A; display: inline-flex; align-items: center; justify-content: center; font-size: 38px; margin-bottom: 16px; box-shadow: 0 8px 20px rgba(22,163,74,0.25);">
+            <i class="ti ti-shield-check"></i>
+        </div>
+        <h3 style="margin: 0 0 8px; font-size: 21px; font-weight: 800; color: var(--ink, #11201B); font-family: 'Oswald', sans-serif; letter-spacing: 0.4px;">
+            {{ __('ĐANG XÁC THỰC THANH TOÁN & KÍCH HOẠT GÓI...') }}
+        </h3>
+        <p style="margin: 0 0 18px; font-size: 14px; color: var(--ink-soft, #5E726A); line-height: 1.5;">
+            {{ __('Hệ thống đang ghi nhận giao dịch và kích hoạt đặc quyền hội viên VIP cho tài khoản của bạn. Vui lòng đợi trong giây lát!') }}
+        </p>
+        <div style="background: #F0FDF4; border: 1px solid #86EFAC; border-radius: 12px; padding: 10px 14px; font-size: 13px; color: #15803D; font-weight: 700;">
+            <i class="ti ti-qrcode"></i> <span id="verifying-memo-display">Mã đối soát: {{ $planMemo }} • Số tiền: {{ number_format($planAmount, 0, ',', '.') }}₫</span>
+        </div>
+    </div>
 </div>
 
 @push('scripts')
@@ -746,26 +781,25 @@ document.addEventListener('DOMContentLoaded', function () {
     const btnFinalText = document.getElementById('btn-final-text');
 
     function goToStep(step) {
-        stepSec1.style.display = 'none';
-        stepSec2.style.display = 'none';
-        stepSec3.style.display = 'none';
+        stepSec1.style.display = (step === 1) ? 'block' : 'none';
+        stepSec2.style.display = (step === 2) ? 'block' : 'none';
+        stepSec3.style.display = (step === 3) ? 'block' : 'none';
 
-        stepNav1.className = 'step-item';
-        stepNav2.className = 'step-item';
-        stepNav3.className = 'step-item';
+        for (let i = 1; i <= 3; i++) {
+            const item = document.getElementById('step-nav-' + i);
+            const num = document.getElementById('step-num-' + i);
+            if (!item || !num) continue;
+            item.classList.remove('active', 'completed');
 
-        if (step === 1) {
-            stepSec1.style.display = 'block';
-            stepNav1.className = 'step-item active';
-        } else if (step === 2) {
-            stepSec2.style.display = 'block';
-            stepNav1.className = 'step-item completed';
-            stepNav2.className = 'step-item active';
-        } else if (step === 3) {
-            stepSec3.style.display = 'block';
-            stepNav1.className = 'step-item completed';
-            stepNav2.className = 'step-item completed';
-            stepNav3.className = 'step-item active';
+            if (i < step) {
+                item.classList.add('completed');
+                num.innerHTML = '<i class="ti ti-check"></i>';
+            } else if (i === step) {
+                item.classList.add('active');
+                num.textContent = i;
+            } else {
+                num.textContent = i;
+            }
         }
 
         window.scrollTo({ top: 120, behavior: 'smooth' });
@@ -834,14 +868,32 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Copy to clipboard helper
-    function copyText(val, btn) {
+    if (stepNav1) stepNav1.addEventListener('click', function () { goToStep(1); });
+    if (stepNav2) stepNav2.addEventListener('click', function () { goToStep(2); });
+    if (stepNav3) stepNav3.addEventListener('click', function () { goToStep(3); });
+
+    // Copy to clipboard helper with Toast Notification
+    let toastTimeout = null;
+    function showCopyToast(label) {
+        const toast = document.getElementById('copy-toast-notification');
+        const toastText = document.getElementById('copy-toast-text');
+        if (!toast || !toastText) return;
+        toastText.textContent = 'Đã sao chép: ' + label;
+        toast.style.display = 'inline-flex';
+        if (toastTimeout) clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+            toast.style.display = 'none';
+        }, 2500);
+    }
+
+    function copyText(val, btn, label) {
         if (navigator.clipboard) {
             navigator.clipboard.writeText(val).then(() => {
                 const orig = btn.innerText;
-                btn.innerText = 'Đã sao chép!';
-                btn.style.background = '#15803D';
+                btn.innerText = 'Đã chép!';
+                btn.style.background = '#178A4C';
                 btn.style.color = '#fff';
+                showCopyToast(label || val);
                 setTimeout(() => {
                     btn.innerText = orig;
                     btn.style.background = '';
@@ -855,21 +907,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const btnCopyAcc = document.getElementById('btn-copy-acc');
     if (btnCopyAcc) {
         btnCopyAcc.addEventListener('click', function () {
-            copyText('10006118170', this);
+            copyText('10006118170', this, 'STK TPBank 1000 6118 170');
         });
     }
 
     const btnCopyAmount = document.getElementById('btn-copy-amount');
     if (btnCopyAmount) {
         btnCopyAmount.addEventListener('click', function () {
-            copyText('{{ $planAmount }}', this);
+            copyText('{{ $planAmount }}', this, '{{ number_format($planAmount, 0, ',', '.') }}₫');
         });
     }
 
     const btnCopyMemo = document.getElementById('btn-copy-memo');
     if (btnCopyMemo) {
         btnCopyMemo.addEventListener('click', function () {
-            copyText('{{ $planMemo }}', this);
+            copyText('{{ $planMemo }}', this, 'Nội dung CK {{ $planMemo }}');
         });
     }
 
@@ -877,21 +929,32 @@ document.addEventListener('DOMContentLoaded', function () {
     const btnCopyMoMoAcc = document.getElementById('btn-copy-momo-acc');
     if (btnCopyMoMoAcc) {
         btnCopyMoMoAcc.addEventListener('click', function () {
-            copyText('PSP2615713900000057', this);
+            copyText('PSP2615713900000057', this, 'Mã TK MoMo PSP2615713900000057');
         });
     }
 
     const btnCopyMoMoAmount = document.getElementById('btn-copy-momo-amount');
     if (btnCopyMoMoAmount) {
         btnCopyMoMoAmount.addEventListener('click', function () {
-            copyText('{{ $planAmount }}', this);
+            copyText('{{ $planAmount }}', this, '{{ number_format($planAmount, 0, ',', '.') }}₫');
         });
     }
 
     const btnCopyMoMoMemo = document.getElementById('btn-copy-momo-memo');
     if (btnCopyMoMoMemo) {
         btnCopyMoMoMemo.addEventListener('click', function () {
-            copyText('{{ $planMemo }}', this);
+            copyText('{{ $planMemo }}', this, 'Nội dung MoMo {{ $planMemo }}');
+        });
+    }
+
+    // Show loading/verifying overlay on submit
+    const planForm = document.getElementById('plan-checkout-form');
+    if (planForm) {
+        planForm.addEventListener('submit', function () {
+            const overlay = document.getElementById('payment-verifying-overlay');
+            if (overlay) {
+                overlay.style.display = 'flex';
+            }
         });
     }
 
