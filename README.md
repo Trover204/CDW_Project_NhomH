@@ -25,4 +25,8 @@ CDW Stadium Project
             DB_USERNAME=root
             DB_PASSWORD=root
 
-docker exec laravel_app php artisan scout:import "App\Models\TenModel"
+
+Một số commands
+composer config --global process-timeout 2000
+docker compose exec app php artisan optimize:clear
+docker compose ps
