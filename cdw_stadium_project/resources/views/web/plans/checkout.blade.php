@@ -461,7 +461,7 @@
                             <i class="ti ti-credit-card"></i>
                         </div>
                         <div style="flex-grow: 1;">
-                            <div style="font-weight: 700; font-size: 14.5px; color: var(--ink, #111827);">{{ __('Thẻ Quốc Tế (Visa / Mastercard / JCB)') }}</div>
+                            <div style="font-weight: 700; font-size: 14.5px; color: var(--ink, #111827);">{{ __('Thẻ Visa/Mastercard') }}</div>
                             <div style="font-size: 12.5px; color: var(--ink-soft, #6B7280);">{{ __('Cổng thanh toán thẻ quốc tế bảo mật cao') }}</div>
                         </div>
                     </label>
