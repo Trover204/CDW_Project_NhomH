@@ -20,7 +20,8 @@ class StoreWebBookingRequest extends FormRequest
             'booking_date' => ['required', 'date', 'after_or_equal:today'],
             'start_time' => ['required', 'date_format:H:i'],
             'end_time' => ['required', 'date_format:H:i', 'after:start_time'],
-            'payment_method' => ['nullable', 'string', 'in:cod,vnpay,momo,bank_transfer'],
+            'payment_method' => ['nullable', 'string', 'in:momo,visa,paypal,vnpay,cod,cash,qr,bank_transfer'],
+            'payment_memo' => ['nullable', 'string', 'max:100'],
             'note' => ['nullable', 'string'],
         ];
     }

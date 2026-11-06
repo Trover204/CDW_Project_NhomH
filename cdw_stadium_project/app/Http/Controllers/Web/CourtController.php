@@ -99,11 +99,43 @@ class CourtController extends Controller
             ->whereDate('booking_date', $selectedDate)
             ->whereNotIn('status', ['cancelled', 'rejected'])
             ->get(['start_time', 'end_time'])
-            ->map(function ($booking) {
-                return substr($booking->start_time, 0, 5);
+            ->flatMap(function ($booking) {
+                $slots = [];
+                $startH = (int) substr((string) $booking->start_time, 0, 2);
+                $endH = (int) substr((string) $booking->end_time, 0, 2);
+                $endM = (int) substr((string) $booking->end_time, 3, 2);
+                if ($endM > 0) {
+                    $endH++;
+                }
+                if ($endH <= $startH) {
+                    return [substr((string) $booking->start_time, 0, 5)];
+                }
+                for ($h = $startH; $h < $endH; $h++) {
+                    $slots[] = str_pad((string) $h, 2, '0', STR_PAD_LEFT) . ':00';
+                }
+
+                return $slots;
             })
+            ->unique()
+            ->values()
             ->all();
 
-        return view('web.courts.show', compact('court', 'selectedDate', 'bookedSlots'));
+        $subscription = null;
+        if (\Illuminate\Support\Facades\Auth::check()) {
+            $subscription = \App\Models\Subscription::with('plan')
+                ->where('user_id', \Illuminate\Support\Facades\Auth::id())
+                ->where('status', 1)
+                ->where('expires_at', '>', now())
+                ->latest('expires_at')
+                ->first();
+        }
+
+        $priceRules = \App\Models\PriceRule::where('status', 1)
+            ->where('sport_type_id', $court->sport_type_id)
+            ->where(fn ($q) => $q->where('court_id', $court->id)->orWhereNull('court_id'))
+            ->orderByRaw('court_id IS NULL')
+            ->get(['day_type', 'start_time', 'end_time', 'price']);
+
+        return view('web.courts.show', compact('court', 'selectedDate', 'bookedSlots', 'subscription', 'priceRules'));
     }
 }

@@ -149,9 +149,12 @@
                                         @endif
                                         <div class="court-badges">
                                             <span class="badge-sport">{{ $court->sportType->name ?? __('Thể thao') }}</span>
-                                            <span class="badge-status {{ ($court->status ?? 'active') === 'active' ? 'status-open' : 'status-busy' }}">
+                                            @php
+                                                $isCourtOpen = in_array($court->status ?? 'available', ['available', 'active'], true);
+                                            @endphp
+                                            <span class="badge-status {{ $isCourtOpen ? 'status-open' : 'status-busy' }}">
                                                 <span class="status-dot"></span>
-                                                {{ ($court->status ?? 'active') === 'active' ? __('Đang hoạt động') : __('Bảo trì') }}
+                                                {{ $isCourtOpen ? __('Đang hoạt động') : __('Bảo trì') }}
                                             </span>
                                         </div>
                                     </div>
