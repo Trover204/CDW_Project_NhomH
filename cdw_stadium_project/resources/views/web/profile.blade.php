@@ -23,7 +23,7 @@
         }
 
         .breadcrumb a:hover {
-            color: #178A4C;
+            color: #EC4899;
         }
 
         .profile-grid {
@@ -42,17 +42,17 @@
         /* Sidebar Card */
         .profile-card {
             background: #FFFFFF;
-            border: 1px solid #E1E8E3;
+            border: 1px solid #F1E4EC;
             border-radius: 16px;
-            box-shadow: 0 4px 18px rgba(13, 56, 46, 0.04);
+            box-shadow: 0 4px 18px rgba(24, 24, 36, 0.04);
             overflow: hidden;
         }
 
         .profile-header-card {
             padding: 28px 20px 22px;
             text-align: center;
-            background: linear-gradient(180deg, #F0FDF4 0%, #FFFFFF 100%);
-            border-bottom: 1px solid #EBF1ED;
+            background: linear-gradient(180deg, #FDF2F8 0%, #FFFFFF 100%);
+            border-bottom: 1px solid #F1E4EC;
         }
 
         .avatar-wrap {
@@ -68,15 +68,15 @@
             border-radius: 50%;
             object-fit: cover;
             border: 3px solid #FFFFFF;
-            box-shadow: 0 4px 12px rgba(15, 92, 51, 0.15);
-            background: #E6F5EB;
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.18);
+            background: #FCE7F3;
         }
 
         .avatar-fallback {
             width: 86px;
             height: 86px;
             border-radius: 50%;
-            background: #0F5C33;
+            background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
             color: #FFFFFF;
             font-size: 28px;
             font-weight: 700;
@@ -84,7 +84,7 @@
             align-items: center;
             justify-content: center;
             border: 3px solid #FFFFFF;
-            box-shadow: 0 4px 12px rgba(15, 92, 51, 0.15);
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.18);
         }
 
         .avatar-badge-btn {
@@ -94,7 +94,7 @@
             width: 28px;
             height: 28px;
             border-radius: 50%;
-            background: #178A4C;
+            background: #EC4899;
             color: #fff;
             display: flex;
             align-items: center;
@@ -107,13 +107,13 @@
         .profile-name {
             font-size: 17px;
             font-weight: 700;
-            color: #11201B;
+            color: #181824;
             margin-bottom: 4px;
         }
 
         .profile-email {
             font-size: 13px;
-            color: #5E726A;
+            color: #525266;
             margin-bottom: 12px;
         }
 
@@ -134,17 +134,17 @@
         }
 
         .badge-standard {
-            background: #E6F5EB;
-            color: #0F5C33;
-            border: 1px solid #C7D3CA;
+            background: #FDF2F8;
+            color: #BE185D;
+            border: 1px solid #FBCFE8;
         }
 
         .profile-stats-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            border-top: 1px solid #EBF1ED;
-            border-bottom: 1px solid #EBF1ED;
-            background: #FAFDFB;
+            border-top: 1px solid #F1E4EC;
+            border-bottom: 1px solid #F1E4EC;
+            background: #FAF7F9;
         }
 
         .profile-stat-box {
@@ -153,18 +153,18 @@
         }
 
         .profile-stat-box:first-child {
-            border-right: 1px solid #EBF1ED;
+            border-right: 1px solid #F1E4EC;
         }
 
         .profile-stat-num {
             font-size: 18px;
             font-weight: 700;
-            color: #0F5C33;
+            color: #EC4899;
         }
 
         .profile-stat-label {
             font-size: 11.5px;
-            color: #6B7A70;
+            color: #525266;
             margin-top: 2px;
         }
 
@@ -182,7 +182,7 @@
             padding: 11px 16px;
             border-radius: 10px;
             font-size: 13.5px;
-            color: #3A453E;
+            color: #3A3A4A;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -195,41 +195,41 @@
 
         .menu-item i {
             font-size: 18px;
-            color: #6B7A70;
+            color: #6B6B80;
             transition: color 0.2s;
         }
 
         .menu-item:hover {
-            background: #F2F7F4;
-            color: #0F5C33;
+            background: #FDF2F8;
+            color: #DB2777;
         }
 
         .menu-item:hover i {
-            color: #0F5C33;
+            color: #DB2777;
         }
 
         .menu-item.active {
-            background: #E6F5EB;
-            color: #0F5C33;
+            background: #FCE7F3;
+            color: #BE185D;
             font-weight: 600;
         }
 
         .menu-item.active i {
-            color: #178A4C;
+            color: #EC4899;
         }
 
         .menu-divider {
             height: 1px;
-            background: #EBF1ED;
+            background: #F1E4EC;
             margin: 6px 12px;
         }
 
         /* Right Content Panel */
         .content-card {
             background: #FFFFFF;
-            border: 1px solid #E1E8E3;
+            border: 1px solid #F1E4EC;
             border-radius: 16px;
-            box-shadow: 0 4px 18px rgba(13, 56, 46, 0.04);
+            box-shadow: 0 4px 18px rgba(24, 24, 36, 0.04);
             padding: 32px 36px;
         }
 
@@ -242,19 +242,19 @@
         .section-header {
             margin-bottom: 24px;
             padding-bottom: 14px;
-            border-bottom: 1px solid #EBF1ED;
+            border-bottom: 1px solid #F1E4EC;
         }
 
         .section-title {
             font-size: 20px;
             font-weight: 700;
-            color: #11201B;
+            color: #181824;
             margin: 0 0 4px;
         }
 
         .section-desc {
             font-size: 13px;
-            color: #5E726A;
+            color: #525266;
             margin: 0;
         }
 
@@ -285,7 +285,7 @@
         .field-label {
             font-size: 13px;
             font-weight: 600;
-            color: #213229;
+            color: #181824;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -301,7 +301,7 @@
             position: absolute;
             left: 14px;
             font-size: 18px;
-            color: #879C94;
+            color: #8E8EA0;
             pointer-events: none;
         }
 
@@ -309,10 +309,10 @@
             width: 100%;
             height: 44px;
             padding: 0 14px 0 42px;
-            border: 1px solid #C7D3CA;
+            border: 1px solid #E5D5DF;
             border-radius: 10px;
             font-size: 14px;
-            color: #11201B;
+            color: #181824;
             background: #FFFFFF;
             outline: none;
             transition: all 0.2s ease;
@@ -320,8 +320,8 @@
         }
 
         .form-input:focus {
-            border-color: #178A4C;
-            box-shadow: 0 0 0 3px rgba(23, 138, 76, 0.12);
+            border-color: #EC4899;
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.14);
         }
 
         .form-input.is-invalid {
@@ -337,7 +337,7 @@
 
         .form-hint {
             font-size: 11.5px;
-            color: #6B7A70;
+            color: #6B6B80;
         }
 
         /* Avatar Upload Area */
@@ -347,8 +347,8 @@
             gap: 20px;
             padding: 16px;
             border-radius: 12px;
-            background: #F7FAF8;
-            border: 1px dashed #C7D3CA;
+            background: #FAF7F9;
+            border: 1px dashed #E5D5DF;
             margin-bottom: 24px;
         }
 
@@ -367,19 +367,19 @@
             gap: 8px;
             padding: 8px 16px;
             border-radius: 8px;
-            border: 1px solid #C7D3CA;
+            border: 1px solid #E5D5DF;
             background: #FFFFFF;
             font-size: 12.5px;
             font-weight: 600;
-            color: #3A453E;
+            color: #3A3A4A;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .btn-upload-file:hover {
-            background: #F0FDF4;
-            border-color: #178A4C;
-            color: #0F5C33;
+            background: #FDF2F8;
+            border-color: #EC4899;
+            color: #BE185D;
         }
 
         /* Buttons */
@@ -389,14 +389,14 @@
             gap: 12px;
             margin-top: 10px;
             padding-top: 20px;
-            border-top: 1px solid #EBF1ED;
+            border-top: 1px solid #F1E4EC;
         }
 
         .btn-save {
             height: 42px;
             padding: 0 24px;
             border-radius: 10px;
-            background: #F97316;
+            background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
             color: #FFFFFF;
             font-size: 13.5px;
             font-weight: 600;
@@ -405,20 +405,20 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: background 0.2s;
+            transition: all 0.2s;
         }
 
         .btn-save:hover {
-            background: #EA580C;
+            background: linear-gradient(135deg, #DB2777 0%, #BE185D 100%);
         }
 
         .btn-cancel {
             height: 42px;
             padding: 0 20px;
             border-radius: 10px;
-            border: 1px solid #C7D3CA;
+            border: 1px solid #E5D5DF;
             background: #FFFFFF;
-            color: #3A453E;
+            color: #3A3A4A;
             font-size: 13.5px;
             font-weight: 500;
             cursor: pointer;
@@ -429,7 +429,7 @@
         }
 
         .btn-cancel:hover {
-            background: #F5F7F5;
+            background: #FAF7F9;
         }
 
         /* Alert Notifications */
@@ -444,9 +444,9 @@
         }
 
         .alert-success {
-            background: #E6F5EB;
-            color: #0F5C33;
-            border: 1px solid #B8E4C7;
+            background: #FDF2F8;
+            color: #BE185D;
+            border: 1px solid #FBCFE8;
         }
 
         .alert-danger {
@@ -457,10 +457,10 @@
 
         /* Membership Card Inside Tab */
         .plan-card-detail {
-            border: 1.5px solid #178A4C;
+            border: 1.5px solid #EC4899;
             border-radius: 14px;
             padding: 24px;
-            background: linear-gradient(135deg, #F0FDF4 0%, #FFFFFF 100%);
+            background: linear-gradient(135deg, #FDF2F8 0%, #FFFFFF 100%);
             margin-bottom: 20px;
         }
 
@@ -477,11 +477,11 @@
             gap: 10px;
             margin-bottom: 10px;
             font-size: 13px;
-            color: #213229;
+            color: #181824;
         }
 
         .plan-benefit-item i {
-            color: #178A4C;
+            color: #EC4899;
             font-size: 16px;
         }
     </style>
@@ -606,8 +606,8 @@
                     <div class="menu-divider"></div>
 
                     @if(in_array($user->role, ['admin', 'staff']))
-                        <a href="{{ route('admin.dashboard') }}" class="menu-item" style="color: #0F5C33; font-weight: 600;">
-                            <i class="ti ti-layout-dashboard" style="color: #178A4C;"></i>
+                        <a href="{{ route('admin.dashboard') }}" class="menu-item" style="color: #BE185D; font-weight: 600;">
+                            <i class="ti ti-layout-dashboard" style="color: #EC4899;"></i>
                             <span>Dashboard</span>
                         </a>
                     @endif
@@ -755,16 +755,16 @@
                             {{-- VAI TRÒ / QUYỀN HẠN --}}
                             <div class="field-group form-group-full">
                                 <label class="field-label">Loại tài khoản</label>
-                                <div style="display: flex; gap: 12px; align-items: center; justify-content: space-between; padding: 10px 14px; background: #F7FAF8; border-radius: 8px; border: 1px solid #E1E8E3;">
+                                <div style="display: flex; gap: 12px; align-items: center; justify-content: space-between; padding: 10px 14px; background: #FAF7F9; border-radius: 8px; border: 1px solid #F1E4EC;">
                                     <div style="display: flex; gap: 12px; align-items: center;">
-                                        <i class="ti ti-id-badge" style="font-size: 20px; color: #178A4C;"></i>
+                                        <i class="ti ti-id-badge" style="font-size: 20px; color: #EC4899;"></i>
                                         <div>
-                                            <strong style="color: #16241C; font-size: 13.5px; text-transform: uppercase;">{{ $user->role }}</strong>
-                                            <span style="color: #6B7A70; font-size: 12px; margin-left: 8px;">(Trạng thái: {{ $user->status ? 'Đang hoạt động' : 'Tạm khóa' }})</span>
+                                            <strong style="color: #181824; font-size: 13.5px; text-transform: uppercase;">{{ $user->role }}</strong>
+                                            <span style="color: #6B6B80; font-size: 12px; margin-left: 8px;">(Trạng thái: {{ $user->status ? 'Đang hoạt động' : 'Tạm khóa' }})</span>
                                         </div>
                                     </div>
                                     @if(in_array($user->role, ['admin', 'staff']))
-                                        <a href="{{ route('admin.dashboard') }}" class="btn-save" style="height: 36px; padding: 0 16px; font-size: 13px; text-decoration: none; background: #0F5C33;">
+                                        <a href="{{ route('admin.dashboard') }}" class="btn-save" style="height: 36px; padding: 0 16px; font-size: 13px; text-decoration: none; background: #181824;">
                                             <i class="ti ti-layout-dashboard"></i> Dashboard
                                         </a>
                                     @endif
@@ -889,13 +889,13 @@
                         <div class="table-responsive" style="overflow-x: auto;">
                             <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
                                 <thead>
-                                    <tr style="border-bottom: 1px solid #E1E8E3;">
-                                        <th style="padding: 12px 8px; font-weight: 600; color: #178A4C;">Mã ĐS</th>
-                                        <th style="padding: 12px 8px; font-weight: 600; color: #178A4C;">Sân</th>
-                                        <th style="padding: 12px 8px; font-weight: 600; color: #178A4C;">Ngày</th>
-                                        <th style="padding: 12px 8px; font-weight: 600; color: #178A4C;">Thời gian</th>
-                                        <th style="padding: 12px 8px; font-weight: 600; color: #178A4C;">Tổng tiền</th>
-                                        <th style="padding: 12px 8px; font-weight: 600; color: #178A4C;">Trạng thái</th>
+                                    <tr style="border-bottom: 1px solid #F1E4EC;">
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">Mã ĐS</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">Sân</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">Ngày</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">Thời gian</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">Tổng tiền</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">Trạng thái</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -945,12 +945,12 @@
                         <div class="table-responsive" style="overflow-x: auto;">
                             <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
                                 <thead>
-                                    <tr style="border-bottom: 1px solid #E1E8E3;">
-                                        <th style="padding: 12px 8px; font-weight: 600; color: #178A4C;">Mã ĐH</th>
-                                        <th style="padding: 12px 8px; font-weight: 600; color: #178A4C;">Sản phẩm</th>
-                                        <th style="padding: 12px 8px; font-weight: 600; color: #178A4C;">Ngày mua</th>
-                                        <th style="padding: 12px 8px; font-weight: 600; color: #178A4C;">Số lượng</th>
-                                        <th style="padding: 12px 8px; font-weight: 600; color: #178A4C;">Tổng tiền</th>
+                                    <tr style="border-bottom: 1px solid #F1E4EC;">
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">Mã ĐH</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">Sản phẩm</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">Ngày mua</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">Số lượng</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">Tổng tiền</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -987,19 +987,19 @@
                                     <span class="membership-badge badge-vip" style="margin-bottom: 8px;">
                                         <i class="ti ti-crown"></i> Gói đang sử dụng
                                     </span>
-                                    <h3 style="font-size: 22px; font-weight: 700; color: #0D382E; margin: 4px 0;">{{ $activeSubscription->plan->name }}</h3>
-                                    <div style="font-size: 13px; color: #5E726A;">
+                                    <h3 style="font-size: 22px; font-weight: 700; color: #181824; margin: 4px 0;">{{ $activeSubscription->plan->name }}</h3>
+                                    <div style="font-size: 13px; color: #525266;">
                                         Hiệu lực từ <strong>{{ $activeSubscription->starts_at ? \Carbon\Carbon::parse($activeSubscription->starts_at)->format('d/m/Y') : 'Ngay sau đăng ký' }}</strong>
                                         đến <strong>{{ \Carbon\Carbon::parse($activeSubscription->expires_at)->format('d/m/Y') }}</strong>
                                     </div>
                                 </div>
                                 <div style="text-align: right;">
-                                    <span style="font-size: 11.5px; color: #6B7A70;">Giảm giá đặt sân</span>
-                                    <div style="font-size: 24px; font-weight: 800; color: #178A4C;">-{{ $activeSubscription->plan->discount_percent }}%</div>
+                                    <span style="font-size: 11.5px; color: #6B6B80;">Giảm giá đặt sân</span>
+                                    <div style="font-size: 24px; font-weight: 800; color: #EC4899;">-{{ $activeSubscription->plan->discount_percent }}%</div>
                                 </div>
                             </div>
 
-                            <div style="border-top: 1px dashed #B8E4C7; padding-top: 14px; margin-top: 10px;">
+                            <div style="border-top: 1px dashed #FBCFE8; padding-top: 14px; margin-top: 10px;">
                                 <div class="plan-benefit-item">
                                     <i class="ti ti-check"></i>
                                     <span>Tự động giảm {{ $activeSubscription->plan->discount_percent }}% trực tiếp trên mỗi khung giờ đặt sân.</span>
@@ -1015,12 +1015,12 @@
                             </div>
                         </div>
                     @else
-                        <div style="padding: 28px 24px; border: 1px dashed #C7D3CA; border-radius: 14px; text-align: center; background: #FAFDFB;">
-                            <div style="width: 56px; height: 56px; border-radius: 50%; background: #E6F5EB; color: #178A4C; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 26px;">
+                        <div style="padding: 28px 24px; border: 1px dashed #E5D5DF; border-radius: 14px; text-align: center; background: #FAF7F9;">
+                            <div style="width: 56px; height: 56px; border-radius: 50%; background: #FDF2F8; color: #EC4899; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 26px;">
                                 <i class="ti ti-sparkles"></i>
                             </div>
-                            <h3 style="font-size: 17px; font-weight: 700; color: #16241C; margin-bottom: 6px;">Bạn đang là Thành viên tiêu chuẩn</h3>
-                            <p style="font-size: 13px; color: #5E726A; max-width: 480px; margin: 0 auto 18px;">
+                            <h3 style="font-size: 17px; font-weight: 700; color: #181824; margin-bottom: 6px;">Bạn đang là Thành viên tiêu chuẩn</h3>
+                            <p style="font-size: 13px; color: #525266; max-width: 480px; margin: 0 auto 18px;">
                                 Nâng cấp lên các gói thành viên VIP, Tiêu chuẩn để nhận ưu đãi giảm đến 25% mỗi lượt đặt sân và giữ khung giờ vàng mỗi tuần!
                             </p>
                             <a href="{{ route('home') }}#plans" class="btn-save" style="display: inline-flex; text-decoration: none;">

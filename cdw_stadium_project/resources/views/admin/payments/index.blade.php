@@ -23,7 +23,7 @@
         </div>
         <small style="color: var(--muted);">{{ $summary['total_count'] ?? 0 }} giao dịch ({{ $summary['pending_count'] ?? 0 }} chờ xử lý)</small>
     </div>
-    <div class="card" style="padding: 14px 18px; border-left: 3px solid #178A4C;">
+    <div class="card" style="padding: 14px 18px; border-left: 3px solid #EC4899;">
         <div style="font-size: 12px; color: var(--muted);">Thu từ Đặt sân</div>
         <div style="font-size: 18px; font-weight: 700; color: var(--text); margin-top: 4px;">
             {{ number_format($summary['booking_paid'] ?? 0, 0, ',', '.') }} đ

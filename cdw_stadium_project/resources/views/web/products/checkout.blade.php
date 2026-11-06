@@ -54,16 +54,16 @@
         box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
     .step-item.active .step-number {
-        background: #178A4C;
-        border-color: #178A4C;
+        background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
+        border-color: #EC4899;
         color: #FFFFFF;
-        box-shadow: 0 4px 14px rgba(23, 138, 76, 0.4);
+        box-shadow: 0 4px 14px rgba(236, 72, 153, 0.4);
         transform: scale(1.08);
     }
     .step-item.completed .step-number {
-        background: #DCFCE7;
-        border-color: #178A4C;
-        color: #15803D;
+        background: #FCE7F3;
+        border-color: #EC4899;
+        color: #BE185D;
     }
     .step-label {
         font-size: 13.5px;
@@ -73,14 +73,14 @@
         transition: color 0.3s ease;
     }
     .step-item.active .step-label {
-        color: #178A4C;
+        color: #EC4899;
         font-weight: 700;
     }
 
     /* Checkout Card */
     .checkout-card {
         background: var(--bg-white, #FFFFFF);
-        border: 1px solid var(--line, #E3ECE6);
+        border: 1px solid var(--line, #F1E4EC);
         border-radius: 24px;
         padding: 36px 32px;
         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
@@ -92,9 +92,9 @@
         align-items: center;
         gap: 18px;
         padding: 18px 20px;
-        background: var(--bg-page, #F9FAFB);
+        background: var(--bg-page, #FAF7F9);
         border-radius: 16px;
-        border: 1px solid var(--line, #E5E7EB);
+        border: 1px solid var(--line, #F1E4EC);
         margin-bottom: 28px;
     }
     .checkout-prod-img {
@@ -102,7 +102,7 @@
         height: 84px;
         background: #FFFFFF;
         border-radius: 12px;
-        border: 1px solid var(--line, #E5E7EB);
+        border: 1px solid var(--line, #F1E4EC);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -124,7 +124,7 @@
         border: 2px solid var(--line, #D1D5DB);
         font-size: 22px;
         font-weight: 700;
-        color: var(--ink, #11201B);
+        color: var(--ink, #181824);
         cursor: pointer;
         display: inline-flex;
         align-items: center;
@@ -133,9 +133,9 @@
         user-select: none;
     }
     .qty-btn:hover {
-        border-color: #178A4C;
-        color: #178A4C;
-        background: #F0FDF4;
+        border-color: #EC4899;
+        color: #EC4899;
+        background: #FDF2F8;
         transform: translateY(-1px);
     }
     .qty-btn:active {
@@ -157,19 +157,19 @@
         user-select: none;
     }
     .payment-option-card:hover {
-        border-color: #178A4C;
-        background: #F0FDF4;
+        border-color: #EC4899;
+        background: #FDF2F8;
     }
     .payment-option-card.selected {
-        border-color: #178A4C;
-        background: #F0FDF4;
-        box-shadow: 0 4px 14px rgba(23, 138, 76, 0.12);
+        border-color: #EC4899;
+        background: #FDF2F8;
+        box-shadow: 0 4px 14px rgba(236, 72, 153, 0.14);
     }
     .payment-option-card input[type="radio"] {
         margin-right: 14px;
         width: 20px;
         height: 20px;
-        accent-color: #178A4C;
+        accent-color: #EC4899;
         cursor: pointer;
     }
 
@@ -181,7 +181,7 @@
         display: block;
         font-size: 14px;
         font-weight: 700;
-        color: var(--ink, #11201B);
+        color: var(--ink, #181824);
         margin-bottom: 8px;
     }
     .form-label-custom span.req {
@@ -196,13 +196,13 @@
         border-radius: 12px;
         font-size: 14.5px;
         background: var(--bg-white, #FFFFFF);
-        color: var(--ink, #11201B);
+        color: var(--ink, #181824);
         outline: none;
         transition: all 0.2s;
     }
     .form-input-custom:focus {
-        border-color: #178A4C;
-        box-shadow: 0 0 0 3px rgba(23, 138, 76, 0.12);
+        border-color: #EC4899;
+        box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.14);
     }
 
     /* Size Selector Pills */
@@ -222,23 +222,23 @@
         cursor: pointer;
         transition: all 0.2s;
         background: var(--bg-white, #FFFFFF);
-        color: var(--ink, #11201B);
+        color: var(--ink, #181824);
         user-select: none;
     }
     .size-pill-label:hover {
-        border-color: #178A4C;
-        color: #178A4C;
+        border-color: #EC4899;
+        color: #EC4899;
     }
     .size-pill-label.selected {
-        background: #178A4C;
+        background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
         color: #FFFFFF;
-        border-color: #178A4C;
+        border-color: #EC4899;
     }
 
     /* QR Code Display Frame */
     .qr-payment-frame {
-        background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%);
-        border: 2px solid #BFDBFE;
+        background: linear-gradient(135deg, #FDF2F8 0%, #FAF7F9 100%);
+        border: 2px solid #FBCFE8;
         border-radius: 20px;
         padding: 26px;
         margin-bottom: 28px;
@@ -276,10 +276,10 @@
         box-shadow: 0 4px 10px rgba(0,0,0,0.08);
     }
     .qr-switch-pill.active-bank {
-        background: #178A4C;
+        background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
         color: #FFFFFF;
-        border-color: #178A4C;
-        box-shadow: 0 4px 12px rgba(23, 138, 76, 0.25);
+        border-color: #EC4899;
+        box-shadow: 0 4px 12px rgba(236, 72, 153, 0.28);
     }
     .qr-switch-pill.active-momo {
         background: #A50064;
@@ -338,9 +338,9 @@
     }
 
     .btn-copy {
-        background: #E2E8F0;
+        background: #FCE7F3;
         border: none;
-        color: #334155;
+        color: #BE185D;
         font-size: 11.5px;
         font-weight: 600;
         padding: 4px 9px;
@@ -351,7 +351,7 @@
         float: right;
     }
     .btn-copy:hover {
-        background: #178A4C;
+        background: #EC4899;
         color: #FFFFFF;
     }
 
@@ -360,7 +360,7 @@
         width: 100%;
         height: 52px;
         border-radius: 12px;
-        background: linear-gradient(135deg, #178A4C 0%, #12723E 100%);
+        background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
         color: #FFFFFF;
         border: none;
         font-size: 16px;
@@ -371,11 +371,11 @@
         justify-content: center;
         gap: 8px;
         transition: all 0.2s;
-        box-shadow: 0 4px 14px rgba(23, 138, 76, 0.28);
+        box-shadow: 0 4px 14px rgba(236, 72, 153, 0.3);
     }
     .btn-checkout-primary:hover {
-        background: linear-gradient(135deg, #137740 0%, #0D562E 100%);
-        box-shadow: 0 6px 18px rgba(23, 138, 76, 0.4);
+        background: linear-gradient(135deg, #DB2777 0%, #BE185D 100%);
+        box-shadow: 0 6px 18px rgba(236, 72, 153, 0.42);
         transform: translateY(-1px);
     }
     .btn-checkout-back {
@@ -422,12 +422,12 @@
 <div class="checkout-container">
 
     {{-- Breadcrumb --}}
-    <div style="margin-bottom: 22px; font-size: 14px; color: var(--ink-soft, #5E726A); display: flex; align-items: center; gap: 8px;">
-        <a href="{{ route('products.index') }}" style="color: #178A4C; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+    <div style="margin-bottom: 22px; font-size: 14px; color: var(--ink-soft, #525266); display: flex; align-items: center; gap: 8px;">
+        <a href="{{ route('products.index') }}" style="color: #EC4899; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
             <i class="ti ti-arrow-left"></i> Cửa hàng Merch
         </a>
         <span>/</span>
-        <span style="color: var(--ink, #11201B); font-weight: 500;">Quy trình đặt mua & Thanh toán</span>
+        <span style="color: var(--ink, #181824); font-weight: 500;">Quy trình đặt mua & Thanh toán</span>
     </div>
 
     @if(session('error'))
@@ -466,16 +466,16 @@
 
             <div style="flex-grow: 1;">
                 @if($product->team)
-                    <span style="display: inline-block; background: #F0FDF4; color: #15803D; font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-bottom: 4px;">
+                    <span style="display: inline-block; background: #FDF2F8; color: #DB2777; font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-bottom: 4px;">
                         <i class="ti ti-shield" style="font-size: 11px;"></i> {{ $product->team }} {{ $product->season ? "• {$product->season}" : '' }}
                     </span>
                 @endif
-                <div style="font-weight: 700; color: var(--ink, #111827); font-size: 16.5px; margin-bottom: 6px;">{{ $product->name }}</div>
+                <div style="font-weight: 700; color: var(--ink, #181824); font-size: 16.5px; margin-bottom: 6px;">{{ $product->name }}</div>
                 <div style="display: flex; align-items: baseline; justify-content: space-between;">
-                    <span style="font-size: 13px; color: #15803D; font-weight: 600;">
+                    <span style="font-size: 13px; color: #DB2777; font-weight: 600;">
                         <i class="ti ti-check" style="font-size: 12px;"></i> Còn {{ $product->stock_quantity }} sản phẩm
                     </span>
-                    <span style="font-size: 19px; font-weight: 800; color: #EA580C; font-family: 'Oswald', sans-serif;">
+                    <span style="font-size: 19px; font-weight: 800; color: #EC4899; font-family: 'Oswald', sans-serif;">
                         {{ number_format($product->cost_price, 0, ',', '.') }}₫
                     </span>
                 </div>
@@ -490,12 +490,12 @@
                  BƯỚC 1: CHỌN SỐ LƯỢNG & PHƯƠNG THỨC THANH TOÁN
             ======================================================== --}}
             <div id="step-section-1">
-                <h3 style="font-size: 18px; font-weight: 700; color: var(--ink, #11201B); margin: 0 0 18px; display: flex; align-items: center; gap: 8px;">
-                    <i class="ti ti-credit-card" style="color: #178A4C;"></i> Bước 1: Chọn số lượng & Phương thức thanh toán
+                <h3 style="font-size: 18px; font-weight: 700; color: var(--ink, #181824); margin: 0 0 18px; display: flex; align-items: center; gap: 8px;">
+                    <i class="ti ti-credit-card" style="color: #EC4899;"></i> Bước 1: Chọn số lượng & Phương thức thanh toán
                 </h3>
 
                 {{-- Quantity Selector --}}
-                <div class="form-group-custom" style="background: var(--bg-page, #F8FAFC); padding: 16px 20px; border-radius: 14px; border: 1px solid var(--line, #E5E7EB); margin-bottom: 24px;">
+                <div class="form-group-custom" style="background: var(--bg-page, #FAF7F9); padding: 16px 20px; border-radius: 14px; border: 1px solid var(--line, #F1E4EC); margin-bottom: 24px;">
                     <label class="form-label-custom">
                         Số lượng áo đặt mua <span class="req">*</span>
                     </label>
@@ -521,12 +521,12 @@
                         <input type="radio" name="payment_method" value="qr" checked>
                         <div style="flex-grow: 1;">
                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                                <span style="background: #178A4C; color: #fff; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700;">KHUYÊN DÙNG</span>
-                                <span style="font-weight: 700; font-size: 15px; color: var(--ink, #111827);">Quét mã QR Ngân Hàng (VietQR / Chuyển khoản 24/7)</span>
+                                <span style="background: #EC4899; color: #fff; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700;">KHUYÊN DÙNG</span>
+                                <span style="font-weight: 700; font-size: 15px; color: var(--ink, #181824);">Quét mã QR Ngân Hàng (VietQR / Chuyển khoản 24/7)</span>
                             </div>
                             <div style="font-size: 13px; color: var(--ink-soft, #6B7280);">Quét mã chuyển tiền tức thì từ MB Bank, Vietcombank, Techcombank, BIDV... hoặc MoMo</div>
                         </div>
-                        <i class="ti ti-qrcode" style="font-size: 28px; color: #178A4C;"></i>
+                        <i class="ti ti-qrcode" style="font-size: 28px; color: #EC4899;"></i>
                     </label>
 
                     {{-- MoMo --}}
@@ -571,12 +571,12 @@
                 </div>
 
                 {{-- Price Total Box --}}
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; background: #FFF7ED; border-radius: 14px; border: 1.5px solid #FDBA74; margin-bottom: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; background: #FDF2F8; border-radius: 14px; border: 1.5px solid #FBCFE8; margin-bottom: 24px;">
                     <div>
-                        <span style="display: block; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; color: #9A3412;">Tổng tiền tạm tính</span>
-                        <span style="font-size: 12px; color: #C2410C;">Miễn phí giao hàng toàn quốc</span>
+                        <span style="display: block; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; color: #BE185D;">Tổng tiền tạm tính</span>
+                        <span style="font-size: 12px; color: #DB2777;">Miễn phí giao hàng toàn quốc</span>
                     </div>
-                    <span style="font-weight: 800; font-size: 26px; color: #C2410C; font-family: 'Oswald', sans-serif;" class="total-display-tag">
+                    <span style="font-weight: 800; font-size: 26px; color: #EC4899; font-family: 'Oswald', sans-serif;" class="total-display-tag">
                         {{ number_format($product->cost_price, 0, ',', '.') }}₫
                     </span>
                 </div>
@@ -590,8 +590,8 @@
                  BƯỚC 2: NHẬP THÔNG TIN KHÁCH HÀNG
             ======================================================== --}}
             <div id="step-section-2" style="display: none;">
-                <h3 style="font-size: 18px; font-weight: 700; color: var(--ink, #11201B); margin: 0 0 18px; display: flex; align-items: center; gap: 8px;">
-                    <i class="ti ti-user-check" style="color: #178A4C;"></i> Bước 2: Nhập thông tin nhận hàng
+                <h3 style="font-size: 18px; font-weight: 700; color: var(--ink, #181824); margin: 0 0 18px; display: flex; align-items: center; gap: 8px;">
+                    <i class="ti ti-user-check" style="color: #EC4899;"></i> Bước 2: Nhập thông tin nhận hàng
                 </h3>
 
                 {{-- Customer Name --}}
@@ -665,8 +665,8 @@
                  BƯỚC 3: MÃ QR THANH TOÁN & XÁC NHẬN ĐƠN HÀNG
             ======================================================== --}}
             <div id="step-section-3" style="display: none;">
-                <h3 style="font-size: 18px; font-weight: 700; color: var(--ink, #11201B); margin: 0 0 18px; display: flex; align-items: center; gap: 8px;">
-                    <i class="ti ti-qrcode" style="color: #178A4C;"></i> Bước 3: Quét mã QR & Xác nhận thanh toán
+                <h3 style="font-size: 18px; font-weight: 700; color: var(--ink, #181824); margin: 0 0 18px; display: flex; align-items: center; gap: 8px;">
+                    <i class="ti ti-qrcode" style="color: #EC4899;"></i> Bước 3: Quét mã QR & Xác nhận thanh toán
                 </h3>
 
                 {{-- QR Payment Container (Visible for QR / Bank / MoMo) --}}
@@ -691,7 +691,7 @@
                     ========================================= --}}
                     <div id="bank-qr-view">
                         <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px;">
-                            <span style="background: #178A4C; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;">
+                            <span style="background: #EC4899; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;">
                                 VIETQR CHUẨN QUỐC GIA
                             </span>
                             <span style="font-size: 13px; color: #475569; font-weight: 600;">
@@ -715,7 +715,7 @@
                                 <td>Ngân hàng:</td>
                                 <td>
                                     <strong>TPBank (Ngân hàng Tiên Phong)</strong>
-                                    <span style="font-size: 11px; color: #178A4C; margin-left: 8px;">24/7 Tức thì</span>
+                                    <span style="font-size: 11px; color: #DB2777; margin-left: 8px;">24/7 Tức thì</span>
                                 </td>
                             </tr>
                             <tr>
@@ -734,20 +734,20 @@
                             <tr>
                                 <td>Số tiền cần chuyển:</td>
                                 <td>
-                                    <span id="bank-amount" style="color: #EA580C; font-weight: 800; font-size: 16px;"></span>
+                                    <span id="bank-amount" style="color: #EC4899; font-weight: 800; font-size: 16px;"></span>
                                     <button type="button" class="btn-copy" id="btn-copy-amount">Sao chép</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Nội dung chuyển khoản:</td>
                                 <td>
-                                    <span id="bank-memo" style="color: #178A4C; font-weight: 700; font-family: monospace; font-size: 15px;"></span>
+                                    <span id="bank-memo" style="color: #DB2777; font-weight: 700; font-family: monospace; font-size: 15px;"></span>
                                     <button type="button" class="btn-copy" id="btn-copy-memo">Sao chép</button>
                                 </td>
                             </tr>
                         </table>
 
-                        <div style="background: rgba(23,138,76,0.08); border-radius: 10px; padding: 12px; font-size: 13px; color: #166534; line-height: 1.5; max-width: 480px; margin: 0 auto; text-align: left;">
+                        <div style="background: rgba(236,72,153,0.08); border-radius: 10px; padding: 12px; font-size: 13px; color: #9D174D; line-height: 1.5; max-width: 480px; margin: 0 auto; text-align: left;">
                             <i class="ti ti-info-circle" style="margin-right: 4px;"></i>
                             <strong>Hướng dẫn:</strong> Quý khách mở App Ngân hàng (TPBank, MB, VCB, BIDV, Techcombank...) hoặc MoMo, chọn <strong>Quét mã QR</strong> để quét mã trên. Vui lòng giữ nguyên nội dung chuyển khoản để đơn hàng được xác nhận nhanh chóng.
                         </div>
@@ -833,11 +833,11 @@
                 </div>
 
                 {{-- Real-time Payment Status Notice Box --}}
-                <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 14px; padding: 14px 18px; margin-bottom: 22px; display: flex; align-items: center; gap: 12px;">
-                    <div style="width: 38px; height: 38px; border-radius: 50%; background: #DCFCE7; color: #15803D; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
+                <div style="background: #FDF2F8; border: 1px solid #FBCFE8; border-radius: 14px; padding: 14px 18px; margin-bottom: 22px; display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 38px; height: 38px; border-radius: 50%; background: #FCE7F3; color: #DB2777; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
                         <i class="ti ti-bell-ringing"></i>
                     </div>
-                    <div style="font-size: 13px; color: #166534; line-height: 1.45;">
+                    <div style="font-size: 13px; color: #9D174D; line-height: 1.45;">
                         <strong>Thông báo xác nhận thanh toán tự động:</strong>
                         Sau khi quét mã chuyển khoản thành công, quý khách nhấn nút xác nhận bên dưới để hệ thống phát hành biên lai & lên đơn giao hàng ngay lập tức.
                     </div>
@@ -859,24 +859,24 @@
 </div>
 
 {{-- Copy Notification Toast --}}
-<div id="copy-toast-notification" style="position: fixed; bottom: 28px; right: 28px; background: #0D382E; color: #FFFFFF; padding: 12px 20px; border-radius: 12px; font-size: 13.5px; font-weight: 600; display: none; align-items: center; gap: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 99999; border: 1px solid #178A4C;">
-    <i class="ti ti-circle-check" style="color: #4ADE80; font-size: 18px;"></i>
+<div id="copy-toast-notification" style="position: fixed; bottom: 28px; right: 28px; background: #181824; color: #FFFFFF; padding: 12px 20px; border-radius: 12px; font-size: 13.5px; font-weight: 600; display: none; align-items: center; gap: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 99999; border: 1px solid #EC4899;">
+    <i class="ti ti-circle-check" style="color: #FF2E93; font-size: 18px;"></i>
     <span id="copy-toast-text">Đã sao chép vào bộ nhớ tạm!</span>
 </div>
 
 {{-- Payment Verification Overlay Modal when submitting --}}
 <div id="payment-verifying-overlay" style="position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 999999; padding: 20px;">
-    <div style="background: var(--bg-white, #FFFFFF); border-radius: 24px; max-width: 440px; width: 100%; padding: 32px 26px; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.3); border: 1px solid var(--line, #E3ECE6);">
-        <div style="width: 72px; height: 72px; border-radius: 50%; background: #DCFCE7; color: #16A34A; display: inline-flex; align-items: center; justify-content: center; font-size: 38px; margin-bottom: 16px; box-shadow: 0 8px 20px rgba(22,163,74,0.25);">
+    <div style="background: var(--bg-white, #FFFFFF); border-radius: 24px; max-width: 440px; width: 100%; padding: 32px 26px; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.3); border: 1px solid var(--line, #F1E4EC);">
+        <div style="width: 72px; height: 72px; border-radius: 50%; background: #FCE7F3; color: #EC4899; display: inline-flex; align-items: center; justify-content: center; font-size: 38px; margin-bottom: 16px; box-shadow: 0 8px 20px rgba(236,72,153,0.25);">
             <i class="ti ti-shield-check"></i>
         </div>
-        <h3 style="margin: 0 0 8px; font-size: 21px; font-weight: 800; color: var(--ink, #11201B); font-family: 'Oswald', sans-serif; letter-spacing: 0.4px;">
+        <h3 style="margin: 0 0 8px; font-size: 21px; font-weight: 800; color: var(--ink, #181824); font-family: 'Oswald', sans-serif; letter-spacing: 0.4px;">
             ĐANG XÁC THỰC THANH TOÁN & KHỞI TẠO ĐƠN...
         </h3>
-        <p style="margin: 0 0 18px; font-size: 14px; color: var(--ink-soft, #5E726A); line-height: 1.5;">
+        <p style="margin: 0 0 18px; font-size: 14px; color: var(--ink-soft, #525266); line-height: 1.5;">
             Hệ thống đang ghi nhận giao dịch và khởi tạo phiếu xuất kho giao hàng cho đơn của bạn. Vui lòng đợi trong giây lát!
         </p>
-        <div style="background: #F0FDF4; border: 1px solid #86EFAC; border-radius: 12px; padding: 10px 14px; font-size: 13px; color: #15803D; font-weight: 700;">
+        <div style="background: #FDF2F8; border: 1px solid #FBCFE8; border-radius: 12px; padding: 10px 14px; font-size: 13px; color: #DB2777; font-weight: 700;">
             <i class="ti ti-qrcode"></i> <span id="verifying-memo-display"></span>
         </div>
     </div>
@@ -1147,7 +1147,7 @@
             navigator.clipboard.writeText(text).then(() => {
                 const old = btn.textContent;
                 btn.textContent = 'Đã chép!';
-                btn.style.background = '#178A4C';
+                btn.style.background = '#EC4899';
                 btn.style.color = '#fff';
                 showCopyToast(label || text);
                 setTimeout(() => {

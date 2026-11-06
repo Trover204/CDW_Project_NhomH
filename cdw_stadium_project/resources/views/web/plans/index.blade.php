@@ -148,10 +148,10 @@
     padding-bottom: 70px;
 }
 .plans-hero-banner {
-    background: linear-gradient(135deg, var(--turf-dark, #0D382E) 0%, #061B16 100%);
+    background: linear-gradient(135deg, #12121C 0%, #181824 55%, #2D182A 100%);
     color: #fff;
     padding: 60px 0 50px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255, 46, 147, 0.2);
 }
 .plans-hero-content {
     max-width: 760px;
@@ -162,9 +162,9 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: rgba(210, 248, 90, 0.15);
-    color: var(--turf-accent, #D2F85A);
-    border: 1px solid rgba(210, 248, 90, 0.3);
+    background: rgba(255, 46, 147, 0.16);
+    color: #FF2E93;
+    border: 1px solid rgba(255, 46, 147, 0.4);
     padding: 6px 16px;
     border-radius: 999px;
     font-size: 13px;
@@ -180,7 +180,7 @@
     letter-spacing: 0.5px;
 }
 .plans-hero-content p {
-    color: #C3D5CE;
+    color: #D4D4E0;
     font-size: 16px;
     line-height: 1.6;
     margin: 0 auto;
@@ -190,9 +190,9 @@
     margin-top: -30px;
 }
 .plan-alert-success {
-    background: #DCFCE7;
-    border: 1px solid #86EFAC;
-    color: #166534;
+    background: #FDF2F8;
+    border: 1px solid #FBCFE8;
+    color: #BE185D;
     padding: 14px 20px;
     border-radius: 14px;
     margin-bottom: 30px;
@@ -209,19 +209,19 @@
 }
 .benefit-box {
     background: var(--surface, #fff);
-    border: 1px solid var(--line, #E3ECE6);
+    border: 1px solid var(--line, #F1E4EC);
     border-radius: 18px;
     padding: 24px;
     display: flex;
     gap: 16px;
-    box-shadow: 0 4px 18px rgba(13, 56, 46, 0.04);
+    box-shadow: 0 4px 18px rgba(24, 24, 36, 0.04);
 }
 .b-icon {
     width: 44px;
     height: 44px;
     border-radius: 12px;
-    background: var(--turf-teal-soft, #E6F6F4);
-    color: var(--turf-teal, #106764);
+    background: #FDF2F8;
+    color: #EC4899;
     font-size: 22px;
     display: flex;
     align-items: center;
@@ -232,12 +232,12 @@
     margin: 0 0 4px;
     font-size: 15.5px;
     font-weight: 700;
-    color: var(--turf-dark, #0D382E);
+    color: var(--ink, #181824);
 }
 .b-text p {
     margin: 0;
     font-size: 13px;
-    color: var(--ink-soft, #5E726A);
+    color: var(--ink-soft, #525266);
     line-height: 1.5;
 }
 .pricing-cards-grid {
@@ -248,31 +248,31 @@
 }
 .pricing-card {
     background: var(--surface, #fff);
-    border: 1.5px solid var(--line, #E3ECE6);
+    border: 1.5px solid var(--line, #F1E4EC);
     border-radius: 24px;
     padding: 32px 28px;
     display: flex;
     flex-direction: column;
     position: relative;
-    box-shadow: 0 6px 24px rgba(13, 56, 46, 0.04);
+    box-shadow: 0 6px 24px rgba(24, 24, 36, 0.04);
     transition: all 0.3s ease;
 }
 .pricing-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 16px 36px rgba(13, 56, 46, 0.09);
-    border-color: #B5D9C4;
+    box-shadow: 0 16px 36px rgba(236, 72, 153, 0.12);
+    border-color: #F472B6;
 }
 .popular-card {
-    border-color: var(--turf-teal, #106764);
-    box-shadow: 0 12px 36px rgba(16, 103, 100, 0.12);
+    border-color: #EC4899;
+    box-shadow: 0 12px 36px rgba(236, 72, 153, 0.16);
 }
 .popular-ribbon {
     position: absolute;
     top: -14px;
     left: 50%;
     transform: translateX(-50%);
-    background: var(--turf-dark, #0D382E);
-    color: var(--turf-accent, #D2F85A);
+    background: #181824;
+    color: #FF2E93;
     font-size: 12px;
     font-weight: 700;
     padding: 5px 18px;
@@ -281,17 +281,18 @@
     align-items: center;
     gap: 6px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border: 1px solid rgba(255, 46, 147, 0.35);
 }
 .card-top-info {
     margin-bottom: 24px;
     padding-bottom: 20px;
-    border-bottom: 1px solid var(--line, #E3ECE6);
+    border-bottom: 1px solid var(--line, #F1E4EC);
 }
 .plan-type-tag {
     font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
-    color: var(--ink-muted, #879C94);
+    color: var(--ink-muted, #8E8EA0);
     letter-spacing: 0.5px;
 }
 .plan-name {
@@ -299,7 +300,7 @@
     font-family: 'Oswald', sans-serif;
     font-size: 26px;
     font-weight: 700;
-    color: var(--turf-dark, #0D382E);
+    color: var(--ink, #181824);
 }
 .plan-price-block {
     display: flex;
@@ -311,18 +312,18 @@
     font-family: 'Oswald', sans-serif;
     font-size: 34px;
     font-weight: 800;
-    color: var(--turf-dark, #0D382E);
+    color: #EC4899;
 }
 .price-period {
     font-size: 14px;
-    color: var(--ink-muted, #879C94);
+    color: var(--ink-muted, #8E8EA0);
 }
 .plan-discount-callout {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: #DCFCE7;
-    color: #15803D;
+    background: #FCE7F3;
+    color: #BE185D;
     font-size: 12.5px;
     font-weight: 700;
     padding: 5px 12px;
@@ -339,7 +340,7 @@
     font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
-    color: var(--ink-muted, #879C94);
+    color: var(--ink-muted, #8E8EA0);
     letter-spacing: 0.5px;
     margin-bottom: 4px;
 }
@@ -348,15 +349,15 @@
     align-items: flex-start;
     gap: 12px;
     font-size: 14px;
-    color: var(--ink, #11201B);
+    color: var(--ink, #181824);
     line-height: 1.45;
 }
 .check-icon {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: var(--turf-teal-soft, #E6F6F4);
-    color: var(--turf-teal, #106764);
+    background: #FDF2F8;
+    color: #EC4899;
     font-size: 13px;
     display: flex;
     align-items: center;
@@ -378,30 +379,30 @@
     font-size: 15px;
     font-weight: 700;
     text-decoration: none;
-    background: var(--bg-page, #F6F8F6);
-    color: var(--turf-dark, #0D382E);
-    border: 1px solid var(--line, #E3ECE6);
+    background: var(--bg-page, #FAF7F9);
+    color: var(--ink, #181824);
+    border: 1px solid var(--line, #F1E4EC);
     transition: all 0.2s ease;
 }
 .btn-choose-plan:hover {
-    background: var(--turf-dark, #0D382E);
+    background: #181824;
     color: #fff;
-    border-color: var(--turf-dark, #0D382E);
+    border-color: #181824;
 }
 .btn-popular-action {
-    background: #F97316;
+    background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
     color: #fff;
     border: none;
-    box-shadow: 0 4px 14px rgba(249, 115, 22, 0.3);
+    box-shadow: 0 4px 14px rgba(236, 72, 153, 0.3);
 }
 .btn-popular-action:hover {
-    background: #ea580c;
-    box-shadow: 0 6px 18px rgba(249, 115, 22, 0.4);
+    background: linear-gradient(135deg, #DB2777 0%, #BE185D 100%);
+    box-shadow: 0 6px 18px rgba(236, 72, 153, 0.42);
 }
 .plans-faq-box {
     margin-top: 60px;
     background: var(--surface, #fff);
-    border: 1px solid var(--line, #E3ECE6);
+    border: 1px solid var(--line, #F1E4EC);
     border-radius: 20px;
     padding: 36px;
 }
@@ -409,7 +410,7 @@
     font-family: 'Oswald', sans-serif;
     font-size: 22px;
     font-weight: 700;
-    color: var(--turf-dark, #0D382E);
+    color: var(--turf-dark, #181824);
     margin: 0 0 24px;
     text-align: center;
 }
@@ -422,12 +423,12 @@
     margin: 0 0 8px;
     font-size: 15.5px;
     font-weight: 700;
-    color: var(--turf-dark, #0D382E);
+    color: var(--turf-dark, #181824);
 }
 .faq-item p {
     margin: 0;
     font-size: 14px;
-    color: var(--ink-soft, #5E726A);
+    color: var(--ink-soft, #5A5565);
     line-height: 1.6;
 }
 @media (max-width: 900px) {

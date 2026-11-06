@@ -246,10 +246,10 @@
                             </div>
                             @if(isset($subscription) && $subscription && $subscription->plan && $subscription->plan->discount_percent > 0)
                                 <div class="breakdown-row">
-                                    <span style="color: #16A34A; font-weight: 600;">
+                                    <span style="color: #DB2777; font-weight: 600;">
                                         <i class="ti ti-crown"></i> {{ __('Ưu đãi VIP (:name)', ['name' => $subscription->plan->name]) }}
                                     </span>
-                                    <span style="color: #16A34A; font-weight: 700;">-{{ $subscription->plan->discount_percent }}%</span>
+                                    <span style="color: #DB2777; font-weight: 700;">-{{ $subscription->plan->discount_percent }}%</span>
                                 </div>
                             @endif
                             <div class="breakdown-total">
@@ -263,8 +263,8 @@
                             <i class="ti ti-arrow-right"></i>
                         </button>
 
-                        <div style="display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line, #E3ECE6);">
-                            <span style="font-size: 11px; font-weight: 700; background: #DCFCE7; color: #15803D; padding: 3px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 3px;">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line, #F1E4EC);">
+                            <span style="font-size: 11px; font-weight: 700; background: #FCE7F3; color: #BE185D; padding: 3px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 3px;">
                                 <i class="ti ti-qrcode"></i> VietQR 24/7
                             </span>
                             <span style="font-size: 11px; font-weight: 700; background: #FDF2F8; color: #A50064; padding: 3px 8px; border-radius: 6px;">
@@ -305,7 +305,7 @@
 }
 .breadcrumb-container {
     background: var(--surface, #fff);
-    border-bottom: 1px solid var(--line, #E3ECE6);
+    border-bottom: 1px solid var(--line, #F1E4EC);
     padding: 14px 0;
 }
 .court-breadcrumb {
@@ -314,31 +314,31 @@
     flex-wrap: wrap;
     gap: 8px;
     font-size: 13.5px;
-    color: var(--ink-soft, #5E726A);
+    color: var(--ink-soft, #5A5A72);
 }
 .court-breadcrumb a {
-    color: var(--turf-dark, #0D382E);
+    color: var(--turf-dark, #181824);
     display: inline-flex;
     align-items: center;
     gap: 4px;
     font-weight: 500;
 }
 .court-breadcrumb a:hover {
-    color: var(--turf-teal, #106764);
+    color: var(--turf-teal, #EC4899);
     text-decoration: underline;
 }
 .bc-sep {
     font-size: 12px;
-    color: var(--ink-muted, #879C94);
+    color: var(--ink-muted, #8E8EA8);
     display: flex;
     align-items: center;
 }
 .bc-sport {
     font-weight: 600;
-    color: var(--turf-teal, #106764);
+    color: var(--turf-teal, #EC4899);
 }
 .bc-current {
-    color: var(--ink-soft, #5E726A);
+    color: var(--ink-soft, #5A5A72);
     font-weight: 500;
 }
 .detail-wrap {
@@ -357,10 +357,10 @@
 }
 .detail-title-card {
     background: var(--surface, #fff);
-    border: 1px solid var(--line, #E3ECE6);
+    border: 1px solid var(--line, #F1E4EC);
     border-radius: 20px;
     padding: 26px 28px;
-    box-shadow: 0 4px 18px rgba(13, 56, 46, 0.03);
+    box-shadow: 0 4px 18px rgba(24, 24, 36, 0.04);
 }
 .title-meta-row {
     display: flex;
@@ -369,8 +369,8 @@
     margin-bottom: 12px;
 }
 .sport-badge-pill {
-    background: var(--turf-teal-soft, #E6F6F4);
-    color: var(--turf-teal, #106764);
+    background: var(--turf-teal-soft, #FDF2F8);
+    color: var(--turf-teal, #EC4899);
     font-size: 13px;
     font-weight: 700;
     padding: 4px 14px;
@@ -384,9 +384,9 @@
     align-items: center;
     gap: 6px;
     font-size: 12.5px;
-    color: #16A34A;
+    color: #BE185D;
     font-weight: 600;
-    background: #DCFCE7;
+    background: #FCE7F3;
     padding: 4px 10px;
     border-radius: 999px;
 }
@@ -394,14 +394,14 @@
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: #16A34A;
-    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2);
+    background: #FF2E93;
+    box-shadow: 0 0 0 3px rgba(255, 46, 147, 0.25);
 }
 .court-main-title {
     font-family: 'Oswald', sans-serif;
     font-size: 32px;
     font-weight: 700;
-    color: var(--turf-dark, #0D382E);
+    color: var(--turf-dark, #181824);
     margin: 0 0 10px;
     line-height: 1.25;
 }
@@ -410,11 +410,11 @@
     align-items: center;
     gap: 8px;
     font-size: 14.5px;
-    color: var(--ink-soft, #5E726A);
+    color: var(--ink-soft, #5A5A72);
     margin-bottom: 18px;
 }
 .court-location-line i {
-    color: var(--turf-teal, #106764);
+    color: var(--turf-teal, #EC4899);
     font-size: 17px;
 }
 .stats-pills-row {
@@ -422,19 +422,19 @@
     flex-wrap: wrap;
     gap: 12px;
     padding-top: 14px;
-    border-top: 1px solid var(--line, #E3ECE6);
+    border-top: 1px solid var(--line, #F1E4EC);
 }
 .stat-bubble {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: var(--bg-page, #F6F8F6);
-    border: 1px solid var(--line, #E3ECE6);
+    background: var(--bg-page, #FAF7F9);
+    border: 1px solid var(--line, #F1E4EC);
     padding: 6px 14px;
     border-radius: 999px;
     font-size: 13px;
     font-weight: 600;
-    color: var(--ink, #11201B);
+    color: var(--ink, #181824);
 }
 .star-gold {
     color: #F59E0B;
@@ -443,21 +443,21 @@
     font-weight: 700;
 }
 .rating-sub {
-    color: var(--ink-muted, #879C94);
+    color: var(--ink-muted, #8E8EA8);
     font-weight: normal;
 }
 .gallery-card {
     background: var(--surface, #fff);
-    border: 1px solid var(--line, #E3ECE6);
+    border: 1px solid var(--line, #F1E4EC);
     border-radius: 20px;
     padding: 16px;
-    box-shadow: 0 4px 18px rgba(13, 56, 46, 0.03);
+    box-shadow: 0 4px 18px rgba(24, 24, 36, 0.04);
 }
 .main-image-viewer {
     height: 380px;
     border-radius: 14px;
     overflow: hidden;
-    background: #0D382E;
+    background: #181824;
 }
 .main-image-viewer img {
     width: 100%;
@@ -485,7 +485,7 @@
 }
 .thumb-item:hover, .thumb-item.active {
     opacity: 1;
-    border-color: var(--turf-teal, #106764);
+    border-color: var(--turf-teal, #EC4899);
     transform: translateY(-2px);
 }
 .thumb-item img {
@@ -500,9 +500,9 @@
     align-items: center;
     justify-content: center;
     gap: 12px;
-    background: #E6F0FA;
+    background: #FDF2F8;
     border-radius: 14px;
-    color: var(--turf-teal, #106764);
+    color: var(--turf-teal, #EC4899);
     font-size: 15px;
     font-weight: 500;
 }
@@ -511,10 +511,10 @@
 }
 .content-box-card {
     background: var(--surface, #fff);
-    border: 1px solid var(--line, #E3ECE6);
+    border: 1px solid var(--line, #F1E4EC);
     border-radius: 20px;
     padding: 26px 28px;
-    box-shadow: 0 4px 18px rgba(13, 56, 46, 0.03);
+    box-shadow: 0 4px 18px rgba(24, 24, 36, 0.04);
 }
 .box-card-header {
     display: flex;
@@ -522,22 +522,22 @@
     gap: 10px;
     margin-bottom: 18px;
     padding-bottom: 12px;
-    border-bottom: 1px solid var(--line, #E3ECE6);
+    border-bottom: 1px solid var(--line, #F1E4EC);
 }
 .box-card-header i {
     font-size: 22px;
-    color: var(--turf-teal, #106764);
+    color: var(--turf-teal, #EC4899);
 }
 .box-card-header h3 {
     margin: 0;
     font-size: 19px;
     font-weight: 700;
-    color: var(--turf-dark, #0D382E);
+    color: var(--turf-dark, #181824);
 }
 .court-description-text {
     font-size: 15px;
     line-height: 1.7;
-    color: var(--ink-soft, #5E726A);
+    color: var(--ink-soft, #5A5A72);
 }
 .amenities-grid {
     display: grid;
@@ -545,7 +545,7 @@
     gap: 16px;
     margin-top: 24px;
     padding-top: 20px;
-    border-top: 1px dashed var(--line, #E3ECE6);
+    border-top: 1px dashed var(--line, #F1E4EC);
 }
 .amenity-item {
     display: flex;
@@ -553,11 +553,11 @@
     gap: 10px;
     font-size: 14px;
     font-weight: 600;
-    color: var(--turf-dark, #0D382E);
+    color: var(--turf-dark, #181824);
 }
 .amenity-item i {
     font-size: 18px;
-    color: var(--turf-teal, #106764);
+    color: var(--turf-teal, #EC4899);
 }
 .reviews-list-container {
     display: flex;
@@ -569,7 +569,7 @@
     gap: 16px;
     align-items: flex-start;
     padding-bottom: 18px;
-    border-bottom: 1px solid var(--line, #E3ECE6);
+    border-bottom: 1px solid var(--line, #F1E4EC);
 }
 .user-review-item:last-child {
     border-bottom: none;
@@ -579,8 +579,8 @@
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: var(--turf-teal-soft, #E6F6F4);
-    color: var(--turf-teal, #106764);
+    background: var(--turf-teal-soft, #FDF2F8);
+    color: var(--turf-teal, #EC4899);
     font-weight: 700;
     font-size: 16px;
     display: flex;
@@ -599,7 +599,7 @@
 }
 .user-name {
     font-size: 14.5px;
-    color: var(--turf-dark, #0D382E);
+    color: var(--turf-dark, #181824);
 }
 .star-rating {
     color: #F59E0B;
@@ -607,22 +607,22 @@
 }
 .review-text-message {
     font-size: 14px;
-    color: var(--ink-soft, #5E726A);
+    color: var(--ink-soft, #5A5A72);
     line-height: 1.6;
     margin: 0 0 6px;
 }
 .review-date {
     font-size: 12px;
-    color: var(--ink-muted, #879C94);
+    color: var(--ink-muted, #8E8EA8);
 }
 .no-reviews-box {
     text-align: center;
     padding: 30px 10px;
-    color: var(--ink-soft, #5E726A);
+    color: var(--ink-soft, #5A5A72);
 }
 .no-reviews-box i {
     font-size: 40px;
-    color: var(--ink-muted, #879C94);
+    color: var(--ink-muted, #8E8EA8);
     margin-bottom: 8px;
 }
 .court-booking-col {
@@ -632,10 +632,10 @@
     position: sticky;
     top: 90px;
     background: var(--surface, #fff);
-    border: 1px solid var(--line, #E3ECE6);
+    border: 1px solid var(--line, #F1E4EC);
     border-radius: 24px;
     padding: 26px;
-    box-shadow: 0 8px 30px rgba(13, 56, 46, 0.08);
+    box-shadow: 0 8px 30px rgba(24, 24, 36, 0.08);
 }
 .booking-card-head {
     display: flex;
@@ -643,7 +643,7 @@
     align-items: center;
     margin-bottom: 22px;
     padding-bottom: 18px;
-    border-bottom: 1px solid var(--line, #E3ECE6);
+    border-bottom: 1px solid var(--line, #F1E4EC);
 }
 .booking-badge {
     display: inline-flex;
@@ -651,8 +651,8 @@
     gap: 4px;
     font-size: 12px;
     font-weight: 700;
-    color: var(--turf-teal, #106764);
-    background: var(--turf-teal-soft, #E6F6F4);
+    color: var(--turf-teal, #EC4899);
+    background: var(--turf-teal-soft, #FDF2F8);
     padding: 5px 10px;
     border-radius: 999px;
 }
@@ -665,11 +665,11 @@
     font-family: 'Oswald', sans-serif;
     font-size: 26px;
     font-weight: 800;
-    color: #F97316;
+    color: #EC4899;
 }
 .unit-text {
     font-size: 13px;
-    color: var(--ink-soft, #5E726A);
+    color: var(--ink-soft, #5A5A72);
 }
 .form-input-group {
     margin-bottom: 20px;
@@ -680,7 +680,7 @@
     gap: 6px;
     font-size: 13.5px;
     font-weight: 700;
-    color: var(--turf-dark, #0D382E);
+    color: var(--turf-dark, #181824);
     margin-bottom: 10px;
 }
 .group-label-between {
@@ -691,11 +691,11 @@
 }
 .slot-legend-online {
     font-size: 11.5px;
-    color: var(--ink-muted, #879C94);
+    color: var(--ink-muted, #8E8EA8);
 }
 .date-picker-wrap {
-    background: var(--bg-page, #F6F8F6);
-    border: 1px solid #C7D3CA;
+    background: var(--bg-page, #FAF7F9);
+    border: 1px solid #E5D4E0;
     border-radius: 12px;
     padding: 10px 14px;
 }
@@ -706,7 +706,7 @@
     background: transparent;
     font-size: 14.5px;
     font-weight: 600;
-    color: var(--turf-dark, #0D382E);
+    color: var(--turf-dark, #181824);
     font-family: inherit;
     cursor: pointer;
 }
@@ -730,26 +730,27 @@
     justify-content: center;
     padding: 10px 6px;
     border-radius: 10px;
-    border: 1.5px solid var(--line, #E3ECE6);
+    border: 1.5px solid var(--line, #F1E4EC);
     background: var(--surface, #fff);
     transition: all 0.2s ease;
 }
 .slot-time {
     font-size: 13.5px;
     font-weight: 700;
-    color: var(--turf-dark, #0D382E);
+    color: var(--turf-dark, #181824);
 }
 .slot-hint {
     font-size: 10.5px;
-    color: #16A34A;
+    color: #DB2777;
     margin-top: 2px;
 }
 .slot-tile:hover .slot-tile-inner {
-    border-color: var(--turf-teal, #106764);
+    border-color: var(--turf-teal, #EC4899);
 }
 .slot-tile input:checked + .slot-tile-inner {
-    background: var(--turf-dark, #0D382E);
-    border-color: var(--turf-dark, #0D382E);
+    background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
+    border-color: #EC4899;
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
 }
 .slot-tile input:checked + .slot-tile-inner .slot-time,
 .slot-tile input:checked + .slot-tile-inner .slot-hint {
@@ -760,18 +761,18 @@
     opacity: 0.6;
 }
 .slot-disabled .slot-tile-inner {
-    background: var(--bg-page, #F6F8F6);
-    border: 1px dashed var(--line, #E3ECE6);
+    background: var(--bg-page, #FAF7F9);
+    border: 1px dashed var(--line, #F1E4EC);
 }
 .slot-disabled .slot-time {
     text-decoration: line-through;
-    color: var(--ink-muted, #879C94);
+    color: var(--ink-muted, #8E8EA8);
 }
 .slot-disabled .slot-hint {
     color: #ef4444;
 }
 .booking-price-breakdown {
-    background: var(--bg-page, #F6F8F6);
+    background: var(--bg-page, #FAF7F9);
     border-radius: 14px;
     padding: 16px;
     margin-bottom: 20px;
@@ -783,10 +784,10 @@
     display: flex;
     justify-content: space-between;
     font-size: 13px;
-    color: var(--ink-soft, #5E726A);
+    color: var(--ink-soft, #5A5A72);
 }
 .free-badge {
-    color: #16A34A;
+    color: #DB2777;
     font-weight: 600;
 }
 .breakdown-total {
@@ -795,13 +796,13 @@
     align-items: baseline;
     font-size: 14px;
     font-weight: 700;
-    color: var(--turf-dark, #0D382E);
+    color: var(--turf-dark, #181824);
     padding-top: 10px;
-    border-top: 1px dashed var(--line, #E3ECE6);
+    border-top: 1px dashed var(--line, #F1E4EC);
 }
 .total-number {
     font-size: 20px;
-    color: #F97316;
+    color: #EC4899;
     font-family: 'Oswald', sans-serif;
     font-weight: 800;
 }
@@ -811,21 +812,21 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
-    background: #F97316;
+    background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
     color: #fff;
     border: none;
     font-size: 16px;
     font-weight: 700;
     padding: 14px;
-    border-radius: 12px;
+    border-radius: 999px;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 14px rgba(249, 115, 22, 0.3);
+    box-shadow: 0 6px 18px rgba(236, 72, 153, 0.35);
 }
 .btn-proceed-booking:hover {
-    background: #ea580c;
+    background: linear-gradient(135deg, #E01A70 0%, #BE185D 100%);
     transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(249, 115, 22, 0.4);
+    box-shadow: 0 8px 22px rgba(236, 72, 153, 0.48);
 }
 .booking-guarantees {
     margin-top: 18px;
@@ -838,10 +839,10 @@
     align-items: center;
     gap: 8px;
     font-size: 12px;
-    color: var(--ink-soft, #5E726A);
+    color: var(--ink-soft, #5A5A72);
 }
 .guarantee-item i {
-    color: #16A34A;
+    color: #EC4899;
     font-size: 15px;
 }
 
