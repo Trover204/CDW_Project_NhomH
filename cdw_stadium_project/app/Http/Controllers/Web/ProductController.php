@@ -104,7 +104,7 @@ class ProductController extends Controller
                 ? 'Đơn #' . $sale->id . ' (' . $sale->quantity . 'x ' . $product->name . ') - ' . implode(' | ', $noteDetails)
                 : 'Đơn #' . $sale->id . ' (' . $sale->quantity . 'x ' . $product->name . ')';
 
-            $this->paymentService->syncFromPayable(
+            $createdPayment = $this->paymentService->syncFromPayable(
                 $sale,
                 paymentMethod: $validated['payment_method'],
                 status: 'paid',
@@ -120,9 +120,22 @@ class ProductController extends Controller
 
             DB::commit();
 
+            $methodLabels = [
+                'qr' => 'Quét mã QR Ngân Hàng (VietQR 24/7)',
+                'bank_transfer' => 'Chuyển khoản Ngân Hàng (VietQR 24/7)',
+                'momo' => 'Ví điện tử MoMo (Napas 247)',
+                'visa' => 'Thẻ Quốc tế (Visa / MasterCard)',
+                'paypal' => 'Cổng thanh toán PayPal',
+                'vnpay' => 'Cổng thanh toán VNPay',
+                'cod' => 'Thanh toán khi nhận hàng (COD)',
+                'cash' => 'Tiền mặt khi nhận hàng',
+            ];
+            $pm = $validated['payment_method'];
+
             $orderSuccessData = [
                 'order_id' => $sale->id,
                 'reference' => 'SL-' . str_pad((string) $sale->id, 5, '0', STR_PAD_LEFT),
+                'transaction_code' => $createdPayment?->transaction_code ?? ('SL-' . now()->format('ymdHis')),
                 'product_name' => $product->name,
                 'product_image' => $product->image_url,
                 'team' => $product->team,
@@ -134,7 +147,9 @@ class ProductController extends Controller
                 'customer_phone' => $customerPhone,
                 'shipping_address' => $validated['shipping_address'] ?? '',
                 'note' => $validated['note'] ?? '',
-                'payment_method' => $validated['payment_method'],
+                'payment_method' => $pm,
+                'payment_method_label' => $methodLabels[$pm] ?? strtoupper($pm),
+                'payment_status' => in_array($pm, ['cod', 'cash'], true) ? 'pending' : 'paid',
                 'created_at' => now()->format('H:i - d/m/Y'),
             ];
 
