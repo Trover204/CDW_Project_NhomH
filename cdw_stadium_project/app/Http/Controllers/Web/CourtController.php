@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SearchRequest;
+use App\Models\Booking;
 use App\Models\Court;
 use App\Models\Facility;
 use App\Models\News;
+use App\Models\PriceRule;
 use App\Models\SportType;
+use App\Models\Subscription;
+use Illuminate\Support\Facades\Auth;
 
 class CourtController extends Controller
 {
@@ -18,7 +22,7 @@ class CourtController extends Controller
         $selectedSportTypes = $request->input('sport_types', []);
 
         if ($keyword !== '' || ! empty($selectedSportTypes)) {
-            if ($keyword !== '') {
+            if ($keyword !== '' && ! $request->isNormalSearch()) {
                 $searchAfter = $request->searchAfterCursor();
                 $courts = Court::search($keyword)
                     ->when(! empty($selectedSportTypes), function ($search) use ($selectedSportTypes) {
@@ -34,7 +38,18 @@ class CourtController extends Controller
             } else {
                 $courts = Court::with(['facility', 'sportType', 'images'])
                     ->where('status', '!=', 'inactive')
-                    ->whereIn('sport_type_id', $selectedSportTypes);
+                    ->when($keyword !== '', function ($query) use ($keyword) {
+                        $like = "%{$keyword}%";
+                        $query->where(function ($q) use ($like) {
+                            $q->where('name', 'like', $like)
+                                ->orWhere('description', 'like', $like)
+                                ->orWhereHas('facility', fn ($f) => $f->where('name', 'like', $like)->orWhere('district', 'like', $like)->orWhere('address', 'like', $like))
+                                ->orWhereHas('sportType', fn ($s) => $s->where('name', 'like', $like));
+                        });
+                    })
+                    ->when(! empty($selectedSportTypes), function ($query) use ($selectedSportTypes) {
+                        $query->whereIn('sport_type_id', $selectedSportTypes);
+                    });
             }
             $courts = $courts->paginate(12)->appends($request->query());
         } else {
@@ -65,27 +80,56 @@ class CourtController extends Controller
     public function search(SearchRequest $request)
     {
         $keyword = $request->keyword();
+        $searchMode = $request->searchMode();
 
         if ($keyword === '') {
             return redirect()->route('courts.index');
         }
 
-        $searchAfter = $request->searchAfterCursor();
+        if ($request->isNormalSearch()) {
+            $like = "%{$keyword}%";
 
-        $courts = Court::search($keyword)
-            ->when($searchAfter !== [], fn ($search) => $search->searchAfter($searchAfter))
-            ->query(fn ($query) => $query->with(['facility', 'sportType', 'images'])->where('status', '!=', 'inactive'))
-            ->paginate(12)
-            ->appends($request->query());
+            $courts = Court::with(['facility', 'sportType', 'images'])
+                ->where('status', '!=', 'inactive')
+                ->where(function ($q) use ($like) {
+                    $q->where('name', 'like', $like)
+                        ->orWhere('description', 'like', $like)
+                        ->orWhereHas('facility', fn ($f) => $f->where('name', 'like', $like)->orWhere('district', 'like', $like)->orWhere('address', 'like', $like))
+                        ->orWhereHas('sportType', fn ($s) => $s->where('name', 'like', $like));
+                })
+                ->latest()
+                ->paginate(12)
+                ->appends($request->query());
 
-        $news = News::search($keyword)
-            ->where('status', 'published')
-            ->when($searchAfter !== [], fn ($search) => $search->searchAfter($searchAfter))
-            ->query(fn ($query) => $query->where('status', 'published')->with('user:id,name')->latest())
-            ->paginate(6, 'news_page')
-            ->appends($request->query());
+            $news = News::where('status', 'published')
+                ->with('user:id,name')
+                ->where(function ($q) use ($like) {
+                    $q->where('title', 'like', $like)
+                        ->orWhere('summary', 'like', $like)
+                        ->orWhere('content', 'like', $like)
+                        ->orWhere('category', 'like', $like);
+                })
+                ->latest()
+                ->paginate(6, ['*'], 'news_page')
+                ->appends($request->query());
+        } else {
+            $searchAfter = $request->searchAfterCursor();
 
-        return view('web.courts.search', compact('courts', 'news', 'keyword'));
+            $courts = Court::search($keyword)
+                ->when($searchAfter !== [], fn ($search) => $search->searchAfter($searchAfter))
+                ->query(fn ($query) => $query->with(['facility', 'sportType', 'images'])->where('status', '!=', 'inactive'))
+                ->paginate(12)
+                ->appends($request->query());
+
+            $news = News::search($keyword)
+                ->where('status', 'published')
+                ->when($searchAfter !== [], fn ($search) => $search->searchAfter($searchAfter))
+                ->query(fn ($query) => $query->where('status', 'published')->with('user:id,name')->latest())
+                ->paginate(6, 'news_page')
+                ->appends($request->query());
+        }
+
+        return view('web.courts.search', compact('courts', 'news', 'keyword', 'searchMode'));
     }
 
     public function show(Court $court)
@@ -95,7 +139,7 @@ class CourtController extends Controller
         $selectedDate = request('date', now()->format('Y-m-d'));
 
         // Lấy danh sách booking đã được đặt (không tính đã hủy/từ chối) của sân trong ngày được chọn
-        $bookedSlots = \App\Models\Booking::where('court_id', $court->id)
+        $bookedSlots = Booking::where('court_id', $court->id)
             ->whereDate('booking_date', $selectedDate)
             ->whereNotIn('status', ['cancelled', 'rejected'])
             ->get(['start_time', 'end_time'])
@@ -111,7 +155,7 @@ class CourtController extends Controller
                     return [substr((string) $booking->start_time, 0, 5)];
                 }
                 for ($h = $startH; $h < $endH; $h++) {
-                    $slots[] = str_pad((string) $h, 2, '0', STR_PAD_LEFT) . ':00';
+                    $slots[] = str_pad((string) $h, 2, '0', STR_PAD_LEFT).':00';
                 }
 
                 return $slots;
@@ -121,16 +165,16 @@ class CourtController extends Controller
             ->all();
 
         $subscription = null;
-        if (\Illuminate\Support\Facades\Auth::check()) {
-            $subscription = \App\Models\Subscription::with('plan')
-                ->where('user_id', \Illuminate\Support\Facades\Auth::id())
+        if (Auth::check()) {
+            $subscription = Subscription::with('plan')
+                ->where('user_id', Auth::id())
                 ->where('status', 1)
                 ->where('expires_at', '>', now())
                 ->latest('expires_at')
                 ->first();
         }
 
-        $priceRules = \App\Models\PriceRule::where('status', 1)
+        $priceRules = PriceRule::where('status', 1)
             ->where('sport_type_id', $court->sport_type_id)
             ->where(fn ($q) => $q->where('court_id', $court->id)->orWhereNull('court_id'))
             ->orderByRaw('court_id IS NULL')

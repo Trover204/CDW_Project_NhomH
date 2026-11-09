@@ -853,6 +853,33 @@ nav[role="navigation"] span.inline-flex {
     color: var(--muted);
 }
 
+.admin-search-mode-divider {
+    width: 1px;
+    height: 18px;
+    background: var(--border-strong);
+    flex-shrink: 0;
+}
+
+.admin-search-mode-select {
+    border: none;
+    background: var(--surface-alt);
+    color: var(--text);
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    outline: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s ease;
+}
+
+.admin-search-mode-select:hover,
+.admin-search-mode-select:focus {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
 .admin-search-btn {
     background: var(--primary);
     color: #ffffff;
@@ -923,6 +950,40 @@ nav[role="navigation"] span.inline-flex {
     color: var(--sidebar-text);
 }
 
+.admin-search-mode-switch {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 4px;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    gap: 4px;
+}
+
+.mode-switch-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.mode-switch-pill:hover {
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.mode-switch-pill.active {
+    background: var(--primary);
+    color: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
 .admin-search-hero-bar {
     display: flex;
     align-items: center;
@@ -946,6 +1007,33 @@ nav[role="navigation"] span.inline-flex {
     font-size: 14px;
     color: #111827;
     font-family: inherit;
+}
+
+.hero-mode-divider {
+    width: 1px;
+    height: 22px;
+    background: #E5E7EB;
+    flex-shrink: 0;
+}
+
+.hero-mode-select {
+    border: 1px solid var(--border);
+    background: var(--surface-alt);
+    color: #111827;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 9999px;
+    outline: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s ease;
+}
+
+.hero-mode-select:hover,
+.hero-mode-select:focus {
+    border-color: var(--primary);
+    color: var(--primary);
 }
 
 .admin-search-hero-bar .hero-submit-btn {

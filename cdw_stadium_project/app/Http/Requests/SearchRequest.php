@@ -21,6 +21,7 @@ class SearchRequest extends FormRequest
                 'string',
                 'in:all,courts,facilities,products,news,sport_types,bookings,users,sales,payments,plans,subscriptions,reviews,ads,price_rules',
             ],
+            'mode' => ['nullable', 'string', 'in:normal,elasticsearch'],
             'search_after' => ['nullable', 'array'],
         ];
     }
@@ -33,6 +34,16 @@ class SearchRequest extends FormRequest
     public function searchType(): string
     {
         return (string) ($this->validated('type') ?? 'all');
+    }
+
+    public function searchMode(): string
+    {
+        return (string) ($this->validated('mode') ?? 'elasticsearch');
+    }
+
+    public function isNormalSearch(): bool
+    {
+        return $this->searchMode() === 'normal';
     }
 
     /**

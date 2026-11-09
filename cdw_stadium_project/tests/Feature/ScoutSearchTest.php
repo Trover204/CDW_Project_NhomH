@@ -234,6 +234,67 @@ class ScoutSearchTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee(route('admin.search'), false);
         $response->assertSee('name="q"', false);
+        $response->assertSee('name="mode"', false);
+        $response->assertSee('value="elasticsearch"', false);
+        $response->assertSee('value="normal"', false);
+    }
+
+    public function test_admin_search_supports_switching_between_normal_search_and_elasticsearch(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $facility = Facility::factory()->create([
+            'name' => 'Cơ sở Ngưng Hoạt Động',
+            'district' => 'Bình Thạnh',
+            'status' => false,
+        ]);
+
+        $inactiveCourt = Court::factory()->create([
+            'facility_id' => $facility->id,
+            'name' => 'Sân VIP Đang Ẩn',
+            'status' => 'inactive',
+        ]);
+
+        // Khi tìm kiếm bằng Elasticsearch (mặc định), các bản ghi không được index (status = inactive) sẽ không xuất hiện trong index ES
+        Http::fake([
+            '*/_search*' => Http::response([
+                'hits' => [
+                    'total' => ['value' => 0],
+                    'hits' => [],
+                ],
+            ], 200),
+            '*' => Http::response(['acknowledged' => true], 200),
+        ]);
+
+        config([
+            'scout.driver' => 'elasticsearch',
+            'scout.elasticsearch.host' => 'http://elasticsearch:9200',
+        ]);
+
+        $esResponse = $this->actingAs($admin)->get(route('admin.search', [
+            'q' => 'Đang Ẩn',
+            'mode' => 'elasticsearch',
+        ]));
+
+        $esResponse->assertStatus(200);
+        $esResponse->assertViewHas('searchMode', 'elasticsearch');
+        $esResponse->assertDontSee('Sân VIP Đang Ẩn');
+        Http::assertSent(fn (Request $request) => str_contains($request->url(), '/courts/_search'));
+
+        // Khi chuyển sang chế độ Tìm kiếm thường (mode = normal), truy vấn trực tiếp SQL Eloquent không gọi HTTP tới Elasticsearch
+        Http::fake();
+
+        $normalResponse = $this->actingAs($admin)->get(route('admin.search', [
+            'q' => 'Bình Thạnh',
+            'mode' => 'normal',
+        ]));
+
+        $normalResponse->assertStatus(200);
+        $normalResponse->assertViewHas('searchMode', 'normal');
+        $normalResponse->assertSee('Tìm kiếm thường (SQL Database)');
+        $normalResponse->assertSee('Cơ sở Ngưng Hoạt Động');
+        $normalResponse->assertSee($inactiveCourt->name);
+        Http::assertNothingSent();
     }
 
     public function test_admin_search_page_displays_unified_results_and_supports_type_filter(): void
