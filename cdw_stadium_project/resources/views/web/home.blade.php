@@ -5,9 +5,44 @@
 @section('content')
 
     {{-- =====================================================
-         HERO SECTION (BANNER.JPG LAYOUT + FLOATING SEARCH BAR)
+         HERO SECTION (BACKGROUND CAROUSEL + FLOATING SEARCH BAR)
     ====================================================== --}}
-    <section class="hero hero-enhanced hero-nhomh-banner">
+    @php
+        $heroBannerImages = [
+            asset('img_new/banner.jpg'),
+            asset('img_new/banner1.jpg'),
+            asset('img_new/banner2.jpg'),
+            asset('img_new/banner3.jpg'),
+            asset('img_new/banner4.jpg'),
+        ];
+    @endphp
+    <section
+        class="hero hero-enhanced hero-nhomh-banner"
+        id="heroBannerSection"
+        data-hero-carousel
+        data-interval="5000"
+        data-loop="true"
+    >
+        {{-- BACKGROUND SWIPE CAROUSEL --}}
+        <div class="hero-bg-carousel" id="heroBgCarousel" aria-hidden="true">
+            <div class="hero-bg-track" id="heroBgTrack">
+                @foreach($heroBannerImages as $bannerIndex => $bannerUrl)
+                    <div
+                        class="hero-bg-slide {{ $bannerIndex === 0 ? 'is-active' : '' }}"
+                        data-hero-slide="{{ $bannerIndex }}"
+                        style="background-image: url('{{ $bannerUrl }}');"
+                    ></div>
+                @endforeach
+                {{-- Seamless infinite loop clone of the first banner --}}
+                <div
+                    class="hero-bg-slide is-clone"
+                    data-hero-slide="clone"
+                    style="background-image: url('{{ $heroBannerImages[0] }}');"
+                ></div>
+            </div>
+            <div class="hero-bg-overlay"></div>
+        </div>
+
         <div class="hero-slash-top" aria-hidden="true"></div>
         <div class="hero-slash-bottom-left" aria-hidden="true"></div>
         <div class="hero-slash-bottom-right" aria-hidden="true"></div>
@@ -120,12 +155,48 @@
 
                 </div>
 
-                {{-- RIGHT COLUMN: VISUAL SHOWCASE FROM BANNER.JPG --}}
-                <div class="hero-visual-showcase" aria-hidden="true">
-                    <div class="hero-slogan-badge">
+                {{-- RIGHT COLUMN: VISUAL SHOWCASE & CAROUSEL CONTROLS --}}
+                <div class="hero-visual-showcase">
+                    <div class="hero-slogan-badge" aria-hidden="true">
                         <i class="ti ti-crown hero-crown-icon"></i>
                         <div class="hero-slogan-title">NHÓM H</div>
                         <div class="hero-slogan-sub">Play Hard<br>Live Strong</div>
+                    </div>
+
+                    <div class="hero-carousel-controls" aria-label="{{ __('Điều khiển trình chiếu banner') }}">
+                        <button
+                            type="button"
+                            class="hero-carousel-arrow"
+                            id="heroCarouselPrev"
+                            data-hero-prev
+                            aria-label="{{ __('Banner trước') }}"
+                        >
+                            <i class="ti ti-chevron-left"></i>
+                        </button>
+
+                        <div class="hero-carousel-dots" id="heroCarouselDots" role="tablist">
+                            @foreach($heroBannerImages as $bannerIndex => $bannerUrl)
+                                <button
+                                    type="button"
+                                    class="hero-carousel-dot {{ $bannerIndex === 0 ? 'active' : '' }}"
+                                    data-hero-dot="{{ $bannerIndex }}"
+                                    aria-label="Banner {{ $bannerIndex + 1 }}"
+                                    aria-selected="{{ $bannerIndex === 0 ? 'true' : 'false' }}"
+                                >
+                                    <span class="hero-dot-progress"></span>
+                                </button>
+                            @endforeach
+                        </div>
+
+                        <button
+                            type="button"
+                            class="hero-carousel-arrow"
+                            id="heroCarouselNext"
+                            data-hero-next
+                            aria-label="{{ __('Banner tiếp theo') }}"
+                        >
+                            <i class="ti ti-chevron-right"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -593,18 +664,66 @@
 @push('styles')
 <style>
 /* =====================================================
-   NHOM H BANNER.JPG HERO LAYOUT & SPORTZONE SEARCH BAR
+   NHOM H BANNER CAROUSEL HERO LAYOUT & SPORTZONE SEARCH BAR
 ===================================================== */
 .hero-nhomh-banner {
     position: relative;
     padding: 54px 0 88px;
     background-color: #12121C;
-    background-image:
-        linear-gradient(90deg, rgba(10, 10, 18, 0.92) 0%, rgba(15, 15, 25, 0.72) 46%, rgba(15, 15, 25, 0.15) 75%, rgba(15, 15, 25, 0.05) 100%),
-        url('{{ asset("img_new/banner.jpg") }}');
+    background-image: none;
+    border-bottom: 3px solid rgba(255, 46, 147, 0.35);
+    overflow: hidden;
+    user-select: none;
+}
+
+.hero-bg-carousel {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    background-color: #12121C;
+}
+
+.hero-bg-track {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    will-change: transform;
+    transform: translate3d(0%, 0, 0);
+    transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-bg-track.no-transition {
+    transition: none !important;
+}
+
+.hero-bg-slide {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
     background-size: cover;
     background-position: center center;
-    border-bottom: 3px solid rgba(255, 46, 147, 0.35);
+    background-repeat: no-repeat;
+    transform: scale(1.015);
+    transition: transform 5.2s ease-out;
+}
+
+.hero-bg-slide.is-active {
+    transform: scale(1.055);
+}
+
+.hero-bg-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+        90deg,
+        rgba(10, 10, 18, 0.92) 0%,
+        rgba(15, 15, 25, 0.72) 46%,
+        rgba(15, 15, 25, 0.22) 78%,
+        rgba(15, 15, 25, 0.08) 100%
+    );
 }
 
 .hero-slash-top {
@@ -620,7 +739,7 @@
         transparent 12px,
         transparent 20px
     );
-    z-index: 1;
+    z-index: 2;
     pointer-events: none;
 }
 
@@ -633,7 +752,7 @@
     background: linear-gradient(135deg, #FF2E93 0%, #12121C 75%);
     transform: rotate(14deg);
     opacity: 0.75;
-    z-index: 1;
+    z-index: 2;
     pointer-events: none;
     border-top: 4px solid #FFFFFF;
 }
@@ -646,7 +765,7 @@
     height: 110px;
     background: linear-gradient(135deg, rgba(255, 46, 147, 0.85) 0%, rgba(219, 39, 119, 0.92) 100%);
     transform: rotate(-16deg);
-    z-index: 1;
+    z-index: 2;
     pointer-events: none;
     box-shadow: 0 -8px 28px rgba(255, 46, 147, 0.35);
 }
@@ -656,6 +775,8 @@
     grid-template-columns: 1.2fr 0.8fr;
     gap: 32px;
     align-items: center;
+    position: relative;
+    z-index: 3;
 }
 
 .hero-brand-row {
@@ -916,7 +1037,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    justify-content: flex-start;
+    justify-content: space-between;
     min-height: 360px;
     position: relative;
 }
@@ -958,6 +1079,95 @@
     line-height: 1.2;
     margin-top: 4px;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.65);
+}
+
+/* Hero Background Carousel Controls */
+.hero-carousel-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 14px;
+    background: rgba(15, 15, 24, 0.68);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 999px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    margin-top: auto;
+}
+
+.hero-carousel-arrow {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 46, 147, 0.45);
+    background: rgba(255, 46, 147, 0.14);
+    color: #FFFFFF;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.hero-carousel-arrow:hover {
+    background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
+    border-color: #FF2E93;
+    transform: scale(1.06);
+    box-shadow: 0 4px 12px rgba(255, 46, 147, 0.45);
+}
+
+.hero-carousel-dots {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hero-carousel-dot {
+    position: relative;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    border: none;
+    background: rgba(255, 255, 255, 0.32);
+    cursor: pointer;
+    padding: 0;
+    overflow: hidden;
+    transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1), background 0.25s ease;
+}
+
+.hero-carousel-dot:hover {
+    background: rgba(255, 255, 255, 0.58);
+}
+
+.hero-carousel-dot.active {
+    width: 34px;
+    background: rgba(255, 255, 255, 0.22);
+}
+
+.hero-dot-progress {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #FF2E93 0%, #EC4899 100%);
+    border-radius: 999px;
+    transform: scaleX(0);
+    transform-origin: left center;
+}
+
+.hero-carousel-dot.active .hero-dot-progress {
+    animation: heroDotProgress 5s linear forwards;
+}
+
+@keyframes heroDotProgress {
+    from {
+        transform: scaleX(0);
+    }
+    to {
+        transform: scaleX(1);
+    }
 }
 
 /* Floating Quick Search Bar (Like home.jpg) */
@@ -1292,6 +1502,10 @@
         grid-template-columns: 1fr;
     }
     .hero-visual-showcase {
+        min-height: auto;
+        align-items: flex-start;
+    }
+    .hero-slogan-badge {
         display: none;
     }
     .search-card-sportzone {
@@ -1339,6 +1553,195 @@
 @push('scripts')
 <script nonce="{{ $cspNonce ?? '' }}">
 document.addEventListener('DOMContentLoaded', function () {
+    // =====================================================
+    // HERO BACKGROUND SWIPE CAROUSEL (5S INTERVAL + INFINITE LOOP)
+    // =====================================================
+    const heroSection = document.getElementById('heroBannerSection');
+    const heroTrack = document.getElementById('heroBgTrack');
+    const heroDots = Array.from(document.querySelectorAll('[data-hero-dot]'));
+    const heroPrevBtn = document.querySelector('[data-hero-prev]');
+    const heroNextBtn = document.querySelector('[data-hero-next]');
+
+    if (heroSection && heroTrack) {
+        const allSlides = Array.from(heroTrack.querySelectorAll('.hero-bg-slide'));
+        const realSlidesCount = heroDots.length > 0 ? heroDots.length : Math.max(1, allSlides.length - 1);
+        const swipeIntervalMs = parseInt(heroSection.dataset.interval || '5000', 10);
+
+        let currentIndex = 0;
+        let isTransitioning = false;
+        let autoSwipeTimer = null;
+        let touchStartX = null;
+
+        function syncActiveState(realIndex) {
+            const normalizedIdx = ((realIndex % realSlidesCount) + realSlidesCount) % realSlidesCount;
+
+            allSlides.forEach((slide, idx) => {
+                const isSlideActive = idx === realIndex || (realIndex === realSlidesCount && idx === 0);
+                slide.classList.toggle('is-active', isSlideActive);
+            });
+
+            heroDots.forEach((dot, idx) => {
+                const isDotActive = idx === normalizedIdx;
+                dot.classList.toggle('active', isDotActive);
+                dot.setAttribute('aria-selected', isDotActive ? 'true' : 'false');
+
+                const progressEl = dot.querySelector('.hero-dot-progress');
+                if (progressEl && isDotActive) {
+                    progressEl.style.animation = 'none';
+                    void progressEl.offsetWidth;
+                    progressEl.style.animation = '';
+                }
+            });
+        }
+
+        function moveToSlide(targetIndex, withAnimation = true) {
+            if (!withAnimation) {
+                heroTrack.classList.add('no-transition');
+                heroTrack.style.transform = `translate3d(-${targetIndex * 100}%, 0, 0)`;
+                void heroTrack.offsetWidth;
+                heroTrack.classList.remove('no-transition');
+                isTransitioning = false;
+            } else {
+                isTransitioning = true;
+                heroTrack.classList.remove('no-transition');
+                heroTrack.style.transform = `translate3d(-${targetIndex * 100}%, 0, 0)`;
+            }
+
+            currentIndex = targetIndex;
+            syncActiveState(currentIndex);
+        }
+
+        function swipeNext() {
+            if (isTransitioning || realSlidesCount <= 1) {
+                return;
+            }
+            moveToSlide(currentIndex + 1, true);
+        }
+
+        function swipePrev() {
+            if (isTransitioning || realSlidesCount <= 1) {
+                return;
+            }
+
+            if (currentIndex === 0) {
+                // Jump seamlessly to the cloned first slide at the end, then swipe back to last real slide
+                heroTrack.classList.add('no-transition');
+                heroTrack.style.transform = `translate3d(-${realSlidesCount * 100}%, 0, 0)`;
+                void heroTrack.offsetWidth;
+                heroTrack.classList.remove('no-transition');
+                moveToSlide(realSlidesCount - 1, true);
+            } else {
+                moveToSlide(currentIndex - 1, true);
+            }
+        }
+
+        heroTrack.addEventListener('transitionend', function (e) {
+            if (e.target !== heroTrack || e.propertyName !== 'transform') {
+                return;
+            }
+
+            isTransitioning = false;
+
+            // Seamless loop: when reaching the cloned slide at index === realSlidesCount, snap back to 0 without transition
+            if (currentIndex >= realSlidesCount) {
+                moveToSlide(0, false);
+            }
+        });
+
+        function startAutoSwipe() {
+            stopAutoSwipe();
+            if (realSlidesCount > 1) {
+                autoSwipeTimer = window.setInterval(function () {
+                    // Fallback safety if tab was backgrounded and transitionend didn't fire
+                    if (isTransitioning) {
+                        isTransitioning = false;
+                        if (currentIndex >= realSlidesCount) {
+                            moveToSlide(0, false);
+                        }
+                    }
+                    swipeNext();
+                }, swipeIntervalMs);
+            }
+        }
+
+        function stopAutoSwipe() {
+            if (autoSwipeTimer) {
+                window.clearInterval(autoSwipeTimer);
+                autoSwipeTimer = null;
+            }
+        }
+
+        if (heroNextBtn) {
+            heroNextBtn.addEventListener('click', function () {
+                swipeNext();
+                startAutoSwipe();
+            });
+        }
+
+        if (heroPrevBtn) {
+            heroPrevBtn.addEventListener('click', function () {
+                swipePrev();
+                startAutoSwipe();
+            });
+        }
+
+        heroDots.forEach(function (dot) {
+            dot.addEventListener('click', function () {
+                const targetIdx = parseInt(dot.dataset.heroDot || '0', 10);
+                if (isTransitioning || targetIdx === (currentIndex % realSlidesCount)) {
+                    return;
+                }
+                if (currentIndex >= realSlidesCount) {
+                    moveToSlide(0, false);
+                }
+                moveToSlide(targetIdx, true);
+                startAutoSwipe();
+            });
+        });
+
+        // Touch / Mouse drag swipe support on Hero banner
+        heroSection.addEventListener('touchstart', function (e) {
+            if (e.touches && e.touches.length === 1) {
+                touchStartX = e.touches[0].clientX;
+            }
+        }, { passive: true });
+
+        heroSection.addEventListener('touchend', function (e) {
+            if (touchStartX === null || !e.changedTouches || e.changedTouches.length === 0) {
+                return;
+            }
+            const deltaX = e.changedTouches[0].clientX - touchStartX;
+            touchStartX = null;
+
+            if (Math.abs(deltaX) > 45) {
+                if (deltaX < 0) {
+                    swipeNext();
+                } else {
+                    swipePrev();
+                }
+                startAutoSwipe();
+            }
+        }, { passive: true });
+
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden) {
+                stopAutoSwipe();
+            } else {
+                if (currentIndex >= realSlidesCount) {
+                    moveToSlide(0, false);
+                }
+                isTransitioning = false;
+                startAutoSwipe();
+            }
+        });
+
+        syncActiveState(0);
+        startAutoSwipe();
+    }
+
+    // =====================================================
+    // FAQ ACCORDION
+    // =====================================================
     const faqItems = document.querySelectorAll('.faq-item-accordion');
     
     faqItems.forEach(item => {

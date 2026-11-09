@@ -112,4 +112,30 @@ class HomeControllerTest extends TestCase
         $response->assertSee('type="email"', false);
         $response->assertSee('1900.6868.88');
     }
+
+    public function test_home_page_displays_hero_background_carousel_with_all_banners_and_swipe_loop(): void
+    {
+        $response = $this->get(route('home'));
+
+        $response->assertStatus(200);
+        $response->assertSee('id="heroBannerSection"', false);
+        $response->assertSee('data-hero-carousel', false);
+        $response->assertSee('data-interval="5000"', false);
+        $response->assertSee('data-loop="true"', false);
+        $response->assertSee('id="heroBgCarousel"', false);
+        $response->assertSee('id="heroBgTrack"', false);
+
+        // Verify all 5 banner images from public/img_new are rendered in the background carousel
+        $response->assertSee('img_new/banner.jpg', false);
+        $response->assertSee('img_new/banner1.jpg', false);
+        $response->assertSee('img_new/banner2.jpg', false);
+        $response->assertSee('img_new/banner3.jpg', false);
+        $response->assertSee('img_new/banner4.jpg', false);
+
+        // Verify seamless loop clone slide & navigation controls
+        $response->assertSee('data-hero-slide="clone"', false);
+        $response->assertSee('id="heroCarouselDots"', false);
+        $response->assertSee('data-hero-prev', false);
+        $response->assertSee('data-hero-next', false);
+    }
 }
