@@ -14,6 +14,9 @@
     </div>
 
     {{-- HERO SEARCH BANNER --}}
+    @php
+        $currentMode = $searchMode ?? request('mode', 'elasticsearch');
+    @endphp
     <div class="admin-search-hero">
         <div class="admin-search-hero-top">
             <div>
@@ -26,11 +29,31 @@
                 </h2>
                 <p class="admin-search-hero-sub">
                     @if ($keyword !== '')
-                        Tìm thấy tổng cộng <strong>{{ $counts['all'] }}</strong> bản ghi phù hợp trên Elasticsearch / Laravel Scout
+                        @if ($currentMode === 'normal')
+                            Tìm thấy tổng cộng <strong>{{ $counts['all'] }}</strong> bản ghi phù hợp qua <strong>Tìm kiếm thường (SQL Database)</strong>
+                        @else
+                            Tìm thấy tổng cộng <strong>{{ $counts['all'] }}</strong> bản ghi phù hợp trên <strong>Elasticsearch / Laravel Scout</strong>
+                        @endif
                     @else
-                        Nhập từ khóa để tìm nhanh Sân thể thao, Cơ sở, Đơn đặt sân, Người dùng, Sản phẩm, Tin tức...
+                        Nhập từ khóa và chọn chế độ tìm kiếm (Elasticsearch hoặc Tìm kiếm thường) để tra cứu nhanh Sân thể thao, Cơ sở, Đơn đặt sân, Người dùng, Sản phẩm, Tin tức...
                     @endif
                 </p>
+            </div>
+            <div class="admin-search-mode-switch" role="group" aria-label="Chuyển đổi chế độ tìm kiếm">
+                <a
+                    href="{{ route('admin.search', array_filter(['q' => $keyword, 'type' => $activeType !== 'all' ? $activeType : null, 'mode' => 'elasticsearch'])) }}"
+                    class="mode-switch-pill {{ $currentMode === 'elasticsearch' ? 'active' : '' }}"
+                >
+                    <i class="ti ti-bolt"></i>
+                    <span>Elasticsearch</span>
+                </a>
+                <a
+                    href="{{ route('admin.search', array_filter(['q' => $keyword, 'type' => $activeType !== 'all' ? $activeType : null, 'mode' => 'normal'])) }}"
+                    class="mode-switch-pill {{ $currentMode === 'normal' ? 'active' : '' }}"
+                >
+                    <i class="ti ti-database-search"></i>
+                    <span>Tìm kiếm thường</span>
+                </a>
             </div>
         </div>
 
@@ -49,6 +72,11 @@
                 placeholder="Nhập tên sân, cơ sở, khách hàng, mã giao dịch, sản phẩm hoặc tin tức..."
                 autofocus
             >
+            <div class="hero-mode-divider"></div>
+            <select name="mode" class="hero-mode-select" aria-label="{{ __('Chế độ tìm kiếm') }}">
+                <option value="elasticsearch" @selected($currentMode === 'elasticsearch')>⚡ Elasticsearch</option>
+                <option value="normal" @selected($currentMode === 'normal')>🗄️ Tìm kiếm thường (SQL)</option>
+            </select>
             <button type="submit" class="hero-submit-btn">
                 <i class="ti ti-search"></i> Tìm kiếm
             </button>
@@ -87,7 +115,7 @@
                 @foreach ($tabs as $typeKey => $tab)
                     @if ($typeKey === 'all' || ($counts[$typeKey] ?? 0) > 0 || $activeType === $typeKey)
                         <a
-                            href="{{ route('admin.search', ['q' => $keyword, 'type' => $typeKey]) }}"
+                            href="{{ route('admin.search', ['q' => $keyword, 'type' => $typeKey, 'mode' => $currentMode]) }}"
                             class="admin-search-tab {{ $activeType === $typeKey ? 'active' : '' }}"
                         >
                             <i class="ti {{ $tab['icon'] }}"></i>

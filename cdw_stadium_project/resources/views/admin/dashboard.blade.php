@@ -211,6 +211,11 @@
                     <path d="m21 21-4.3-4.3"/>
                 </svg>
                 <input type="text" name="q" value="{{ request('q') }}" placeholder="{{ __('Tìm kiếm sân, cơ sở, sản phẩm, tin tức...') }}">
+                <div class="admin-search-mode-divider"></div>
+                <select name="mode" class="admin-search-mode-select" aria-label="{{ __('Chế độ tìm kiếm') }}" title="{{ __('Chọn chế độ tìm kiếm') }}">
+                    <option value="elasticsearch" @selected(request('mode', 'elasticsearch') === 'elasticsearch')>⚡ Elasticsearch</option>
+                    <option value="normal" @selected(request('mode') === 'normal')>🗄️ Tìm kiếm thường</option>
+                </select>
                 <button type="submit" class="admin-search-btn">
                     {{ __('Tìm kiếm') }}
                 </button>
