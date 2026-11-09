@@ -41,10 +41,33 @@ class DashboardControllerTest extends TestCase
             'tableStats',
             'stats',
             'weeklyRevenue',
+            'monthlyRevenueGraph',
             'courtTypes',
             'recentBookings',
             'activityLogs',
         ]);
+
+        $monthlyGraph = $response->viewData('monthlyRevenueGraph');
+        $this->assertCount(30, $monthlyGraph);
+        $this->assertArrayHasKey('date', $monthlyGraph[0]);
+        $this->assertArrayHasKey('label', $monthlyGraph[0]);
+        $this->assertArrayHasKey('revenue', $monthlyGraph[0]);
+        $this->assertArrayHasKey('revenue_million', $monthlyGraph[0]);
+        $this->assertArrayHasKey('booking_revenue', $monthlyGraph[0]);
+        $this->assertArrayHasKey('sale_revenue', $monthlyGraph[0]);
+        $this->assertArrayHasKey('subscription_revenue', $monthlyGraph[0]);
+        $this->assertArrayHasKey('count', $monthlyGraph[0]);
+
+        // Kiểm tra giao diện biểu đồ Graph 30 ngày mới thay thế biểu đồ cột và biểu đồ tròn cũ
+        $response->assertSee('Biểu đồ doanh thu 30 ngày gần nhất (triệu VNĐ)');
+        $response->assertSee('id="revenue30dSvg"', false);
+        $response->assertSee('id="revenueGraphLine"', false);
+        $response->assertSee('id="revenueGraphTooltip"', false);
+        $response->assertSee('data-point-index="0"', false);
+        $response->assertSee('data-point-index="29"', false);
+        $response->assertDontSee('<div class="bars">', false);
+        $response->assertDontSee('class="donut-wrap"', false);
+        $response->assertDontSee('Cơ cấu môn thể thao theo số lượng sân');
 
         $tableStats = $response->viewData('tableStats');
         $this->assertArrayHasKey('sport', $tableStats);

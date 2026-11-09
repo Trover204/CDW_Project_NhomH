@@ -15,6 +15,7 @@ use App\Models\Sale;
 use App\Models\SportType;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -146,19 +147,75 @@ class DashboardController extends Controller
             'total_courts' => Court::count(),
         ];
 
-        // 3. Doanh thu 7 ngày gần nhất (đơn vị: triệu đồng)
-        $weeklyRevenue = collect(range(6, 0))->map(function ($daysAgo) {
-            $date = now()->subDays($daysAgo)->toDateString();
-            $rev = (float) Payment::where('status', 'paid')
-                ->whereDate('paid_at', $date)
-                ->sum('amount');
+        // 3. Doanh thu 30 ngày gần nhất cho biểu đồ Graph
+        $start30 = now()->subDays(29)->startOfDay();
+        $end30 = now()->endOfDay();
 
-            return round($rev / 1000000, 1);
-        })->values()->all();
+        $isSqlite = DB::getDriverName() === 'sqlite';
+        $effectiveTs = 'COALESCE(paid_at, created_at)';
+        $dateExpr = $isSqlite ? "date({$effectiveTs})" : "DATE({$effectiveTs})";
 
-        if (array_sum($weeklyRevenue) <= 0) {
-            $weeklyRevenue = [8, 13, 10, 16, 12, 19, 14];
-        }
+        $dailyRows = Payment::query()
+            ->where('status', 'paid')
+            ->whereRaw("{$effectiveTs} BETWEEN ? AND ?", [
+                $start30->toDateTimeString(),
+                $end30->toDateTimeString(),
+            ])
+            ->selectRaw("
+                {$dateExpr} as p_date,
+                SUM(amount) as revenue,
+                SUM(CASE WHEN payable_type = 'booking' THEN amount ELSE 0 END) as booking_revenue,
+                SUM(CASE WHEN payable_type = 'sale' THEN amount ELSE 0 END) as sale_revenue,
+                SUM(CASE WHEN payable_type = 'subscription' THEN amount ELSE 0 END) as subscription_revenue,
+                COUNT(*) as p_count
+            ")
+            ->groupBy('p_date')
+            ->get()
+            ->keyBy('p_date');
+
+        $fallbackValues = [
+            8.5, 11.2, 9.8, 13.4, 15.0, 18.2, 16.5, 10.4, 12.1, 14.3,
+            13.8, 17.5, 21.0, 19.4, 11.8, 13.2, 15.6, 14.9, 18.7, 22.4,
+            20.1, 12.6, 14.5, 16.2, 15.8, 19.3, 24.5, 21.8, 15.4, 18.9,
+        ];
+        $hasReal30DaysData = $dailyRows->sum('revenue') > 0;
+
+        $monthlyRevenueGraph = collect(range(29, 0))->values()->map(function ($daysAgo, $idx) use ($dailyRows, $hasReal30DaysData, $fallbackValues) {
+            $dateObj = now()->subDays($daysAgo);
+            $dateStr = $dateObj->toDateString();
+            $row = $dailyRows->get($dateStr);
+
+            if ($hasReal30DaysData) {
+                $rev = $row ? (float) $row->revenue : 0.0;
+                $revMillion = round($rev / 1000000, 2);
+                $bookingRev = $row ? (float) $row->booking_revenue : 0.0;
+                $saleRev = $row ? (float) $row->sale_revenue : 0.0;
+                $subRev = $row ? (float) $row->subscription_revenue : 0.0;
+                $count = $row ? (int) $row->p_count : 0;
+            } else {
+                $revMillion = $fallbackValues[$idx] ?? 12.0;
+                $rev = $revMillion * 1000000;
+                $bookingRev = round($rev * 0.65);
+                $saleRev = round($rev * 0.20);
+                $subRev = $rev - $bookingRev - $saleRev;
+                $count = max(1, (int) round($revMillion * 1.4));
+            }
+
+            return [
+                'index' => $idx,
+                'date' => $dateStr,
+                'label' => $dateObj->format('d/m'),
+                'full_date' => $dateObj->format('d/m/Y'),
+                'revenue' => $rev,
+                'revenue_million' => $revMillion,
+                'booking_revenue' => $bookingRev,
+                'sale_revenue' => $saleRev,
+                'subscription_revenue' => $subRev,
+                'count' => $count,
+            ];
+        })->all();
+
+        $weeklyRevenue = array_slice(array_column($monthlyRevenueGraph, 'revenue_million'), -7);
 
         // 4. Cơ cấu môn thể thao theo số lượng sân
         $courtColors = ['#0D5C40', '#10B981', '#6EE7B7', '#3B82F6', '#F59E0B'];
@@ -197,6 +254,7 @@ class DashboardController extends Controller
             'tableStats',
             'stats',
             'weeklyRevenue',
+            'monthlyRevenueGraph',
             'courtTypes',
             'recentBookings',
             'activityLogs'
