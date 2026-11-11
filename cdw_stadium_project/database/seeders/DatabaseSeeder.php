@@ -67,6 +67,7 @@ class DatabaseSeeder extends Seeder
             NewsAdSeeder::class,
             BookingSeeder::class,
             ReviewSeeder::class,
+            CommentSeeder::class,
             ProductSeeder::class,
             SaleSeeder::class,
             PaymentSeeder::class,

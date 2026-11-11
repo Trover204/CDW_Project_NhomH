@@ -7,15 +7,29 @@ RUN apt-get update && apt-get install -y \
     curl \
     libicu-dev \
     libzip-dev \
-    && docker-php-ext-install pdo pdo_mysql zip intl \
+    libpng-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
+    libonig-dev \
+    libxml2-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) \
+        pdo \
+        pdo_mysql \
+        mbstring \
+        bcmath \
+        gd \
+        zip \
+        intl \
+        opcache \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
 
 # Enable Apache rewrite
 RUN a2enmod rewrite
 
 # Apache trỏ vào Laravel public/
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
     /etc/apache2/sites-available/*.conf \
@@ -23,14 +37,20 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
     /etc/apache2/conf-available/*.conf
 
 WORKDIR /var/www/html
+
 # Cài Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Copy project
 COPY . /var/www/html
 
-# Quyền cho Laravel
-RUN chown -R www-data:www-data /var/www/html/storage \
-    /var/www/html/bootstrap/cache
+# Đảm bảo thư mục và quyền cho Laravel
+RUN mkdir -p /var/www/html/storage/framework/sessions \
+    /var/www/html/storage/framework/views \
+    /var/www/html/storage/framework/cache/data \
+    /var/www/html/storage/logs \
+    /var/www/html/bootstrap/cache \
+    && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 EXPOSE 80

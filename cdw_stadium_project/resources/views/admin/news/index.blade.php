@@ -20,6 +20,7 @@
                 <th>Tiêu đề</th>
                 <th>Danh mục</th>
                 <th>Người đăng</th>
+                <th style="width: 120px;">Bình luận</th>
                 <th>Trạng thái</th>
                 <th style="width: 130px; text-align: right;">Thao tác</th>
             </tr>
@@ -35,9 +36,18 @@
                         <span style="color: var(--muted); font-size: 12px;">Không có</span>
                     @endif
                 </td>
-                <td style="font-weight: 600; color: var(--text);">{{ $item->title }}</td>
+                <td style="font-weight: 600; color: var(--text);">
+                    <a href="{{ route('news.show', $item->slug) }}" target="_blank" style="color: var(--text); text-decoration: none;">
+                        {{ $item->title }} <i class="ti ti-external-link" style="font-size: 12px; color: var(--muted);"></i>
+                    </a>
+                </td>
                 <td>{{ $item->category ?? '—' }}</td>
                 <td>{{ $item->user->name ?? '—' }}</td>
+                <td>
+                    <a href="{{ route('admin.comments.index', ['news_id' => $item->id]) }}" class="badge info" style="text-decoration: none;">
+                        <i class="ti ti-message-circle"></i> {{ $item->comments_count ?? 0 }} bình luận
+                    </a>
+                </td>
                 <td>
                     @if ($item->status === 'published')
                         <span class="badge success">Đã xuất bản</span>
@@ -56,7 +66,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="7" style="padding: 24px; text-align: center; color: var(--muted);">Chưa có tin tức nào.</td>
+                <td colspan="8" style="padding: 24px; text-align: center; color: var(--muted);">Chưa có tin tức nào.</td>
             </tr>
         @endforelse
         </tbody>

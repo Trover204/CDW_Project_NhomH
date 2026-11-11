@@ -71,6 +71,7 @@
                             <div class="featured-meta">
                                 <span><i class="ti ti-calendar"></i> {{ $firstPost->created_at->format('d/m/Y') }}</span>
                                 <span><i class="ti ti-eye"></i> {{ number_format($firstPost->views ?? 0) }} {{ __('lượt xem') }}</span>
+                                <span><i class="ti ti-message-circle"></i> {{ $firstPost->comments_count ?? 0 }} {{ __('bình luận') }}</span>
                                 <span class="btn-read-featured">
                                     {{ __('Đọc bài viết') }} <i class="ti ti-arrow-right"></i>
                                 </span>
@@ -103,6 +104,9 @@
                                 <span class="meta-dot">•</span>
                                 <i class="ti ti-eye"></i>
                                 <span>{{ $item->views ?? 0 }}</span>
+                                <span class="meta-dot">•</span>
+                                <i class="ti ti-message-circle"></i>
+                                <span>{{ $item->comments_count ?? 0 }}</span>
                             </div>
                             <h3 class="news-card-heading">
                                 <a href="{{ route('news.show', $item->slug) }}">{{ $item->title }}</a>

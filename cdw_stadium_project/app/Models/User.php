@@ -59,6 +59,21 @@ class User extends Authenticatable
         return $this->hasMany(Payment::class);
     }
 
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function news(): HasMany
+    {
+        return $this->hasMany(News::class);
+    }
+
     public function toSearchableArray(): array
     {
         $array = [

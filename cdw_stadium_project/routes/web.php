@@ -54,6 +54,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/partnership/checkout', [PartnershipController::class, 'checkout'])->name('partnership.checkout');
     Route::post('/partnership/process', [PartnershipController::class, 'process'])->name('partnership.process');
 
+    // Bình luận & đánh giá tin tức
+    Route::post('/news/{slug}/comments', [NewsController::class, 'storeComment'])->name('news.comments.store');
+
     // Màn hình hồ sơ cá nhân (Profile)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/user/profile', [ProfileController::class, 'edit'])->name('profile');

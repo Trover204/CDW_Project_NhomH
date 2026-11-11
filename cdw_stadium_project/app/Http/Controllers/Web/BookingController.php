@@ -156,7 +156,7 @@ class BookingController extends Controller
             $createdBooking = DB::transaction(function () use ($court, $user, $validated, $bookingDate, $startTime, $endTime, $subtotal, $discountAmount, $totalPrice, $subscription, $paymentMethod, $paymentMemo, $paymentStatus, $isOnlinePaid, &$createdPayment) {
                 // Khóa kiểm tra chồng lấn
                 $conflict = Booking::where('court_id', $court->id)
-                    ->where('booking_date', $bookingDate)
+                    ->whereDate('booking_date', $bookingDate)
                     ->whereNotIn('status', ['cancelled', 'rejected'])
                     ->where('start_time', '<', $endTime)
                     ->where('end_time', '>', $startTime)
