@@ -1,5 +1,12 @@
 @extends('web.layouts.app')
 
+@php
+    $news = $news ?? $newsItem;
+    $commentsList = $comments ?? ($news->comments ?? collect());
+    $commentsCount = $commentsList->count();
+    $avgRating = $commentsCount > 0 ? round((float) $commentsList->avg(fn ($c) => $c->rating ?? 5), 1) : 5.0;
+@endphp
+
 @section('title', $news->title . ' - ' . config('app.name', 'Sân Nhóm H'))
 
 @push('styles')
@@ -78,16 +85,23 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-wrap: wrap;
         gap: 20px;
         color: var(--ink-muted);
         font-size: 13.5px;
         padding-top: 14px;
         border-top: 1px solid var(--line);
     }
-    .article-meta-row span {
+    .article-meta-row span,
+    .article-meta-row a {
         display: inline-flex;
         align-items: center;
         gap: 6px;
+        color: var(--ink-muted);
+        text-decoration: none;
+    }
+    .article-meta-row a:hover {
+        color: var(--turf-teal);
     }
     .article-featured-media {
         width: 100%;
@@ -135,6 +149,8 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
         margin-top: 40px;
         padding-top: 24px;
         border-top: 1px solid var(--line);
@@ -158,6 +174,310 @@
     .btn-back-news-list:hover {
         gap: 9px;
     }
+
+    /* Reviews & Comments Section */
+    .news-reviews-card {
+        margin-top: 32px;
+        background: var(--surface, #fff);
+        border: 1px solid var(--line, #F1E4EC);
+        border-radius: 24px;
+        padding: 36px 40px;
+        box-shadow: 0 6px 24px rgba(13, 56, 46, 0.04);
+    }
+    .reviews-section-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding-bottom: 18px;
+        margin-bottom: 24px;
+        border-bottom: 1px solid var(--line, #F1E4EC);
+    }
+    .reviews-head-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .reviews-head-left i {
+        font-size: 24px;
+        color: var(--turf-teal, #EC4899);
+    }
+    .reviews-head-left h3 {
+        font-family: 'Oswald', sans-serif;
+        font-size: 23px;
+        font-weight: 700;
+        color: var(--turf-dark, #181824);
+        margin: 0;
+    }
+    .reviews-summary-pills {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .rating-summary-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: #FEF3C7;
+        color: #B45309;
+        font-weight: 700;
+        font-size: 13px;
+        padding: 5px 12px;
+        border-radius: 999px;
+    }
+    .count-summary-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: var(--turf-teal-soft, #FDF2F8);
+        color: var(--turf-teal, #EC4899);
+        font-weight: 700;
+        font-size: 13px;
+        padding: 5px 12px;
+        border-radius: 999px;
+    }
+    .comment-form-box {
+        background: var(--bg-page, #FAF7F9);
+        border: 1px solid var(--line, #F1E4EC);
+        border-radius: 18px;
+        padding: 22px 24px;
+        margin-bottom: 28px;
+    }
+    .comment-form-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 14px;
+    }
+    .commenter-identity {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--turf-dark, #181824);
+    }
+    .commenter-mini-avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 14px;
+    }
+    .star-rating-picker {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .star-rating-picker .picker-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--ink-soft, #5A5A72);
+    }
+    .star-radio-group {
+        display: inline-flex;
+        flex-direction: row-reverse;
+        gap: 4px;
+    }
+    .star-radio-group input {
+        display: none;
+    }
+    .star-radio-group label {
+        cursor: pointer;
+        font-size: 20px;
+        color: #D1D5DB;
+        transition: color 0.15s ease, transform 0.15s ease;
+        line-height: 1;
+    }
+    .star-radio-group label:hover,
+    .star-radio-group label:hover ~ label,
+    .star-radio-group input:checked ~ label {
+        color: #F59E0B;
+    }
+    .star-radio-group label:hover {
+        transform: scale(1.15);
+    }
+    .comment-textarea {
+        width: 100%;
+        border: 1.5px solid var(--line, #E5D4E0);
+        border-radius: 14px;
+        padding: 14px 16px;
+        font-size: 14.5px;
+        font-family: inherit;
+        color: var(--ink, #181824);
+        background: #fff;
+        resize: vertical;
+        min-height: 96px;
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .comment-textarea:focus {
+        border-color: var(--turf-teal, #EC4899);
+        box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.12);
+    }
+    .comment-form-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 12px;
+    }
+    .comment-hint {
+        font-size: 12.5px;
+        color: var(--ink-muted, #8E8EA8);
+    }
+    .btn-submit-comment {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        padding: 11px 22px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 14px rgba(236, 72, 153, 0.25);
+    }
+    .btn-submit-comment:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(236, 72, 153, 0.35);
+    }
+    .guest-comment-prompt {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 14px;
+        background: var(--bg-page, #FAF7F9);
+        border: 1px dashed var(--line, #E5D4E0);
+        border-radius: 16px;
+        padding: 18px 22px;
+        margin-bottom: 26px;
+    }
+    .guest-prompt-text {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14.5px;
+        color: var(--ink-soft, #5A5A72);
+        font-weight: 500;
+    }
+    .guest-prompt-text i {
+        font-size: 20px;
+        color: var(--turf-teal, #EC4899);
+    }
+    .btn-login-to-comment {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
+        color: #fff;
+        text-decoration: none;
+        padding: 9px 18px;
+        border-radius: 10px;
+        font-size: 13.5px;
+        font-weight: 700;
+    }
+    .news-comments-list {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+    .news-comment-item {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        padding-bottom: 18px;
+        border-bottom: 1px solid var(--line, #F1E4EC);
+    }
+    .news-comment-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+    .comment-user-avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--turf-teal-soft, #FDF2F8);
+        color: var(--turf-teal, #EC4899);
+        font-weight: 700;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        overflow: hidden;
+    }
+    .comment-user-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .comment-body-col {
+        flex: 1;
+        min-width: 0;
+    }
+    .comment-header-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 6px;
+    }
+    .comment-author-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .comment-author-name {
+        font-size: 14.5px;
+        font-weight: 700;
+        color: var(--turf-dark, #181824);
+    }
+    .comment-date-text {
+        font-size: 12px;
+        color: var(--ink-muted, #8E8EA8);
+    }
+    .comment-stars {
+        color: #F59E0B;
+        font-size: 13.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 2px;
+    }
+    .comment-content-text {
+        font-size: 14.5px;
+        color: var(--ink-soft, #5A5A72);
+        line-height: 1.65;
+        margin: 0;
+        word-break: break-word;
+    }
+    .no-comments-empty {
+        text-align: center;
+        padding: 28px 16px;
+        color: var(--ink-soft, #5A5A72);
+    }
+    .no-comments-empty i {
+        font-size: 38px;
+        color: var(--ink-muted, #8E8EA8);
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    /* Related Articles */
     .related-articles-section {
         margin-top: 50px;
     }
@@ -228,7 +548,8 @@
         overflow: hidden;
     }
     @media (max-width: 640px) {
-        .news-article-card {
+        .news-article-card,
+        .news-reviews-card {
             padding: 24px 20px;
         }
         .article-title {
@@ -266,6 +587,10 @@
                     <span><i class="ti ti-user"></i> {{ $news->user->name ?? __('Ban Biên Tập') }}</span>
                     <span><i class="ti ti-calendar"></i> {{ $news->created_at->format('d/m/Y') }}</span>
                     <span><i class="ti ti-eye"></i> {{ number_format($news->views ?? 0) }} {{ __('lượt xem') }}</span>
+                    <a href="#news-comments">
+                        <i class="ti ti-message-circle"></i>
+                        <span>{{ $commentsCount }} {{ __('đánh giá & bình luận') }}</span>
+                    </a>
                 </div>
             </header>
 
@@ -297,6 +622,112 @@
             </footer>
         </article>
 
+        {{-- Reviews & Comments Section --}}
+        <section id="news-comments" class="news-reviews-card">
+            <div class="reviews-section-head">
+                <div class="reviews-head-left">
+                    <i class="ti ti-messages"></i>
+                    <h3>{{ __('Đánh giá & Bình luận bài viết') }}</h3>
+                </div>
+                <div class="reviews-summary-pills">
+                    @if($commentsCount > 0)
+                        <span class="rating-summary-badge">
+                            ★ {{ number_format($avgRating, 1) }}/5.0
+                        </span>
+                    @endif
+                    <span class="count-summary-badge">
+                        <i class="ti ti-message-2"></i> {{ $commentsCount }} {{ __('bình luận') }}
+                    </span>
+                </div>
+            </div>
+
+            {{-- Form bình luận cho người dùng đã đăng nhập / Thông báo đăng nhập cho khách --}}
+            @auth
+                <form action="{{ route('news.comments.store', $news->slug) }}" method="POST" class="comment-form-box">
+                    @csrf
+                    <div class="comment-form-top">
+                        <div class="commenter-identity">
+                            <span class="commenter-mini-avatar">
+                                {{ strtoupper(mb_substr(auth()->user()->name ?? 'U', 0, 1, 'UTF-8')) }}
+                            </span>
+                            <span>{{ auth()->user()->name }}</span>
+                        </div>
+
+                        <div class="star-rating-picker">
+                            <span class="picker-label">{{ __('Đánh giá bài viết:') }}</span>
+                            <div class="star-radio-group" title="{{ __('Chọn số sao đánh giá') }}">
+                                @for($star = 5; $star >= 1; $star--)
+                                    <input type="radio" id="news-star-{{ $star }}" name="rating" value="{{ $star }}" @checked((int) old('rating', 5) === $star)>
+                                    <label for="news-star-{{ $star }}" title="{{ $star }} sao">★</label>
+                                @endfor
+                            </div>
+                        </div>
+                    </div>
+
+                    <textarea name="content" class="comment-textarea" maxlength="500" required
+                              placeholder="{{ __('Viết bình luận của bạn...') }}">{{ old('content') }}</textarea>
+
+                    @error('content')
+                        <div style="color: #DC2626; font-size: 13px; font-weight: 600; margin-top: 6px;">{{ $message }}</div>
+                    @enderror
+                    @error('rating')
+                        <div style="color: #DC2626; font-size: 13px; font-weight: 600; margin-top: 6px;">{{ $message }}</div>
+                    @enderror
+
+                    <div class="comment-form-footer">
+                        <span class="comment-hint">{{ __('Tối đa 500 ký tự. Bình luận văn minh, lịch sự.') }}</span>
+                        <button type="submit" class="btn-submit-comment">
+                            <i class="ti ti-send"></i>
+                            <span>{{ __('Gửi bình luận') }}</span>
+                        </button>
+                    </div>
+                </form>
+            @else
+                <div class="guest-comment-prompt">
+                    <div class="guest-prompt-text">
+                        <i class="ti ti-lock"></i>
+                        <span>{{ __('Vui lòng đăng nhập để bình luận.') }}</span>
+                    </div>
+                    <a href="{{ route('login') }}" class="btn-login-to-comment">
+                        <i class="ti ti-login"></i>
+                        <span>{{ __('Đăng nhập ngay') }}</span>
+                    </a>
+                </div>
+            @endauth
+
+            {{-- Danh sách bình luận & đánh giá --}}
+            <div class="news-comments-list">
+                @forelse($commentsList as $comment)
+                    <div class="news-comment-item">
+                        <div class="comment-user-avatar">
+                            {{ strtoupper(mb_substr($comment->user->name ?? 'U', 0, 1, 'UTF-8')) }}
+                        </div>
+                        <div class="comment-body-col">
+                            <div class="comment-header-meta">
+                                <div class="comment-author-wrap">
+                                    <strong class="comment-author-name">{{ $comment->user->name ?? __('Độc giả') }}</strong>
+                                    <span class="comment-date-text">
+                                        • {{ $comment->created_at ? $comment->created_at->format('d/m/Y H:i') : __('Gần đây') }}
+                                    </span>
+                                </div>
+                                <div class="comment-stars" title="{{ $comment->rating ?? 5 }}/5">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <i class="ti {{ $i <= ($comment->rating ?? 5) ? 'ti-star-filled' : 'ti-star' }}"></i>
+                                    @endfor
+                                </div>
+                            </div>
+                            <p class="comment-content-text">{{ $comment->content }}</p>
+                        </div>
+                    </div>
+                @empty
+                    <div class="no-comments-empty">
+                        <i class="ti ti-messages"></i>
+                        <p>{{ __('Chưa có bình luận nào cho bài viết này. Hãy là người đầu tiên chia sẻ cảm nghĩ của bạn!') }}</p>
+                    </div>
+                @endforelse
+            </div>
+        </section>
+
         {{-- Related Articles Section --}}
         @if(isset($relatedNews) && $relatedNews->isNotEmpty())
             <div class="related-articles-section">
@@ -318,7 +749,12 @@
                                 @endif
                             </div>
                             <div class="related-card-body">
-                                <span class="related-card-date">{{ $item->created_at->format('d/m/Y') }}</span>
+                                <span class="related-card-date">
+                                    {{ $item->created_at->format('d/m/Y') }}
+                                    @if(isset($item->comments_count))
+                                        • <i class="ti ti-message-circle"></i> {{ $item->comments_count }}
+                                    @endif
+                                </span>
                                 <h4 class="related-card-title">{{ $item->title }}</h4>
                             </div>
                         </a>

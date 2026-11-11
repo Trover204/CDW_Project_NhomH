@@ -8,6 +8,7 @@ tests
 .phpunit.result.cache
 docker-compose.yml
 dockerfile
+Dockerfile
 phpunit.xml
 README.md
 mockups

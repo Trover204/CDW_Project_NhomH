@@ -16,7 +16,7 @@ class NewsController extends Controller
 
     public function index()
     {
-        $news = News::with('user:id,name')->latest()->paginate(10);
+        $news = News::with('user:id,name')->withCount('comments')->latest()->paginate(10);
 
         return view('admin.news.index', compact('news'));
     }

@@ -86,7 +86,7 @@ class BookingService
             return DB::transaction(function () use ($data, $userId, $subtotal, $discount, $subscription) {
                 // Chặn chồng lấn khung giờ (bắt cả trường hợp đặt nhiều giờ liên tiếp)
                 $conflict = Booking::where('court_id', $data['court_id'])
-                    ->where('booking_date', $data['booking_date'])
+                    ->whereDate('booking_date', $data['booking_date'])
                     ->whereNotIn('status', ['cancelled', 'rejected'])
                     ->where('start_time', '<', $data['end_time'])
                     ->where('end_time', '>', $data['start_time'])

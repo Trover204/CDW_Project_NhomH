@@ -12,7 +12,7 @@
 
 <div class="form-group">
     <label class="form-label">Người dùng *</label>
-    <select name="user_id" class="form-control">
+    <select name="user_id" class="form-control" required>
         <option value="">-- Chọn người dùng --</option>
         @foreach ($users as $u)
             <option value="{{ $u->id }}" @selected(old('user_id', $comment->user_id ?? '') == $u->id)>
@@ -24,36 +24,47 @@
 </div>
 
 <div class="form-group">
-    <label class="form-label">Sân thể thao *</label>
-    <select name="court_id" class="form-control">
-        <option value="">-- Chọn sân --</option>
-        @foreach ($courts as $c)
-            <option value="{{ $c->id }}" @selected(old('court_id', $comment->court_id ?? '') == $c->id)>
-                {{ $c->name }}
+    <label class="form-label">Bài viết tin tức *</label>
+    <select name="news_id" class="form-control" required>
+        <option value="">-- Chọn bài viết tin tức --</option>
+        @foreach ($newsList ?? [] as $n)
+            <option value="{{ $n->id }}" @selected(old('news_id', $comment->news_id ?? request('news_id', '')) == $n->id)>
+                {{ $n->title }}
             </option>
         @endforeach
     </select>
-    @error('court_id') <div class="form-error">{{ $message }}</div> @enderror
+    @error('news_id') <div class="form-error">{{ $message }}</div> @enderror
 </div>
 
 <div class="form-group">
-    <label class="form-label">Nội dung bình luận *</label>
-    <textarea name="content" rows="4" class="form-control" placeholder="Nhập nội dung đánh giá của khách hàng...">{{ old('content', $comment->content ?? '') }}</textarea>
+    <label class="form-label">Nội dung bình luận / đánh giá *</label>
+    <textarea name="content" rows="4" class="form-control" required placeholder="Nhập nội dung bình luận hoặc đánh giá cho bài viết tin tức...">{{ old('content', $comment->content ?? '') }}</textarea>
     @error('content') <div class="form-error">{{ $message }}</div> @enderror
 </div>
 
 <div class="form-group">
     <label class="form-label">Đánh giá số sao (1-5)</label>
-    <input type="number" name="rating" min="1" max="5" value="{{ old('rating', $comment->rating ?? 5) }}" class="form-control" style="max-width: 150px;">
+    <select name="rating" class="form-control" style="max-width: 220px;">
+        @foreach ([5 => '5 sao - Rất tuyệt vời', 4 => '4 sao - Hữu ích', 3 => '3 sao - Bình thường', 2 => '2 sao - Chưa tốt', 1 => '1 sao - Không hài lòng'] as $star => $label)
+            <option value="{{ $star }}" @selected((int) old('rating', $comment->rating ?? 5) === $star)>★ {{ $label }}</option>
+        @endforeach
+    </select>
     @error('rating') <div class="form-error">{{ $message }}</div> @enderror
 </div>
 
 <div class="form-group">
     <label class="form-label">Trạng thái kiểm duyệt *</label>
-    <select name="status" class="form-control">
-        @foreach (['pending' => 'Chờ duyệt', 'approved' => 'Đã duyệt', 'hidden' => 'Ẩn'] as $val => $text)
-            <option value="{{ $val }}" @selected(old('status', $comment->status ?? 'pending') === $val)>{{ $text }}</option>
-        @endforeach
+    @php
+        $currentStatus = old('status', isset($comment) ? ($comment->status ? '1' : '0') : '1');
+        if ($currentStatus === 'approved' || $currentStatus === true || $currentStatus === 1) {
+            $currentStatus = '1';
+        } elseif ($currentStatus === 'pending' || $currentStatus === 'hidden' || $currentStatus === false || $currentStatus === 0) {
+            $currentStatus = '0';
+        }
+    @endphp
+    <select name="status" class="form-control" style="max-width: 260px;">
+        <option value="1" @selected((string) $currentStatus === '1')>Đã duyệt (Hiển thị ngoài web)</option>
+        <option value="0" @selected((string) $currentStatus === '0')>Ẩn bình luận</option>
     </select>
     @error('status') <div class="form-error">{{ $message }}</div> @enderror
 </div>

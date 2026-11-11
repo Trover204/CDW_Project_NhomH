@@ -63,5 +63,9 @@ class ReviewSeeder extends Seeder
         });
 
         $this->syncSearchIndex(Review::class);
+
+        if (DB::table('news')->exists()) {
+            $this->call(CommentSeeder::class);
+        }
     }
 }
