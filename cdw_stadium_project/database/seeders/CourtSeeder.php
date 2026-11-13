@@ -18,33 +18,15 @@ class CourtSeeder extends Seeder
 
         // tên loại môn => [tiền tố tên sân, sức chứa]
         $config = [
-            'Bóng đá mini' => ['Sân bóng', 10],
-            'Bóng rổ' => ['Sân bóng rổ', 10],
+            'Bóng đá' => ['Sân bóng', 10],
             'Cầu lông' => ['Sân cầu lông', 4],
             'Pickleball' => ['Sân pickleball', 4],
+            'Bóng rổ' => ['Sân bóng rổ', 10],
             'Bóng bàn' => ['Bàn bóng bàn', 4],
             'Tennis' => ['Sân tennis', 4],
-            'Bơi lội' => ['Hồ bơi', 20],
-            'Gym' => ['Phòng gym', 30],
-            'Yoga' => ['Phòng yoga', 20],
-            'Bóng chuyền' => ['Sân bóng chuyền', 12],
-            'Boxing' => ['Sàn boxing', 2],
-            'Múa' => ['Phòng múa', 20],
-            'Võ thuật' => ['Sàn võ thuật', 10],
-            'Cờ vua' => ['Bàn cờ vua', 2],
-            'Cờ tướng' => ['Bàn cờ tướng', 2],
-            'Billiards' => ['Bàn bida', 4],
-            'Trượt băng' => ['Sân trượt băng', 30],
-            'Leo núi' => ['Tường leo núi', 1],
-            'Bắn cung' => ['Sân bắn cung', 10],
-            'Điền kinh' => ['Đường chạy', 50],
-            'Cầu mây' => ['Sân cầu mây', 6],
-            'Bóng nước' => ['Hồ bóng nước', 14],
-            'Aerobic' => ['Phòng aerobic', 20],
-            'Bóng ném' => ['Sân bóng ném', 14],
         ];
 
-        // Lấy danh sách ảnh sân bóng đá mini và cầu lông trong public/images
+        // Lấy danh sách ảnh sân bóng đá và cầu lông trong public/images
         $soccerFiles = array_map(fn ($f) => 'images/'.basename($f), glob(public_path('images/sanbanh*.*')) ?: []);
         natsort($soccerFiles);
         $soccerFiles = array_values($soccerFiles);
@@ -95,7 +77,7 @@ class CourtSeeder extends Seeder
                     $primaryImage = null;
                     $secondaryImage = null;
 
-                    if ($typeName === 'Bóng đá mini' && $soccerCount > 0) {
+                    if ($typeName === 'Bóng đá' && $soccerCount > 0) {
                         $primaryImage = $soccerFiles[$soccerIndex % $soccerCount];
                         $secondaryImage = $soccerFiles[($soccerIndex + 1) % $soccerCount];
                         $soccerIndex++;
@@ -133,6 +115,24 @@ class CourtSeeder extends Seeder
                     }
                 }
             }
+        }
+
+        // Dọn dẹp các sân thuộc bộ môn không còn trong danh sách cấu hình
+        $allowedSportTypeIds = DB::table('sport_types')->whereIn('name', array_keys($config))->pluck('id');
+        $obsoleteCourtIds = DB::table('courts')->whereNotIn('sport_type_id', $allowedSportTypeIds)->pluck('id');
+        if ($obsoleteCourtIds->isNotEmpty()) {
+            $obsoleteBookingIds = DB::table('bookings')->whereIn('court_id', $obsoleteCourtIds)->pluck('id');
+            if ($obsoleteBookingIds->isNotEmpty()) {
+                DB::table('payments')->where('payable_type', 'booking')->whereIn('payable_id', $obsoleteBookingIds)->delete();
+                DB::table('booking_logs')->whereIn('booking_id', $obsoleteBookingIds)->delete();
+                DB::table('reviews')->whereIn('booking_id', $obsoleteBookingIds)->delete();
+                DB::table('bookings')->whereIn('id', $obsoleteBookingIds)->delete();
+            }
+            DB::table('reviews')->whereIn('court_id', $obsoleteCourtIds)->delete();
+            DB::table('court_user_likes')->whereIn('court_id', $obsoleteCourtIds)->delete();
+            DB::table('court_images')->whereIn('court_id', $obsoleteCourtIds)->delete();
+            DB::table('price_rules')->whereIn('court_id', $obsoleteCourtIds)->delete();
+            DB::table('courts')->whereIn('id', $obsoleteCourtIds)->delete();
         }
 
         // Xóa và cập nhật lại hình ảnh sân

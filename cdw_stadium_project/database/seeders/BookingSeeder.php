@@ -25,18 +25,30 @@ class BookingSeeder extends Seeder
 
         $sub = DB::table('subscriptions')->where('user_id', $an->id)->value('id');
 
-        $footballType = DB::table('sport_types')->where('name', 'Bóng đá mini')->value('id');
+        $footballType = DB::table('sport_types')->where('name', 'Bóng đá')->value('id');
         $courts = DB::table('courts')->where('sport_type_id', $footballType)->orderBy('id')->limit(2)->pluck('id');
         [$court1, $court2] = [$courts[0], $courts[1]];
 
+        $badmintonType = DB::table('sport_types')->where('name', 'Cầu lông')->value('id');
+        $pickleballType = DB::table('sport_types')->where('name', 'Pickleball')->value('id');
+        $basketballType = DB::table('sport_types')->where('name', 'Bóng rổ')->value('id');
+        $tableTennisType = DB::table('sport_types')->where('name', 'Bóng bàn')->value('id');
+        $tennisType = DB::table('sport_types')->where('name', 'Tennis')->value('id');
+
+        $badmintonCourt = DB::table('courts')->where('sport_type_id', $badmintonType)->orderBy('id')->value('id') ?? $court1;
+        $pickleballCourt = DB::table('courts')->where('sport_type_id', $pickleballType)->orderBy('id')->value('id') ?? $court2;
+        $basketballCourt = DB::table('courts')->where('sport_type_id', $basketballType)->orderBy('id')->value('id') ?? $court1;
+        $tableTennisCourt = DB::table('courts')->where('sport_type_id', $tableTennisType)->orderBy('id')->value('id') ?? $court1;
+        $tennisCourt = DB::table('courts')->where('sport_type_id', $tennisType)->orderBy('id')->value('id') ?? $court2;
+
         // [user, court, ngày, giờ bắt đầu, giờ kết thúc, subtotal, giảm, status, phương thức TT, trạng thái TT]
         $rows = [
-            [$an,    $court1, $now->copy()->subDays(5)->toDateString(), '18:00', '19:00', 300000, 30000, 'completed', 'vnpay', 'paid'],
-            [$an,    $court1, $now->copy()->addDays(2)->toDateString(), '19:00', '20:00', 300000, 30000, 'confirmed', 'cod',   'pending'],
-            [$binh,  $court2, $now->copy()->addDays(3)->toDateString(), '17:00', '18:00', 300000, 0,     'pending',   'vnpay', 'pending'],
-            [$binh,  $court1, $now->copy()->subDays(2)->toDateString(), '20:00', '21:00', 300000, 0,     'cancelled', 'vnpay', 'failed'],
-            [$cuong, $court1, $now->copy()->addDays(1)->toDateString(), '15:00', '17:00', 600000, 0,     'confirmed', 'momo',  'paid'],
-            [$cuong, $court2, $now->copy()->addDays(4)->toDateString(), '18:00', '20:00', 600000, 0,     'pending',   'cod',   'pending'],
+            [$an,    $court1,          $now->copy()->subDays(5)->toDateString(), '18:00', '19:00', 300000, 30000, 'completed', 'vnpay', 'paid'],
+            [$an,    $badmintonCourt,  $now->copy()->addDays(2)->toDateString(), '19:00', '20:00', 120000, 12000, 'confirmed', 'cod',   'pending'],
+            [$binh,  $pickleballCourt, $now->copy()->addDays(3)->toDateString(), '17:00', '18:00', 150000, 0,     'pending',   'vnpay', 'pending'],
+            [$binh,  $basketballCourt, $now->copy()->subDays(2)->toDateString(), '20:00', '21:00', 220000, 0,     'cancelled', 'vnpay', 'failed'],
+            [$cuong, $tableTennisCourt, $now->copy()->addDays(1)->toDateString(), '15:00', '17:00', 80000,  0,     'confirmed', 'momo',  'paid'],
+            [$cuong, $tennisCourt,     $now->copy()->addDays(4)->toDateString(), '18:00', '20:00', 400000, 0,     'pending',   'cod',   'pending'],
         ];
 
         foreach ($rows as $n => [$user, $courtId, $date, $start, $end, $subtotal, $discount, $status, $method, $payStatus]) {

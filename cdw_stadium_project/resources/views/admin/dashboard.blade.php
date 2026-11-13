@@ -522,7 +522,23 @@
                     {{ __('Tìm kiếm') }}
                 </button>
             </form>
-            <div class="avatar">NA</div>
+            @php
+                $authUser = auth()->user();
+                $avatarInitials = 'NA';
+                if ($authUser && !empty($authUser->name)) {
+                    $words = preg_split('/\s+/u', trim($authUser->name), -1, PREG_SPLIT_NO_EMPTY);
+                    $avatarInitials = count($words) >= 2
+                        ? mb_strtoupper(mb_substr($words[0], 0, 1, 'UTF-8') . mb_substr(end($words), 0, 1, 'UTF-8'), 'UTF-8')
+                        : mb_strtoupper(mb_substr($authUser->name, 0, 2, 'UTF-8'), 'UTF-8');
+                }
+            @endphp
+            <a href="{{ route('profile.edit') }}" class="avatar" title="{{ $authUser->name ?? 'Hồ sơ cá nhân' }}" aria-label="{{ $authUser->name ?? 'Hồ sơ cá nhân' }}">
+                @if ($authUser && $authUser->avatar)
+                    <img src="{{ asset('storage/' . $authUser->avatar) }}" alt="{{ $authUser->name }}">
+                @else
+                    {{ $avatarInitials }}
+                @endif
+            </a>
         </div>
     </div>
 
