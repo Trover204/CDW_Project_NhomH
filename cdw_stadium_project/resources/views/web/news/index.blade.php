@@ -14,19 +14,35 @@
                 <h1>{{ __('Tin tức, Sự kiện & Mẹo tập luyện') }}</h1>
                 <p>{{ __('Cập nhật các giải đấu sôi động, chương trình ưu đãi đặc quyền và những bí quyết nâng cao thể lực mỗi ngày từ các chuyên gia.') }}</p>
 
-                {{-- Search Box --}}
-                <form action="{{ route('news.index') }}" method="GET" class="news-search-bar">
-                    <div class="search-input-box">
-                        <i class="ti ti-search"></i>
-                        <input type="text" name="q" value="{{ $keyword ?? request('q') }}" placeholder="{{ __('Tìm kiếm bài viết, mẹo đá bóng, cầu lông, giải đấu...') }}" autocomplete="off">
+    {{-- Filter & Search Toolbar (Synchronized with Merch style) --}}
+    <div class="wrap" style="margin-top: 24px;">
+        <div class="merch-filter-card">
+            <form action="{{ route('news.index') }}" method="GET">
+                <div class="merch-filter-row">
+                    {{-- Search Box --}}
+                    <div class="merch-search-wrap">
+                        <i class="ti ti-search merch-search-icon"></i>
+                        <input type="text" name="q" value="{{ $keyword ?? request('q') }}"
+                               class="merch-search-input news-search-input"
+                               placeholder="{{ __('Tìm kiếm bài viết, mẹo đá bóng, cầu lông, giải đấu...') }}"
+                               autocomplete="off">
+                    </div>
+
+                    {{-- Action Buttons --}}
+                    <div style="display: flex; gap: 8px;">
+                        <button type="submit" class="merch-btn-filter">
+                            <i class="ti ti-search"></i> {{ __('Tìm kiếm') }}
+                        </button>
                         @if($keyword ?? request('q'))
-                            <a href="{{ route('news.index') }}" class="clear-search-btn" title="{{ __('Bỏ tìm') }}"><i class="ti ti-x"></i></a>
+                            <a href="{{ route('news.index') }}" class="merch-btn-reset">
+                                <i class="ti ti-x"></i> {{ __('Xóa lọc') }}
+                            </a>
                         @endif
                     </div>
-                    <button type="submit" class="news-btn-search">
-                        <span>{{ __('Tìm kiếm') }}</span>
-                    </button>
-                </form>
+                </div>
+            </form>
+        </div>
+    </div>
             </div>
         </div>
     </div>
@@ -177,6 +193,89 @@
     margin: 0 auto 28px;
     max-width: 640px;
 }
+/* Synchronized Merch-style Toolbar */
+.merch-filter-card {
+    background: var(--bg-white, #FFFFFF);
+    border: 1px solid var(--line, #F1E4EC);
+    border-radius: 20px;
+    padding: 22px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+.merch-filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+}
+.merch-search-wrap {
+    flex: 1 1 280px;
+    position: relative;
+}
+.merch-search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #8E8EA0;
+    font-size: 18px;
+}
+.merch-search-input {
+    width: 100%;
+    height: 46px;
+    padding: 0 16px 0 46px;
+    border: 1.5px solid var(--line, #F1E4EC);
+    border-radius: 12px;
+    font-size: 14.5px;
+    background: var(--bg-white, #FFFFFF);
+    color: var(--ink, #181824);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.merch-search-input:focus {
+    border-color: #EC4899;
+    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.14);
+}
+.merch-btn-filter {
+    height: 46px;
+    padding: 0 22px;
+    background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 12px;
+    font-size: 14.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+.merch-btn-filter:hover {
+    background: linear-gradient(135deg, #DB2777 0%, #BE185D 100%);
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+}
+.merch-btn-reset {
+    height: 46px;
+    padding: 0 18px;
+    background: var(--bg-page, #FAF7F9);
+    color: var(--ink-soft, #525266);
+    border: 1.5px solid var(--line, #F1E4EC);
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+.merch-btn-reset:hover {
+    background: var(--line, #F1E4EC);
+    color: var(--ink, #181824);
+}
+
 .news-search-bar {
     display: flex;
     align-items: center;
