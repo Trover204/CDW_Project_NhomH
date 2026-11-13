@@ -1,3 +1,5 @@
+<input type="hidden" name="version" value="{{ $news->version ?? 0 }}">
+
 @if ($errors->any())
     <div class="alert alert-danger">
         <ul style="margin: 0; padding-left: 20px;">

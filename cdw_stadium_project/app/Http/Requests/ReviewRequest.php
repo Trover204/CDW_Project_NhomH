@@ -19,8 +19,16 @@ class ReviewRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
+        $merge = [];
         if (! $this->has('status')) {
-            $this->merge(['status' => 1]);
+            $merge['status'] = 1;
+        }
+        if (! $this->filled('version')) {
+            $review = $this->route('review');
+            $merge['version'] = $review instanceof Review ? (int) $review->version : 0;
+        }
+        if (! empty($merge)) {
+            $this->merge($merge);
         }
     }
 
@@ -45,6 +53,7 @@ class ReviewRequest extends FormRequest
             'rating' => 'required|integer|between:1,5',
             'content' => 'nullable|string|max:1000',
             'status' => 'required|boolean',
+            'version' => 'required|integer|min:0',
         ];
     }
 

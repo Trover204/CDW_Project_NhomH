@@ -10,6 +10,7 @@
     <form action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
+        <input type="hidden" name="version" value="{{ $product->version ?? 0 }}">
 
         <div class="form-group">
             <label class="form-label">Tên sản phẩm <span style="color:var(--danger)">*</span></label>

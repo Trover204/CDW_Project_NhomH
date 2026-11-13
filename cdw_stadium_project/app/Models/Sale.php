@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Contracts\Payable;
 use App\Models\Concerns\HasPayment;
 use App\Traits\LogsActivity;
+use App\Traits\OptimisticLocking;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,7 @@ use Laravel\Scout\Searchable;
 
 class Sale extends Model implements Payable
 {
-    use HasFactory, HasPayment, LogsActivity, Searchable;
+    use HasFactory, HasPayment, LogsActivity, OptimisticLocking, Searchable;
 
     protected $fillable = [
         'product_id',
@@ -24,11 +25,13 @@ class Sale extends Model implements Payable
         'total_price',
         'status',
         'sale_date',
+        'version',
     ];
 
     protected $casts = [
         'total_price' => 'float',
         'sale_date' => 'date',
+        'version' => 'integer',
     ];
 
     public function product(): BelongsTo

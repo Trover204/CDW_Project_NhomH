@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\LogsActivity;
+use App\Traits\OptimisticLocking;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +12,7 @@ use Laravel\Scout\Searchable;
 
 class Review extends Model
 {
-    use HasFactory, LogsActivity, Searchable;
+    use HasFactory, LogsActivity, OptimisticLocking, Searchable;
 
     protected $fillable = [
         'user_id',
@@ -20,11 +21,13 @@ class Review extends Model
         'rating',
         'content',
         'status',
+        'version',
     ];
 
     protected $casts = [
         'rating' => 'integer',
         'status' => 'boolean',
+        'version' => 'integer',
     ];
 
     public function user(): BelongsTo

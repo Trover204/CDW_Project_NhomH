@@ -12,6 +12,7 @@
 <div class="form-card">
     <form action="{{ route('admin.ads.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
+        <input type="hidden" name="version" value="0">
 
         <div class="form-group">
             <label class="form-label">Tên quảng cáo <span style="color:red">*</span></label>

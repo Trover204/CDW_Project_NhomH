@@ -13,6 +13,16 @@ class NewsRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        if (! $this->filled('version')) {
+            $news = $this->route('news');
+            $this->merge([
+                'version' => $news instanceof News ? (int) $news->version : 0,
+            ]);
+        }
+    }
+
     public function rules(): array
     {
         $news = $this->route('news');
@@ -31,6 +41,7 @@ class NewsRequest extends FormRequest
             'image' => 'nullable|image|max:2048',
             'category' => 'nullable|string|max:191',
             'status' => 'required|in:draft,published',
+            'version' => 'required|integer|min:0',
         ];
     }
 }

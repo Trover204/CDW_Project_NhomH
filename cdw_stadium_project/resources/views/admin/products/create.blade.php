@@ -9,6 +9,7 @@
 <div class="card" style="max-width: 800px;">
     <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
+        <input type="hidden" name="version" value="0">
 
         <div class="form-group">
             <label class="form-label">Tên sản phẩm <span style="color:var(--danger)">*</span></label>

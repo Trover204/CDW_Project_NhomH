@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Traits\LogsActivity;
+use App\Traits\OptimisticLocking;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
 
 class Ad extends Model
 {
-    use HasFactory, LogsActivity, Searchable;
+    use HasFactory, LogsActivity, OptimisticLocking, Searchable;
 
     protected $fillable = [
         'name',
@@ -17,10 +18,12 @@ class Ad extends Model
         'link_url',
         'is_active',
         'description',
+        'version',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'version' => 'integer',
     ];
 
     public function toSearchableArray(): array

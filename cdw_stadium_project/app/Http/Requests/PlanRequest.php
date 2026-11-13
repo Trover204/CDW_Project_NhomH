@@ -11,6 +11,16 @@ class PlanRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        if (! $this->filled('version')) {
+            $plan = $this->route('plan');
+            $this->merge([
+                'version' => $plan instanceof \App\Models\Plan ? (int) $plan->version : 0,
+            ]);
+        }
+    }
+
     public function rules(): array
     {
         return [
@@ -19,6 +29,7 @@ class PlanRequest extends FormRequest
             'price' => 'required|numeric|min:0',
             'discount_percent' => 'nullable|integer|between:0,100',
             'status' => 'boolean',
+            'version' => 'required|integer|min:0',
         ];
     }
 }

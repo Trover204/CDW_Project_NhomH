@@ -98,7 +98,11 @@ class PaymentController extends Controller
     {
         $data = $this->preparePayload($request->validated(), $payment);
 
-        $payment->update($data);
+        $affectedRows = $payment->updateWithOptimisticLock($data);
+
+        if ($affectedRows === 0) {
+            return redirect()->back()->with('error', Payment::getOptimisticLockErrorMessage());
+        }
 
         return redirect()->route('admin.payments.index')->with('success', 'Đã cập nhật thanh toán.');
     }

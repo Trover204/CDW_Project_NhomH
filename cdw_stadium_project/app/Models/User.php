@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\LogsActivity;
+use App\Traits\OptimisticLocking;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -13,12 +14,12 @@ use Laravel\Scout\Searchable;
 
 class User extends Authenticatable
 {
-    protected $fillable = ['name', 'email', 'password', 'phone', 'avatar', 'birthday', 'role', 'status'];
+    protected $fillable = ['name', 'email', 'password', 'phone', 'avatar', 'birthday', 'role', 'status', 'version'];
 
     protected $hidden = ['password', 'remember_token'];
 
     /** @use HasFactory<UserFactory> */
-    use HasFactory, LogsActivity, Notifiable, Searchable;
+    use HasFactory, LogsActivity, Notifiable, OptimisticLocking, Searchable;
 
     /**
      * Get the attributes that should be cast.
@@ -31,6 +32,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'birthday' => 'date',
             'password' => 'hashed',
+            'version' => 'integer',
         ];
     }
 

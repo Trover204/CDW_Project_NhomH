@@ -14,6 +14,7 @@
 <div class="form-card" style="max-width: 720px;">
     <form action="{{ route('admin.sales.store') }}" method="POST">
         @csrf
+        <input type="hidden" name="version" value="0">
 
         @if ($errors->any())
             <div class="alert alert-danger">

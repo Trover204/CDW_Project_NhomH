@@ -15,6 +15,16 @@ class SaleRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        if (! $this->filled('version')) {
+            $sale = $this->route('sale');
+            $this->merge([
+                'version' => $sale instanceof \App\Models\Sale ? (int) $sale->version : 0,
+            ]);
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -33,6 +43,7 @@ class SaleRequest extends FormRequest
             'sale_date' => 'nullable|date',
             'payment_method' => 'nullable|string|max:50',
             'payment_status' => 'nullable|in:pending,paid,failed,refunded',
+            'version' => 'required|integer|min:0',
         ];
     }
 

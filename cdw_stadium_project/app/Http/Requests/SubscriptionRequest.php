@@ -12,6 +12,16 @@ class SubscriptionRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        if (! $this->filled('version')) {
+            $subscription = $this->route('subscription');
+            $this->merge([
+                'version' => $subscription instanceof \App\Models\Subscription ? (int) $subscription->version : 0,
+            ]);
+        }
+    }
+
     public function rules(): array
     {
         $subscription = $this->route('subscription');
@@ -35,6 +45,7 @@ class SubscriptionRequest extends FormRequest
                 'max:191',
                 Rule::unique('payments', 'transaction_code')->ignore($paymentId),
             ],
+            'version' => 'required|integer|min:0',
         ];
     }
 }

@@ -22,6 +22,10 @@ class BookingRequest extends FormRequest
         if ($this->has('end_time') && is_string($this->end_time)) {
             $merge['end_time'] = substr($this->end_time, 0, 5);
         }
+        if (! $this->filled('version')) {
+            $booking = $this->route('booking');
+            $merge['version'] = $booking instanceof Booking ? (int) $booking->version : 0;
+        }
         if (! empty($merge)) {
             $this->merge($merge);
         }
@@ -46,6 +50,7 @@ class BookingRequest extends FormRequest
             'status' => 'required|in:pending,confirmed,checked_in,completed,cancelled,rejected',
             'payment_method' => 'nullable|string|max:50',
             'payment_status' => 'nullable|in:pending,paid,failed,refunded',
+            'version' => 'required|integer|min:0',
         ];
     }
 

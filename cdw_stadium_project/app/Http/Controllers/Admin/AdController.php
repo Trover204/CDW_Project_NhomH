@@ -71,11 +71,25 @@ class AdController extends Controller
 
         $validated['is_active'] = $request->boolean('is_active');
 
+        $oldImage = $ad->image;
+        $newImage = null;
+
         if ($request->hasFile('image')) {
-            $validated['image'] = $this->files->replace($request->file('image'), $ad->image, self::IMAGE_DIRECTORY);
+            $newImage = $this->files->store($request->file('image'), self::IMAGE_DIRECTORY);
+            $validated['image'] = $newImage;
         }
 
-        $ad->update($validated);
+        $affectedRows = $ad->updateWithOptimisticLock($validated);
+
+        if ($affectedRows === 0) {
+            $this->files->delete($newImage, self::IMAGE_DIRECTORY);
+
+            return redirect()->back()->with('error', Ad::getOptimisticLockErrorMessage());
+        }
+
+        if ($newImage !== null && $oldImage !== $newImage) {
+            $this->files->delete($oldImage, self::IMAGE_DIRECTORY);
+        }
 
         return redirect()->route('admin.ads.index')->with('success', 'Cập nhật quảng cáo thành công.');
     }

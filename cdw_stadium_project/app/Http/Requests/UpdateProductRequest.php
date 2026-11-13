@@ -15,6 +15,16 @@ class UpdateProductRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        if (! $this->filled('version')) {
+            $product = $this->route('product');
+            $this->merge([
+                'version' => $product instanceof \App\Models\Product ? (int) $product->version : 0,
+            ]);
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -32,6 +42,7 @@ class UpdateProductRequest extends FormRequest
             'is_in_stock' => 'boolean',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'is_active' => 'boolean',
+            'version' => 'required|integer|min:0',
         ];
     }
 

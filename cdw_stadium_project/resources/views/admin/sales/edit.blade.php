@@ -15,6 +15,7 @@
     <form action="{{ route('admin.sales.update', $sale) }}" method="POST">
         @csrf
         @method('PUT')
+        <input type="hidden" name="version" value="{{ $sale->version ?? 0 }}">
 
         @if ($errors->any())
             <div class="alert alert-danger">

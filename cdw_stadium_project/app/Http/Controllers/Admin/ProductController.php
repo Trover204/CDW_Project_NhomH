@@ -77,11 +77,25 @@ class ProductController extends Controller
         $validated['is_in_stock'] = $request->boolean('is_in_stock');
         $validated['is_active'] = $request->boolean('is_active');
 
+        $oldImage = $product->image;
+        $newImage = null;
+
         if ($request->hasFile('image')) {
-            $validated['image'] = $this->files->replace($request->file('image'), $product->image, self::IMAGE_DIRECTORY);
+            $newImage = $this->files->store($request->file('image'), self::IMAGE_DIRECTORY);
+            $validated['image'] = $newImage;
         }
 
-        $product->update($validated);
+        $affectedRows = $product->updateWithOptimisticLock($validated);
+
+        if ($affectedRows === 0) {
+            $this->files->delete($newImage, self::IMAGE_DIRECTORY);
+
+            return redirect()->back()->with('error', Product::getOptimisticLockErrorMessage());
+        }
+
+        if ($newImage !== null && $oldImage !== $newImage) {
+            $this->files->delete($oldImage, self::IMAGE_DIRECTORY);
+        }
 
         return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được cập nhật thành công.');
     }

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Contracts\Payable;
 use App\Models\Concerns\HasPayment;
 use App\Traits\LogsActivity;
+use App\Traits\OptimisticLocking;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +15,7 @@ use Laravel\Scout\Searchable;
 
 class Subscription extends Model implements Payable
 {
-    use HasFactory, HasPayment, LogsActivity, Searchable;
+    use HasFactory, HasPayment, LogsActivity, OptimisticLocking, Searchable;
 
     protected $fillable = [
         'user_id',
@@ -23,6 +24,7 @@ class Subscription extends Model implements Payable
         'expires_at',
         'status',
         'price',
+        'version',
     ];
 
     protected $casts = [
@@ -30,6 +32,7 @@ class Subscription extends Model implements Payable
         'starts_at' => 'datetime',
         'expires_at' => 'datetime',
         'price' => 'float',
+        'version' => 'integer',
     ];
 
     public function plan(): BelongsTo

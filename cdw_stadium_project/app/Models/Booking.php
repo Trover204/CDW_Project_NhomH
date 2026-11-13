@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Contracts\Payable;
 use App\Models\Concerns\HasPayment;
 use App\Traits\LogsActivity;
+use App\Traits\OptimisticLocking;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +16,7 @@ use Laravel\Scout\Searchable;
 
 class Booking extends Model implements Payable
 {
-    use HasFactory, HasPayment, LogsActivity, Searchable;
+    use HasFactory, HasPayment, LogsActivity, OptimisticLocking, Searchable;
 
     protected $fillable = [
         'user_id',
@@ -32,6 +33,7 @@ class Booking extends Model implements Payable
         'total_price',
         'note',
         'status',
+        'version',
     ];
 
     protected $casts = [
@@ -39,6 +41,7 @@ class Booking extends Model implements Payable
         'discount_amount' => 'float',
         'total_price' => 'float',
         'booking_date' => 'date',
+        'version' => 'integer',
     ];
 
     public function user(): BelongsTo

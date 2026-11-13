@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\LogsActivity;
+use App\Traits\OptimisticLocking;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,7 @@ use Laravel\Scout\Searchable;
 
 class Payment extends Model
 {
-    use HasFactory, LogsActivity, Searchable;
+    use HasFactory, LogsActivity, OptimisticLocking, Searchable;
 
     public const TYPE_BOOKING = 'booking';
 
@@ -87,11 +88,13 @@ class Payment extends Model
         'status',
         'paid_at',
         'note',
+        'version',
     ];
 
     protected $casts = [
         'amount' => 'float',
         'paid_at' => 'datetime',
+        'version' => 'integer',
     ];
 
     public function payable(): MorphTo

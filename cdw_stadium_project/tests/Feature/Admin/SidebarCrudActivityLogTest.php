@@ -153,6 +153,7 @@ class SidebarCrudActivityLogTest extends TestCase
                 ->exists()
         );
 
+        // Update
         $this->actingAs($this->admin)->put(route('admin.courts.update', $court), [
             'facility_id' => $facility->id,
             'sport_type_id' => $sportType->id,
@@ -168,6 +169,91 @@ class SidebarCrudActivityLogTest extends TestCase
                 ->where('description', 'like', "%Updated Court ID: {$court->id}%")
                 ->exists()
         );
+    }
+
+    public function test_optimistic_locking_detects_concurrent_updates_and_prevents_overwriting(): void
+    {
+        // 1. Facility concurrent update conflict
+        $facility = Facility::factory()->create([
+            'name' => 'Cơ sở Ban Đầu',
+            'version' => 0,
+        ]);
+
+        // Admin A và Admin B cùng mở trang sửa ở version = 0
+        $staleVersion = $facility->version;
+
+        // Admin A lưu thành công -> version tăng lên 1
+        $this->actingAs($this->admin)->put(route('admin.facilities.update', $facility), [
+            'name' => 'Cơ sở Do Admin A Cập Nhật',
+            'district' => $facility->district,
+            'address' => $facility->address,
+            'phone' => $facility->phone,
+            'open_time' => substr((string) $facility->open_time, 0, 5),
+            'close_time' => substr((string) $facility->close_time, 0, 5),
+            'status' => '1',
+            'version' => $staleVersion,
+        ])->assertRedirect(route('admin.facilities.index'));
+
+        $facility->refresh();
+        $this->assertEquals(1, $facility->version);
+        $this->assertEquals('Cơ sở Do Admin A Cập Nhật', $facility->name);
+
+        // Admin B gửi form sau với version cũ ($staleVersion = 0) -> bị từ chối, dữ liệu của Admin A được bảo toàn
+        $conflictResponse = $this->actingAs($this->admin)
+            ->from(route('admin.facilities.edit', $facility))
+            ->put(route('admin.facilities.update', $facility), [
+                'name' => 'Cơ sở Do Admin B Ghi Đè',
+                'district' => $facility->district,
+                'address' => $facility->address,
+                'phone' => $facility->phone,
+                'open_time' => substr((string) $facility->open_time, 0, 5),
+                'close_time' => substr((string) $facility->close_time, 0, 5),
+                'status' => '1',
+                'version' => $staleVersion,
+            ]);
+
+        $conflictResponse->assertRedirect(route('admin.facilities.edit', $facility));
+        $conflictResponse->assertSessionHas('error', Facility::getOptimisticLockErrorMessage());
+
+        $facility->refresh();
+        $this->assertEquals(1, $facility->version);
+        $this->assertEquals('Cơ sở Do Admin A Cập Nhật', $facility->name);
+
+        // 2. Transactional Sale + Payment optimistic locking rollback
+        $product = Product::factory()->create(['cost_price' => 200000, 'stock_quantity' => 50]);
+        $sale = Sale::factory()->create([
+            'product_id' => $product->id,
+            'user_id' => $this->customer->id,
+            'quantity' => 1,
+            'total_price' => 200000,
+            'status' => 'pending',
+            'version' => 0,
+        ]);
+
+        // Giả lập tiến trình khác đã nâng version của Sale lên 1
+        Sale::whereKey($sale->id)->update(['version' => 1]);
+
+        // Request gửi lên với version = 0 cũ -> rollback toàn bộ (kể cả Payment)
+        $saleConflict = $this->actingAs($this->admin)
+            ->from(route('admin.sales.edit', $sale))
+            ->put(route('admin.sales.update', $sale), [
+                'product_id' => $product->id,
+                'user_id' => $this->customer->id,
+                'quantity' => 5,
+                'total_price' => 999000,
+                'status' => 'completed',
+                'sale_date' => now()->toDateString(),
+                'payment_method' => 'vnpay',
+                'payment_status' => 'paid',
+                'version' => 0,
+            ]);
+
+        $saleConflict->assertRedirect(route('admin.sales.edit', $sale));
+        $saleConflict->assertSessionHas('error', Sale::getOptimisticLockErrorMessage());
+
+        $sale->refresh();
+        $this->assertEquals(1, $sale->version);
+        $this->assertEquals(200000.0, $sale->total_price);
     }
 
     public function test_all_other_models_record_activity_logs_on_crud(): void
