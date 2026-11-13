@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SearchRequest;
 use App\Http\Requests\Web\PurchaseProductRequest;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Services\PaymentService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -15,13 +15,13 @@ class ProductController extends Controller
 {
     public function __construct(protected PaymentService $paymentService) {}
 
-    public function index(Request $request)
+    public function index(SearchRequest $request)
     {
         $query = Product::where('is_active', true)
             ->where('is_in_stock', true);
 
-        if ($request->filled('search')) {
-            $search = trim($request->input('search'));
+        $search = $request->keyword();
+        if ($search !== '') {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('team', 'like', "%{$search}%")
@@ -31,10 +31,10 @@ class ProductController extends Controller
         }
 
         if ($request->filled('team')) {
-            $query->where('team', $request->input('team'));
+            $query->where('team', $request->validated('team'));
         }
 
-        $sort = $request->input('sort', 'newest');
+        $sort = $request->validated('sort') ?? 'newest';
         if ($sort === 'price_asc') {
             $query->orderBy('cost_price', 'asc');
         } elseif ($sort === 'price_desc') {
