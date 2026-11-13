@@ -184,6 +184,25 @@
                                                 {{ $isCourtOpen ? __('Đang hoạt động') : __('Bảo trì') }}
                                             </span>
                                         </div>
+
+                                        {{-- Heart Favorite Button --}}
+                                        <div style="position: absolute; bottom: 12px; right: 12px; z-index: 3;" data-stop-propagation>
+                                            @auth
+                                                @php
+                                                    $isFavorited = auth()->user()->favoriteCourts->contains($court->id);
+                                                @endphp
+                                                <form action="{{ route('favorites.toggle', $court->id) }}" method="POST" style="margin:0;">
+                                                    @csrf
+                                                    <button type="submit" class="btn-favorite-heart {{ $isFavorited ? 'is-favorited' : '' }}" title="{{ $isFavorited ? __('Bỏ thích') : __('Yêu thích') }}">
+                                                        <i class="ti {{ $isFavorited ? 'ti-heart-filled' : 'ti-heart' }}"></i>
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <a href="{{ route('login') }}" class="btn-favorite-heart" title="{{ __('Đăng nhập để lưu yêu thích') }}">
+                                                    <i class="ti ti-heart"></i>
+                                                </a>
+                                            @endauth
+                                        </div>
                                     </div>
 
                                     <div class="card-content">

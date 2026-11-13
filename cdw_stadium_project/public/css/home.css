@@ -145,6 +145,85 @@
 }
 
 /* =====================================================
+   FAVORITE HEART BUTTON STYLING (MODERN & BEAUTIFUL)
+===================================================== */
+.btn-favorite-heart {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    color: #6B7280;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    outline: none;
+    text-decoration: none;
+}
+
+.btn-favorite-heart i {
+    font-size: 19px;
+    line-height: 1;
+    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s ease;
+}
+
+.btn-favorite-heart:hover {
+    background: #FFFFFF;
+    color: #FF2E93;
+    transform: scale(1.14);
+    box-shadow: 0 6px 18px rgba(255, 46, 147, 0.35);
+    border-color: #FCE7F3;
+}
+
+.btn-favorite-heart:hover i {
+    transform: scale(1.15);
+}
+
+.btn-favorite-heart.is-favorited {
+    background: #FFFFFF;
+    color: #FF2E93;
+    border-color: #FBCFE8;
+    box-shadow: 0 4px 14px rgba(255, 46, 147, 0.3);
+}
+
+.btn-favorite-heart.is-favorited i {
+    color: #FF2E93;
+    filter: drop-shadow(0 2px 4px rgba(255, 46, 147, 0.35));
+    animation: heartPulse 0.4s ease;
+}
+
+.btn-favorite-heart:active {
+    transform: scale(0.92);
+}
+
+@keyframes heartPulse {
+    0% { transform: scale(0.8); }
+    50% { transform: scale(1.25); }
+    100% { transform: scale(1); }
+}
+
+[data-theme="dark"] .btn-favorite-heart {
+    background: rgba(30, 30, 46, 0.9);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #9CA3AF;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .btn-favorite-heart:hover,
+[data-theme="dark"] .btn-favorite-heart.is-favorited {
+    background: #181824;
+    color: #FF2E93;
+    border-color: rgba(255, 46, 147, 0.4);
+    box-shadow: 0 6px 18px rgba(255, 46, 147, 0.4);
+}
+
+/* =====================================================
    RESET & BASE STYLES
 ===================================================== */
 * {

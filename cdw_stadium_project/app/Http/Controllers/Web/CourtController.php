@@ -58,7 +58,7 @@ class CourtController extends Controller
             foreach ($sportTypes as $sportType) {
                 $subQuery = Court::where('status', '!=', 'inactive')
                     ->where('sport_type_id', $sportType->id)
-                    ->take(3);
+                    ->take(4);
 
                 if ($query === null) {
                     $query = $subQuery;

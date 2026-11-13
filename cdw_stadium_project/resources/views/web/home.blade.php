@@ -284,24 +284,28 @@
                         <div class="court-card" data-href="{{ route('courts.show', $court->id) }}">
 
                             {{-- TAG --}}
-                            <span class="court-tag" style="display:flex; justify-content:space-between; width: calc(100% - 40px); z-index: 2;">
-                                <span><i class="ti ti-star-filled" style="font-size:11px;margin-right:3px;"></i> {{ $court->sportType->name ?? __('Thể thao') }}</span>
+                            <span class="court-tag" style="z-index: 2;">
+                                <i class="ti ti-star-filled" style="font-size:11px;margin-right:3px;"></i> {{ $court->sportType->name ?? __('Thể thao') }}
+                            </span>
+
+                            {{-- FAVORITE BUTTON --}}
+                            <div style="position: absolute; top: 18px; right: 18px; z-index: 3;" data-stop-propagation>
                                 @auth
                                     @php
                                         $isFavorited = auth()->user()->favoriteCourts->contains($court->id);
                                     @endphp
-                                    <form action="{{ route('favorites.toggle', $court->id) }}" method="POST" style="margin:0;" data-stop-propagation>
+                                    <form action="{{ route('favorites.toggle', $court->id) }}" method="POST" style="margin:0;">
                                         @csrf
-                                        <button type="submit" style="background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center;">
-                                            <i class="ti {{ $isFavorited ? 'ti-heart-filled' : 'ti-heart' }}" style="font-size:18px;color:{{ $isFavorited ? '#FFE4E6' : '#FFFFFF' }};" aria-hidden="true"></i>
+                                        <button type="submit" class="btn-favorite-heart {{ $isFavorited ? 'is-favorited' : '' }}" title="{{ $isFavorited ? __('Bỏ thích') : __('Yêu thích') }}">
+                                            <i class="ti {{ $isFavorited ? 'ti-heart-filled' : 'ti-heart' }}"></i>
                                         </button>
                                     </form>
                                 @else
-                                    <a href="{{ route('login') }}" style="background:none;border:none;cursor:pointer;padding:0;text-decoration:none;display:flex;align-items:center;" data-stop-propagation>
-                                        <i class="ti ti-heart" style="font-size:18px;color:#FFFFFF;" aria-hidden="true"></i>
+                                    <a href="{{ route('login') }}" class="btn-favorite-heart" title="{{ __('Đăng nhập để lưu yêu thích') }}">
+                                        <i class="ti ti-heart"></i>
                                     </a>
                                 @endauth
-                            </span>
+                            </div>
 
                             {{-- ICON / MEDIA --}}
                             <div class="court-media" style="overflow: hidden; background: #FDF2F8; position: relative;">
