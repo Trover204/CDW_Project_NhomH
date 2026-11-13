@@ -213,7 +213,7 @@
 
                 <div class="field">
                     <i class="ti ti-search" style="font-size:18px; color:var(--turf-teal); margin-right:4px;"></i>
-                    <input type="text" name="q" value="{{ request('q') }}" placeholder="{{ __('Tìm kiếm sân thể thao, địa chỉ hoặc tin tức...') }}" autocomplete="off">
+                    <input type="text" name="q" value="{{ request('q') }}" placeholder="{{ __('Tìm kiếm sân thể thao, sản phẩm, địa chỉ hoặc tin tức...') }}" autocomplete="off">
                 </div>
 
                 <button type="submit" class="search-btn">

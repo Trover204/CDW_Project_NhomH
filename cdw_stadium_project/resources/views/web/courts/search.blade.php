@@ -10,13 +10,16 @@
             <div class="search-hero-inner">
                 <span class="search-eyebrow"><i class="ti ti-search"></i> {{ __('Kết quả tra cứu') }}</span>
                 <h1>{{ __('Tìm kiếm:') }} <span class="highlight-query">"{{ $keyword }}"</span></h1>
-                <p>{{ __('Dưới đây là các cụm sân thể thao và bài viết tin tức liên quan phù hợp nhất với từ khóa của bạn.') }}</p>
+                <p>{{ __('Dưới đây là các cụm sân thể thao, sản phẩm chính hãng và bài viết tin tức liên quan phù hợp nhất với từ khóa của bạn.') }}</p>
 
                 {{-- Interactive Search Box --}}
                 <form action="{{ route('courts.search') }}" method="GET" class="search-page-form">
+                    @if(isset($activeType) && $activeType !== 'all')
+                        <input type="hidden" name="type" value="{{ $activeType }}">
+                    @endif
                     <div class="search-input-field">
                         <i class="ti ti-search"></i>
-                        <input type="text" name="q" value="{{ $keyword ?? request('q') }}" placeholder="{{ __('Nhập tên sân, địa chỉ hoặc tin tức...') }}" required>
+                        <input type="text" name="q" value="{{ $keyword ?? request('q') }}" placeholder="{{ __('Nhập tên sân, sản phẩm, địa chỉ hoặc tin tức...') }}" required>
                         @if($keyword)
                             <a href="{{ route('courts.index') }}" class="clear-btn" title="{{ __('Bỏ tìm kiếm') }}"><i class="ti ti-x"></i></a>
                         @endif
@@ -30,22 +33,44 @@
     </div>
 
     {{-- Main Results Section --}}
+    @php
+        $currentType = $activeType ?? request('type', 'all');
+        $courtsTotal = $courts->total();
+        $productsTotal = isset($products) ? $products->total() : 0;
+        $newsTotal = isset($news) ? $news->total() : 0;
+        $allTotal = $courtsTotal + $productsTotal + $newsTotal;
+    @endphp
     <div class="wrap search-content-wrap">
         {{-- Tabs / Navigation Pills --}}
         <div class="search-stats-summary">
-            <div class="stat-pill active">
+            <a href="{{ route('courts.search', array_filter(['q' => $keyword, 'type' => 'all', 'mode' => $searchMode !== 'elasticsearch' ? $searchMode : null])) }}"
+               class="stat-pill {{ $currentType === 'all' ? 'active' : '' }}">
+                <i class="ti ti-apps"></i>
+                <span>{{ __('Tất cả') }} ({{ $allTotal }})</span>
+            </a>
+            <a href="{{ route('courts.search', array_filter(['q' => $keyword, 'type' => 'courts', 'mode' => $searchMode !== 'elasticsearch' ? $searchMode : null])) }}"
+               class="stat-pill {{ $currentType === 'courts' ? 'active' : '' }}">
                 <i class="ti ti-trophy"></i>
-                <span>{{ __('Sân thể thao') }} ({{ $courts->total() }})</span>
-            </div>
+                <span>{{ __('Sân thể thao') }} ({{ $courtsTotal }})</span>
+            </a>
+            @if(isset($products))
+                <a href="{{ route('courts.search', array_filter(['q' => $keyword, 'type' => 'products', 'mode' => $searchMode !== 'elasticsearch' ? $searchMode : null])) }}"
+                   class="stat-pill {{ $currentType === 'products' ? 'active' : '' }}">
+                    <i class="ti ti-shirt"></i>
+                    <span>{{ __('Sản phẩm') }} ({{ $productsTotal }})</span>
+                </a>
+            @endif
             @if(isset($news))
-                <div class="stat-pill">
+                <a href="{{ route('courts.search', array_filter(['q' => $keyword, 'type' => 'news', 'mode' => $searchMode !== 'elasticsearch' ? $searchMode : null])) }}"
+                   class="stat-pill {{ $currentType === 'news' ? 'active' : '' }}">
                     <i class="ti ti-news"></i>
-                    <span>{{ __('Bài viết tin tức') }} ({{ $news->total() }})</span>
-                </div>
+                    <span>{{ __('Bài viết tin tức') }} ({{ $newsTotal }})</span>
+                </a>
             @endif
         </div>
 
         {{-- COURTS SECTION --}}
+        @if($currentType === 'all' || $currentType === 'courts')
         <div class="search-section-block">
             <div class="section-heading-row">
                 <div class="heading-with-icon">
@@ -129,10 +154,114 @@
                 </div>
             @endif
         </div>
+        @endif
+
+        {{-- PRODUCTS SECTION --}}
+        @if(isset($products) && ($currentType === 'all' || $currentType === 'products'))
+            <div class="search-section-block" style="{{ $currentType === 'all' ? 'margin-top: 50px;' : '' }}">
+                <div class="section-heading-row">
+                    <div class="heading-with-icon">
+                        <span class="heading-icon-badge product-badge"><i class="ti ti-shirt"></i></span>
+                        <h2>{{ __('Sản phẩm & Phụ kiện thể thao (Merch)') }}</h2>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span class="heading-badge">{{ $products->total() }} {{ __('sản phẩm') }}</span>
+                        <a href="{{ route('products.index', ['search' => $keyword]) }}" class="section-view-all-link">
+                            <span>{{ __('Cửa hàng Merch') }}</span>
+                            <i class="ti ti-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                @if($products->isEmpty())
+                    <div class="search-empty-state" style="padding: 35px 20px;">
+                        <p>{{ __('Không tìm thấy sản phẩm nào phù hợp với từ khóa ":keyword".', ['keyword' => $keyword]) }}</p>
+                        <a href="{{ route('products.index') }}" class="btn-primary-action">{{ __('Khám phá cửa hàng Merch') }}</a>
+                    </div>
+                @else
+                    <div class="search-products-grid">
+                        @foreach ($products as $product)
+                            <div class="search-product-card">
+                                <div class="product-media-box">
+                                    @if($product->season)
+                                        <span class="product-season-pill">{{ $product->season }}</span>
+                                    @endif
+
+                                    @if($product->is_in_stock && $product->stock_quantity > 0)
+                                        <span class="product-stock-pill in-stock">
+                                            <i class="ti ti-check"></i> {{ __('Còn') }} {{ $product->stock_quantity }}
+                                        </span>
+                                    @else
+                                        <span class="product-stock-pill out-stock">
+                                            <i class="ti ti-x"></i> {{ __('Hết hàng') }}
+                                        </span>
+                                    @endif
+
+                                    @if($product->image_url)
+                                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}" loading="lazy">
+                                    @else
+                                        <div class="product-media-placeholder">
+                                            <i class="ti ti-shirt"></i>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <div class="product-body-content">
+                                    @if($product->team)
+                                        <div class="product-team-badge">
+                                            <i class="ti ti-shield"></i>
+                                            <span>{{ $product->team }}</span>
+                                        </div>
+                                    @endif
+
+                                    <h3 class="product-heading" title="{{ $product->name }}">{{ $product->name }}</h3>
+
+                                    @if($product->description)
+                                        <p class="product-snippet">{{ $product->description }}</p>
+                                    @endif
+
+                                    <div class="product-foot-row">
+                                        <div class="product-price-box">
+                                            <span class="product-price-val">{{ number_format((float) $product->cost_price, 0, ',', '.') }}đ</span>
+                                            <span class="product-authentic-tag"><i class="ti ti-rosette-discount-check"></i> {{ __('Chính hãng') }}</span>
+                                        </div>
+
+                                        <div class="product-cta-wrap">
+                                            @auth
+                                                @if($product->is_in_stock && $product->stock_quantity > 0)
+                                                    <a href="{{ route('products.checkout', $product->id) }}" class="btn-action-book product-buy-btn">
+                                                        <i class="ti ti-shopping-cart"></i>
+                                                        <span>{{ __('Mua ngay') }}</span>
+                                                    </a>
+                                                @else
+                                                    <span class="product-disabled-btn">
+                                                        <i class="ti ti-ban"></i>
+                                                        <span>{{ __('Tạm hết hàng') }}</span>
+                                                    </span>
+                                                @endif
+                                            @else
+                                                <a href="{{ route('login') }}" class="product-login-btn">
+                                                    <i class="ti ti-login"></i>
+                                                    <span>{{ __('Đăng nhập để mua') }}</span>
+                                                </a>
+                                            @endauth
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="search-pagination">
+                        {{ $products->links() }}
+                    </div>
+                @endif
+            </div>
+        @endif
 
         {{-- NEWS SECTION --}}
-        @if(isset($news))
-            <div class="search-section-block" style="margin-top: 50px;">
+        @if(isset($news) && ($currentType === 'all' || $currentType === 'news'))
+            <div class="search-section-block" style="{{ $currentType === 'all' ? 'margin-top: 50px;' : '' }}">
                 <div class="section-heading-row">
                     <div class="heading-with-icon">
                         <span class="heading-icon-badge news-badge"><i class="ti ti-article"></i></span>
@@ -298,6 +427,7 @@
 }
 .search-stats-summary {
     display: flex;
+    flex-wrap: wrap;
     gap: 12px;
     margin-bottom: 30px;
 }
@@ -312,6 +442,12 @@
     background: var(--surface, #fff);
     border: 1px solid var(--line, #F1E4EC);
     color: var(--ink-soft, #5A5A72);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+.stat-pill:hover {
+    border-color: var(--turf-teal, #EC4899);
+    color: var(--turf-teal, #EC4899);
 }
 .stat-pill.active {
     background: var(--turf-teal-soft, #FDF2F8);
@@ -352,6 +488,228 @@
 .heading-icon-badge.news-badge {
     background: #FDF2F8;
     color: #DB2777;
+}
+.heading-icon-badge.product-badge {
+    background: #FCE7F3;
+    color: #BE185D;
+}
+.section-view-all-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--turf-teal, #EC4899);
+    text-decoration: none;
+    transition: gap 0.2s ease;
+}
+.section-view-all-link:hover {
+    gap: 8px;
+}
+.search-products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+}
+.search-product-card {
+    background: var(--surface, #fff);
+    border: 1px solid var(--line, #F1E4EC);
+    border-radius: 18px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.25s ease;
+}
+.search-product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px rgba(236, 72, 153, 0.14);
+    border-color: #F472B6;
+}
+.product-media-box {
+    height: 210px;
+    position: relative;
+    background: linear-gradient(180deg, #FDF2F8 0%, #F9FAFB 100%);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 14px;
+    border: 1px solid rgba(236, 72, 153, 0.08);
+}
+[data-theme="dark"] .product-media-box {
+    background: linear-gradient(180deg, #242436 0%, #181824 100%);
+    border-color: #2D2D42;
+}
+.product-media-box img {
+    max-width: 85%;
+    max-height: 85%;
+    object-fit: contain;
+    transition: transform 0.35s ease;
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.08));
+}
+.search-product-card:hover .product-media-box img {
+    transform: scale(1.06);
+}
+.product-media-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 46px;
+    color: var(--turf-teal, #EC4899);
+    opacity: 0.5;
+}
+.product-season-pill {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(24, 24, 36, 0.88);
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 9px;
+    border-radius: 6px;
+    z-index: 2;
+}
+.product-stock-pill {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    z-index: 2;
+}
+.product-stock-pill.in-stock {
+    background: #FCE7F3;
+    color: #BE185D;
+    border: 1px solid #FBCFE8;
+}
+.product-stock-pill.out-stock {
+    background: #FEE2E2;
+    color: #B91C1C;
+    border: 1px solid #FECACA;
+}
+.product-body-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+.product-team-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #DB2777;
+    background: #FDF2F8;
+    padding: 3px 10px;
+    border-radius: 6px;
+    border: 1px solid #FCE7F3;
+    margin-bottom: 8px;
+    align-self: flex-start;
+}
+[data-theme="dark"] .product-team-badge {
+    background: rgba(236, 72, 153, 0.15);
+    border-color: rgba(236, 72, 153, 0.3);
+    color: #F472B6;
+}
+.product-heading {
+    margin: 0 0 6px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--turf-dark, #181824);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 44px;
+}
+.product-snippet {
+    margin: 0 0 12px;
+    font-size: 12.5px;
+    color: var(--ink-soft, #5A5A72);
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.product-foot-row {
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px dashed var(--line, #F1E4EC);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.product-price-box {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+.product-price-val {
+    font-size: 20px;
+    font-weight: 800;
+    color: #EC4899;
+    font-family: 'Oswald', sans-serif;
+}
+.product-authentic-tag {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-muted, #8E8EA8);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.product-authentic-tag i {
+    color: #EC4899;
+    font-size: 14px;
+}
+.product-buy-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 10px 16px;
+    border-radius: 10px;
+}
+.product-login-btn {
+    width: 100%;
+    height: 38px;
+    border-radius: 10px;
+    border: 1.5px solid #EC4899;
+    color: #EC4899;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+.product-login-btn:hover {
+    background: #FDF2F8;
+    color: #DB2777;
+}
+.product-disabled-btn {
+    width: 100%;
+    height: 38px;
+    border-radius: 10px;
+    background: var(--bg-page, #F3F4F6);
+    color: var(--ink-muted, #9CA3AF);
+    border: 1px solid var(--line, #E5E7EB);
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
 }
 .section-heading-row h2 {
     margin: 0;

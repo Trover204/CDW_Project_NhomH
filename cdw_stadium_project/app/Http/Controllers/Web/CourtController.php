@@ -9,6 +9,7 @@ use App\Models\Court;
 use App\Models\Facility;
 use App\Models\News;
 use App\Models\PriceRule;
+use App\Models\Product;
 use App\Models\SportType;
 use App\Models\Subscription;
 use Illuminate\Support\Facades\Auth;
@@ -81,6 +82,11 @@ class CourtController extends Controller
     {
         $keyword = $request->keyword();
         $searchMode = $request->searchMode();
+        $activeType = $request->searchType();
+
+        if (! in_array($activeType, ['all', 'courts', 'products', 'news'], true)) {
+            $activeType = 'all';
+        }
 
         if ($keyword === '') {
             return redirect()->route('courts.index');
@@ -99,6 +105,17 @@ class CourtController extends Controller
                 })
                 ->latest()
                 ->paginate(12)
+                ->appends($request->query());
+
+            $products = Product::where('is_active', true)
+                ->where(function ($q) use ($like) {
+                    $q->where('name', 'like', $like)
+                        ->orWhere('description', 'like', $like)
+                        ->orWhere('team', 'like', $like)
+                        ->orWhere('season', 'like', $like);
+                })
+                ->latest()
+                ->paginate(8, ['*'], 'products_page')
                 ->appends($request->query());
 
             $news = News::where('status', 'published')
@@ -121,6 +138,13 @@ class CourtController extends Controller
                 ->paginate(12)
                 ->appends($request->query());
 
+            $products = Product::search($keyword)
+                ->where('is_active', true)
+                ->when($searchAfter !== [], fn ($search) => $search->searchAfter($searchAfter))
+                ->query(fn ($query) => $query->where('is_active', true)->latest())
+                ->paginate(8, 'products_page')
+                ->appends($request->query());
+
             $news = News::search($keyword)
                 ->where('status', 'published')
                 ->when($searchAfter !== [], fn ($search) => $search->searchAfter($searchAfter))
@@ -129,7 +153,7 @@ class CourtController extends Controller
                 ->appends($request->query());
         }
 
-        return view('web.courts.search', compact('courts', 'news', 'keyword', 'searchMode'));
+        return view('web.courts.search', compact('courts', 'products', 'news', 'keyword', 'searchMode', 'activeType'));
     }
 
     public function show(Court $court)

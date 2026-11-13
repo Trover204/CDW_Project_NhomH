@@ -41,11 +41,12 @@ class ScoutSearchTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('name="q"', false);
+        $response->assertSee('sản phẩm');
         $response->assertDontSee('name="sport_type"', false);
         $response->assertDontSee('name="location"', false);
     }
 
-    public function test_unified_search_returns_matching_courts_and_news_via_scout(): void
+    public function test_unified_search_returns_matching_courts_products_and_news_via_scout(): void
     {
         Court::factory()->create([
             'name' => 'Sân Pickleball Thảo Điền',
@@ -55,6 +56,30 @@ class ScoutSearchTest extends TestCase
         Court::factory()->create([
             'name' => 'Sân Bóng Đá Phú Nhuận',
             'status' => 'available',
+        ]);
+
+        Product::factory()->create([
+            'name' => 'Vợt Pickleball Pro Carbon',
+            'team' => 'SportZone Pro',
+            'season' => '2026',
+            'cost_price' => 450000,
+            'stock_quantity' => 15,
+            'is_in_stock' => true,
+            'is_active' => true,
+        ]);
+
+        Product::factory()->create([
+            'name' => 'Áo đấu Real Madrid Home',
+            'team' => 'Real Madrid',
+            'season' => '2025/2026',
+            'is_in_stock' => true,
+            'is_active' => true,
+        ]);
+
+        Product::factory()->create([
+            'name' => 'Bóng Pickleball Đang Ẩn',
+            'is_in_stock' => true,
+            'is_active' => false,
         ]);
 
         News::factory()->create([
@@ -73,10 +98,34 @@ class ScoutSearchTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertViewIs('web.courts.search');
+        $response->assertViewHasAll(['courts', 'products', 'news', 'keyword', 'searchMode', 'activeType']);
         $response->assertSee('Sân Pickleball Thảo Điền');
         $response->assertDontSee('Sân Bóng Đá Phú Nhuận');
+        $response->assertSee('Vợt Pickleball Pro Carbon');
+        $response->assertDontSee('Áo đấu Real Madrid Home');
+        $response->assertDontSee('Bóng Pickleball Đang Ẩn');
         $response->assertSee('Giải đấu Pickleball mở rộng 2026');
         $response->assertDontSee('Bí quyết chọn giày chạy bộ');
+
+        // Kiểm tra lọc theo tab type = products
+        $productsOnlyResponse = $this->get(route('courts.search', [
+            'q' => 'Pickleball',
+            'type' => 'products',
+        ]));
+
+        $productsOnlyResponse->assertStatus(200);
+        $productsOnlyResponse->assertSee('Vợt Pickleball Pro Carbon');
+        $productsOnlyResponse->assertDontSee('Sân Pickleball Thảo Điền');
+
+        // Kiểm tra tìm kiếm thường (mode = normal) cũng trả về sản phẩm phù hợp
+        $normalResponse = $this->get(route('courts.search', [
+            'q' => 'Real Madrid',
+            'mode' => 'normal',
+        ]));
+
+        $normalResponse->assertStatus(200);
+        $normalResponse->assertSee('Áo đấu Real Madrid Home');
+        $normalResponse->assertDontSee('Vợt Pickleball Pro Carbon');
     }
 
     public function test_search_redirects_to_courts_index_when_query_is_empty(): void

@@ -684,7 +684,7 @@
                 {{-- Search Box --}}
                 <div class="merch-search-wrap">
                     <i class="ti ti-search merch-search-icon"></i>
-                    <input type="text" name="search" value="{{ request('search') }}"
+                    <input type="text" name="search" value="{{ request('search', request('q')) }}"
                            class="merch-search-input"
                            placeholder="Tìm theo tên áo, câu lạc bộ, giải đấu...">
                 </div>
@@ -716,7 +716,7 @@
                     <button type="submit" class="merch-btn-filter">
                         <i class="ti ti-filter"></i> Lọc
                     </button>
-                    @if(request('search') || request('team') || request('sort'))
+                    @if(request('search') || request('q') || request('team') || request('sort'))
                         <a href="{{ route('products.index') }}" class="merch-btn-reset">
                             <i class="ti ti-x"></i> Xóa lọc
                         </a>
@@ -757,8 +757,8 @@
             @if(request('team'))
                 &bull; Đội bóng: <span style="color: #EC4899; font-weight: 700;">{{ request('team') }}</span>
             @endif
-            @if(request('search'))
-                &bull; Từ khóa: "<span style="color: #EC4899; font-weight: 700;">{{ request('search') }}</span>"
+            @if(request('search') || request('q'))
+                &bull; Từ khóa: "<span style="color: #EC4899; font-weight: 700;">{{ request('search', request('q')) }}</span>"
             @endif
         </div>
     </div>

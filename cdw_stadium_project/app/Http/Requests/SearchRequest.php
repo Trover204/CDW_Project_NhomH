@@ -16,6 +16,7 @@ class SearchRequest extends FormRequest
         return [
             'q' => ['nullable', 'string', 'max:191'],
             'keyword' => ['nullable', 'string', 'max:191'],
+            'search' => ['nullable', 'string', 'max:191'],
             'type' => [
                 'nullable',
                 'string',
@@ -23,12 +24,14 @@ class SearchRequest extends FormRequest
             ],
             'mode' => ['nullable', 'string', 'in:normal,elasticsearch'],
             'search_after' => ['nullable', 'array'],
+            'team' => ['nullable', 'string', 'max:191'],
+            'sort' => ['nullable', 'string', 'in:newest,price_asc,price_desc,name_asc'],
         ];
     }
 
     public function keyword(): string
     {
-        return trim((string) ($this->validated('q') ?? $this->validated('keyword') ?? ''));
+        return trim((string) ($this->validated('q') ?? $this->validated('keyword') ?? $this->validated('search') ?? ''));
     }
 
     public function searchType(): string
