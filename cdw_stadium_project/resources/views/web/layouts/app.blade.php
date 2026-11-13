@@ -4,6 +4,7 @@
     <script nonce="{{ $cspNonce ?? '' }}">if(localStorage.getItem("theme")==="dark") document.documentElement.setAttribute("data-theme", "dark");</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', __('Sân Nhóm H'))</title>
 
     {{-- Google Fonts --}}
@@ -28,6 +29,9 @@
     </main>
 
     @include('web.layouts.footer')
+
+    {{-- Chatbot AI Customer Care & Product Suggestions Overlay --}}
+    @include('web.partials.chatbot')
 
     {{-- Order Success Modal & Floating Payment Notification (Merch) --}}
     @if(session('order_success'))

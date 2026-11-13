@@ -5,6 +5,7 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Web\BookingController;
+use App\Http\Controllers\Web\ChatbotController;
 use App\Http\Controllers\Web\CourtController;
 use App\Http\Controllers\Web\LanguageController;
 use App\Http\Controllers\Web\NewsController;
@@ -62,6 +63,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/profile', [ProfileController::class, 'edit'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+
+    // Chatbot AI CSKH & Gợi ý sản phẩm cho Hội viên VIP
+    Route::get('/chatbot/status', [ChatbotController::class, 'status'])->name('chatbot.status');
+    Route::post('/chatbot/message', [ChatbotController::class, 'sendMessage'])->name('chatbot.message');
 });
 
 // Static Pages
