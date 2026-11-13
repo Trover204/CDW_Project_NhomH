@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exceptions\StaleModelLockException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SubscriptionRequest;
 use App\Models\Plan;
@@ -78,23 +79,28 @@ class SubscriptionController extends Controller
         $plan = Plan::findOrFail($validated['plan_id']);
         $price = $validated['price'] ?? $validated['amount_paid'] ?? $subscription->price ?? $plan->price;
 
-        DB::transaction(function () use ($subscription, $validated, $price) {
-            $subscription->update([
-                'user_id' => $validated['user_id'],
-                'plan_id' => $validated['plan_id'],
-                'starts_at' => $validated['starts_at'],
-                'expires_at' => $validated['expires_at'],
-                'status' => $validated['status'] ?? true,
-                'price' => $price,
-            ]);
+        try {
+            DB::transaction(function () use ($subscription, $validated, $price) {
+                $subscription->updateWithOptimisticLockOrFail([
+                    'user_id' => $validated['user_id'],
+                    'plan_id' => $validated['plan_id'],
+                    'starts_at' => $validated['starts_at'],
+                    'expires_at' => $validated['expires_at'],
+                    'status' => $validated['status'] ?? true,
+                    'price' => $price,
+                    'version' => $validated['version'] ?? $subscription->version,
+                ]);
 
-            $this->paymentService->syncFromPayable(
-                $subscription,
-                paymentMethod: $validated['payment_method'] ?? null,
-                status: $validated['payment_status'] ?? null,
-                transactionCode: $validated['transaction_code'] ?? null,
-            );
-        });
+                $this->paymentService->syncFromPayable(
+                    $subscription,
+                    paymentMethod: $validated['payment_method'] ?? null,
+                    status: $validated['payment_status'] ?? null,
+                    transactionCode: $validated['transaction_code'] ?? null,
+                );
+            });
+        } catch (StaleModelLockException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
 
         return redirect()->route('admin.subscriptions.index')->with('success', 'Đã cập nhật subscription và thanh toán.');
     }

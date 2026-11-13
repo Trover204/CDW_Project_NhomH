@@ -71,14 +71,13 @@ class SportTypeController extends Controller
             // Cập nhật thất bại: xóa file vừa tải lên, giữ nguyên ảnh cũ.
             $this->files->delete($newImage, self::IMAGE_DIRECTORY);
 
-            return redirect()->back()->with('error', 'Dữ liệu này vừa được một quản trị viên khác cập nhật. Vui lòng tải lại trang để xem dữ liệu mới nhất.');
+            return redirect()->back()->with('error', SportType::getOptimisticLockErrorMessage());
         }
 
         if ($newImage !== null && $oldImage !== $newImage) {
             $this->files->delete($oldImage, self::IMAGE_DIRECTORY);
         }
 
-        $sportType->shouldBeSearchable() ? $sportType->searchable() : $sportType->unsearchable();
         $sportType->courts()->get()->each(fn ($court) => $court->shouldBeSearchable() ? $court->searchable() : $court->unsearchable());
 
         return redirect()->route('admin.sport-types.index')->with('success', 'Đã cập nhật loại môn thể thao.');

@@ -13,6 +13,7 @@
     <form action="{{ route('admin.ads.update', $ad) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
+        <input type="hidden" name="version" value="{{ $ad->version ?? 0 }}">
 
         <div class="form-group">
             <label class="form-label">Tên quảng cáo <span style="color:red">*</span></label>

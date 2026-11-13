@@ -1,4 +1,5 @@
 @csrf
+<input type="hidden" name="version" value="{{ $plan->version ?? 0 }}">
 
 @if ($errors->any())
     <div class="alert alert-danger">

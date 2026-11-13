@@ -122,7 +122,7 @@ class CommentController extends Controller
         $affectedRows = $comment->updateWithOptimisticLock($validated);
 
         if ($affectedRows === 0) {
-            return redirect()->back()->with('error', 'Dữ liệu này vừa được một quản trị viên khác cập nhật. Vui lòng tải lại trang để xem dữ liệu mới nhất.');
+            return redirect()->back()->with('error', Comment::getOptimisticLockErrorMessage());
         }
 
         return redirect()->route('admin.comments.index')->with('success', 'Đã cập nhật bình luận.');

@@ -12,6 +12,16 @@ class UserRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        if (! $this->filled('version')) {
+            $user = $this->route('user');
+            $this->merge([
+                'version' => $user instanceof \App\Models\User ? (int) $user->version : 0,
+            ]);
+        }
+    }
+
     public function rules(): array
     {
         $user = $this->route('user');
@@ -35,6 +45,7 @@ class UserRequest extends FormRequest
             'birthday' => 'nullable|date|before_or_equal:'.now()->subYears(16)->format('Y-m-d'),
             'role' => 'required|in:admin,staff,customer,ctv,pending_ctv',
             'status' => 'required|boolean',
+            'version' => 'required|integer|min:0',
         ];
 
         if ($this->isMethod('post')) {

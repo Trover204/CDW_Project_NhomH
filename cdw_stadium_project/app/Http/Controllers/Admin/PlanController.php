@@ -47,7 +47,11 @@ class PlanController extends Controller
         $data['discount_percent'] = (int) ($data['discount_percent'] ?? 0);
         $data['status'] = $request->has('status') ? $request->boolean('status') : (bool) $plan->status;
 
-        $plan->update($data);
+        $affectedRows = $plan->updateWithOptimisticLock($data);
+
+        if ($affectedRows === 0) {
+            return redirect()->back()->with('error', Plan::getOptimisticLockErrorMessage());
+        }
 
         return redirect()->route('admin.plans.index')->with('success', 'Đã cập nhật plan.');
     }

@@ -51,10 +51,9 @@ class FacilityController extends Controller
 
         // Nếu affectedRows = 0 nghĩa là version đã bị thay đổi bởi request khác
         if ($affectedRows === 0) {
-            return redirect()->back()->with('error', 'Dữ liệu này vừa được một quản trị viên khác cập nhật. Vui lòng tải lại trang để xem dữ liệu mới nhất.');
+            return redirect()->back()->with('error', Facility::getOptimisticLockErrorMessage());
         }
 
-        $facility->shouldBeSearchable() ? $facility->searchable() : $facility->unsearchable();
         $facility->courts()->get()->each(fn ($court) => $court->shouldBeSearchable() ? $court->searchable() : $court->unsearchable());
 
         return redirect()->route('admin.facilities.index')->with('success', 'Đã cập nhật cơ sở.');

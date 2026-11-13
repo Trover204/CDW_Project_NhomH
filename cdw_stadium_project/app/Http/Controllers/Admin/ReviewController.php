@@ -70,7 +70,11 @@ class ReviewController extends Controller
         $validated = $request->validated();
         $validated['status'] = $request->boolean('status');
 
-        $review->update($validated);
+        $affectedRows = $review->updateWithOptimisticLock($validated);
+
+        if ($affectedRows === 0) {
+            return redirect()->back()->with('error', Review::getOptimisticLockErrorMessage());
+        }
 
         return redirect()
             ->route('admin.comments.index', ['tab' => 'court-reviews'])

@@ -57,10 +57,8 @@ class CourtController extends Controller
 
         // Nếu affectedRows = 0 nghĩa là version đã bị thay đổi bởi request khác
         if ($affectedRows === 0) {
-            return redirect()->back()->with('error', 'Dữ liệu này vừa được một quản trị viên khác cập nhật. Vui lòng tải lại trang để xem dữ liệu mới nhất.');
+            return redirect()->back()->with('error', Court::getOptimisticLockErrorMessage());
         }
-
-        $court->shouldBeSearchable() ? $court->searchable() : $court->unsearchable();
 
         return redirect()->route('admin.courts.index')->with('success', 'Đã cập nhật sân.');
     }

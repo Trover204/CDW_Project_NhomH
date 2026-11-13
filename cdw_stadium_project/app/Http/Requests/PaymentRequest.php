@@ -15,11 +15,20 @@ class PaymentRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
+        $merge = [];
+
         if (! $this->filled('payable_type') && $this->filled('booking_id')) {
-            $this->merge([
-                'payable_type' => Payment::TYPE_BOOKING,
-                'payable_id' => $this->input('booking_id'),
-            ]);
+            $merge['payable_type'] = Payment::TYPE_BOOKING;
+            $merge['payable_id'] = $this->input('booking_id');
+        }
+
+        if (! $this->filled('version')) {
+            $payment = $this->route('payment');
+            $merge['version'] = $payment instanceof Payment ? (int) $payment->version : 0;
+        }
+
+        if (! empty($merge)) {
+            $this->merge($merge);
         }
     }
 
@@ -52,6 +61,7 @@ class PaymentRequest extends FormRequest
             'status' => ['required', Rule::in(array_keys(Payment::STATUSES))],
             'paid_at' => ['nullable', 'date'],
             'note' => ['nullable', 'string', 'max:1000'],
+            'version' => ['required', 'integer', 'min:0'],
         ];
     }
 

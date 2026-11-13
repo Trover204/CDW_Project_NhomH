@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exceptions\StaleModelLockException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SaleRequest;
 use App\Models\Product;
@@ -73,15 +74,19 @@ class SaleController extends Controller
             $validated['sale_date'] = now()->toDateString();
         }
 
-        DB::transaction(function () use ($sale, $validated) {
-            $sale->update(Arr::except($validated, ['payment_method', 'payment_status']));
+        try {
+            DB::transaction(function () use ($sale, $validated) {
+                $sale->updateWithOptimisticLockOrFail(Arr::except($validated, ['payment_method', 'payment_status']));
 
-            $this->paymentService->syncFromPayable(
-                $sale,
-                paymentMethod: $validated['payment_method'] ?? null,
-                status: $validated['payment_status'] ?? null,
-            );
-        });
+                $this->paymentService->syncFromPayable(
+                    $sale,
+                    paymentMethod: $validated['payment_method'] ?? null,
+                    status: $validated['payment_status'] ?? null,
+                );
+            });
+        } catch (StaleModelLockException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
 
         return redirect()->route('admin.sales.index')->with('success', 'Đơn hàng bán đã được cập nhật thành công.');
     }

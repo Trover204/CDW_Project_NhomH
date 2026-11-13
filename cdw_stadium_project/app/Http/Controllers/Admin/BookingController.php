@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exceptions\StaleModelLockException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BookingRequest;
 use App\Models\Booking;
@@ -70,15 +71,19 @@ class BookingController extends Controller
     {
         $validated = $request->validated();
 
-        DB::transaction(function () use ($booking, $validated) {
-            $booking->update(Arr::except($validated, ['payment_method', 'payment_status']));
+        try {
+            DB::transaction(function () use ($booking, $validated) {
+                $booking->updateWithOptimisticLockOrFail(Arr::except($validated, ['payment_method', 'payment_status']));
 
-            $this->paymentService->syncFromPayable(
-                $booking,
-                paymentMethod: $validated['payment_method'] ?? null,
-                status: $validated['payment_status'] ?? null,
-            );
-        });
+                $this->paymentService->syncFromPayable(
+                    $booking,
+                    paymentMethod: $validated['payment_method'] ?? null,
+                    status: $validated['payment_status'] ?? null,
+                );
+            });
+        } catch (StaleModelLockException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
 
         return redirect()->route('admin.bookings.index')->with('success', 'Đã cập nhật đặt sân và thanh toán.');
     }

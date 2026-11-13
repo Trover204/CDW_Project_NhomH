@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\LogsActivity;
+use App\Traits\OptimisticLocking;
 use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,7 @@ use Laravel\Scout\Searchable;
 class Product extends Model
 {
     /** @use HasFactory<ProductFactory> */
-    use HasFactory, LogsActivity, Searchable;
+    use HasFactory, LogsActivity, OptimisticLocking, Searchable;
 
     protected $fillable = [
         'name',
@@ -25,12 +26,14 @@ class Product extends Model
         'is_in_stock',
         'image',
         'is_active',
+        'version',
     ];
 
     protected $casts = [
         'cost_price' => 'decimal:2',
         'is_in_stock' => 'boolean',
         'is_active' => 'boolean',
+        'version' => 'integer',
     ];
 
     public function sales(): HasMany

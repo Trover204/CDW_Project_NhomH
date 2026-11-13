@@ -15,6 +15,16 @@ class AdRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        if (! $this->filled('version')) {
+            $ad = $this->route('ad');
+            $this->merge([
+                'version' => $ad instanceof \App\Models\Ad ? (int) $ad->version : 0,
+            ]);
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -28,6 +38,7 @@ class AdRequest extends FormRequest
             'link_url' => 'nullable|url|max:191',
             'is_active' => 'boolean',
             'description' => 'nullable|string',
+            'version' => 'required|integer|min:0',
         ];
     }
 }

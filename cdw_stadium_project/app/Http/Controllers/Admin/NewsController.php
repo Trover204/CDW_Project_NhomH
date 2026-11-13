@@ -59,11 +59,25 @@ class NewsController extends Controller
 
         $validated['slug'] = $this->resolveUniqueSlug($validated['slug'] ?? null, $validated['title'], $news->id);
 
+        $oldImage = $news->image;
+        $newImage = null;
+
         if ($request->hasFile('image')) {
-            $validated['image'] = $this->files->replace($request->file('image'), $news->image, self::IMAGE_DIRECTORY);
+            $newImage = $this->files->store($request->file('image'), self::IMAGE_DIRECTORY);
+            $validated['image'] = $newImage;
         }
 
-        $news->update($validated);
+        $affectedRows = $news->updateWithOptimisticLock($validated);
+
+        if ($affectedRows === 0) {
+            $this->files->delete($newImage, self::IMAGE_DIRECTORY);
+
+            return redirect()->back()->with('error', News::getOptimisticLockErrorMessage());
+        }
+
+        if ($newImage !== null && $oldImage !== $newImage) {
+            $this->files->delete($oldImage, self::IMAGE_DIRECTORY);
+        }
 
         return redirect()->route('admin.news.index')->with('success', 'Cập nhật tin tức thành công.');
     }

@@ -68,11 +68,25 @@ class UserController extends Controller
             unset($validated['password']);
         }
 
+        $oldAvatar = $user->avatar;
+        $newAvatar = null;
+
         if ($request->hasFile('avatar')) {
-            $validated['avatar'] = $this->files->replace($request->file('avatar'), $user->avatar, self::AVATAR_DIRECTORY);
+            $newAvatar = $this->files->store($request->file('avatar'), self::AVATAR_DIRECTORY);
+            $validated['avatar'] = $newAvatar;
         }
 
-        $user->update($validated);
+        $affectedRows = $user->updateWithOptimisticLock($validated);
+
+        if ($affectedRows === 0) {
+            $this->files->delete($newAvatar, self::AVATAR_DIRECTORY);
+
+            return redirect()->back()->with('error', User::getOptimisticLockErrorMessage());
+        }
+
+        if ($newAvatar !== null && $oldAvatar !== $newAvatar) {
+            $this->files->delete($oldAvatar, self::AVATAR_DIRECTORY);
+        }
 
         return redirect()->route('admin.users.index')->with('success', 'Đã cập nhật người dùng.');
     }
