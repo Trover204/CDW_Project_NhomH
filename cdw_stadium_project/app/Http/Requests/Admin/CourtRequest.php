@@ -12,9 +12,20 @@ class CourtRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        if (! $this->filled('version')) {
+            $court = $this->route('court');
+            $this->merge([
+                'version' => $court instanceof \App\Models\Court ? (int) $court->version : 0,
+            ]);
+        }
+    }
+
     public function rules(): array
     {
-        $id = $this->route('court')?->id;
+        $court = $this->route('court');
+        $id = $court instanceof \App\Models\Court ? $court->id : $court;
 
         return [
             'facility_id' => ['required', 'exists:facilities,id'],
@@ -27,7 +38,7 @@ class CourtRequest extends FormRequest
                     ->where(fn ($query) => $query->where('facility_id', $this->facility_id))
                     ->ignore($id),
             ],
-            'version' => 'required|integer', // Thêm validate cho version
+            'version' => ['required', 'integer', 'min:0'],
             'capacity' => ['required', 'integer', 'min:1'],
             'description' => ['nullable', 'string', 'max:1000'],
             'status' => ['required', Rule::in(['available', 'maintenance', 'inactive'])],

@@ -3,8 +3,11 @@
 
 @section('content')
 <div class="topbar">
-    <h1>Quản lý Plans</h1>
-    <div class="right">
+    <h1>Quản lý Gói cước (Plans)</h1>
+    <div class="right" style="display: flex; gap: 10px;">
+        <a href="{{ route('admin.subscriptions.index') }}" class="btn btn-secondary">
+            <i class="ti ti-crown"></i> DS đăng ký (Subscriptions)
+        </a>
         <a href="{{ route('admin.plans.create') }}" class="btn btn-primary">
             <i class="ti ti-plus"></i> Thêm Plan
         </a>

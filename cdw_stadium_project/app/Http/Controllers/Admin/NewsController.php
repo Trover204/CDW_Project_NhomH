@@ -30,9 +30,7 @@ class NewsController extends Controller
     {
         $validated = $request->validated();
 
-        if (empty($validated['slug'])) {
-            $validated['slug'] = Str::slug($validated['title']);
-        }
+        $validated['slug'] = $this->resolveUniqueSlug($validated['slug'] ?? null, $validated['title']);
 
         if ($request->hasFile('image')) {
             $validated['image'] = $this->files->store($request->file('image'), self::IMAGE_DIRECTORY);
@@ -45,6 +43,11 @@ class NewsController extends Controller
         return redirect()->route('admin.news.index')->with('success', 'Thêm tin tức thành công.');
     }
 
+    public function show(News $news)
+    {
+        return redirect()->route('admin.news.edit', $news);
+    }
+
     public function edit(News $news)
     {
         return view('admin.news.edit', compact('news'));
@@ -54,9 +57,7 @@ class NewsController extends Controller
     {
         $validated = $request->validated();
 
-        if (empty($validated['slug'])) {
-            $validated['slug'] = Str::slug($validated['title']);
-        }
+        $validated['slug'] = $this->resolveUniqueSlug($validated['slug'] ?? null, $validated['title'], $news->id);
 
         if ($request->hasFile('image')) {
             $validated['image'] = $this->files->replace($request->file('image'), $news->image, self::IMAGE_DIRECTORY);
@@ -69,10 +70,28 @@ class NewsController extends Controller
 
     public function destroy(News $news)
     {
-        $this->files->delete($news->image, self::IMAGE_DIRECTORY);
-
+        $imagePath = $news->image;
         $news->delete();
+        $this->files->delete($imagePath, self::IMAGE_DIRECTORY);
 
         return redirect()->route('admin.news.index')->with('success', 'Đã xóa tin tức.');
+    }
+
+    protected function resolveUniqueSlug(?string $slugInput, string $title, ?int $ignoreId = null): string
+    {
+        $baseSlug = Str::slug($slugInput ?: $title) ?: 'tin-tuc';
+        $slug = $baseSlug;
+        $counter = 1;
+
+        while (
+            News::where('slug', $slug)
+                ->when($ignoreId, fn ($q) => $q->where('id', '!=', $ignoreId))
+                ->exists()
+        ) {
+            $slug = $baseSlug.'-'.$counter;
+            $counter++;
+        }
+
+        return $slug;
     }
 }

@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use App\Traits\LogsActivity;
 use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Scout\Searchable;
 
 class Product extends Model
 {
     /** @use HasFactory<ProductFactory> */
-    use HasFactory, Searchable;
+    use HasFactory, LogsActivity, Searchable;
 
     protected $fillable = [
         'name',
@@ -30,6 +32,11 @@ class Product extends Model
         'is_in_stock' => 'boolean',
         'is_active' => 'boolean',
     ];
+
+    public function sales(): HasMany
+    {
+        return $this->hasMany(Sale::class);
+    }
 
     public function getImageUrlAttribute(): ?string
     {

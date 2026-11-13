@@ -85,14 +85,37 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <label class="form-label">Trạng thái <span style="color: var(--danger);">*</span></label>
-            <select name="status" class="form-control" required>
-                <option value="pending" @selected(old('status') === 'pending')>Chờ xử lý</option>
-                <option value="completed" @selected(old('status', 'completed') === 'completed')>Hoàn thành</option>
-                <option value="cancelled" @selected(old('status') === 'cancelled')>Đã hủy</option>
-            </select>
-            @error('status') <div class="form-error">{{ $message }}</div> @enderror
+        <div class="form-grid-3">
+            <div class="form-group">
+                <label class="form-label">Trạng thái đơn <span style="color: var(--danger);">*</span></label>
+                <select name="status" class="form-control" required>
+                    <option value="pending" @selected(old('status') === 'pending')>Chờ xử lý</option>
+                    <option value="completed" @selected(old('status', 'completed') === 'completed')>Hoàn thành</option>
+                    <option value="cancelled" @selected(old('status') === 'cancelled')>Đã hủy</option>
+                </select>
+                @error('status') <div class="form-error">{{ $message }}</div> @enderror
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Phương thức TT (đồng bộ Payment)</label>
+                <select name="payment_method" class="form-control">
+                    @foreach (\App\Models\Payment::METHODS as $mKey => $mText)
+                        <option value="{{ $mKey }}" @selected(old('payment_method', 'cash') === $mKey)>{{ $mText }}</option>
+                    @endforeach
+                </select>
+                @error('payment_method') <div class="form-error">{{ $message }}</div> @enderror
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Trạng thái TT</label>
+                <select name="payment_status" class="form-control">
+                    <option value="">-- Tự động theo trạng thái đơn --</option>
+                    @foreach (\App\Models\Payment::STATUSES as $stKey => $stText)
+                        <option value="{{ $stKey }}" @selected(old('payment_status') === $stKey)>{{ $stText }}</option>
+                    @endforeach
+                </select>
+                @error('payment_status') <div class="form-error">{{ $message }}</div> @enderror
+            </div>
         </div>
 
         <div class="form-actions">

@@ -24,11 +24,17 @@ class FacilityController extends Controller
     {
         $data = $request->validated();
         $data['status'] = $request->boolean('status');
+        $data['version'] = 0;
 
         Facility::create($data);
 
         return redirect()->route('admin.facilities.index')
             ->with('success', 'Thêm cơ sở thành công.');
+    }
+
+    public function show(Facility $facility)
+    {
+        return redirect()->route('admin.facilities.edit', $facility);
     }
 
     public function edit(Facility $facility)
@@ -39,6 +45,7 @@ class FacilityController extends Controller
     public function update(FacilityRequest $request, Facility $facility)
     {
         $validated = $request->validated();
+        $validated['status'] = $request->boolean('status');
 
         $affectedRows = $facility->updateWithOptimisticLock($validated);
 
@@ -47,7 +54,6 @@ class FacilityController extends Controller
             return redirect()->back()->with('error', 'Dữ liệu này vừa được một quản trị viên khác cập nhật. Vui lòng tải lại trang để xem dữ liệu mới nhất.');
         }
 
-        $facility->refresh();
         $facility->shouldBeSearchable() ? $facility->searchable() : $facility->unsearchable();
         $facility->courts()->get()->each(fn ($court) => $court->shouldBeSearchable() ? $court->searchable() : $court->unsearchable());
 

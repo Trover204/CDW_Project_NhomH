@@ -14,7 +14,8 @@ class FacilityRequest extends FormRequest
 
     public function rules(): array
     {
-        $id = $this->route('facility')?->id;
+        $facility = $this->route('facility');
+        $id = $facility instanceof \App\Models\Facility ? $facility->id : $facility;
 
         return [
             'name' => ['required', 'string', 'max:191'],
@@ -27,7 +28,7 @@ class FacilityRequest extends FormRequest
                     ->where(fn ($query) => $query->where('name', $this->name))
                     ->ignore($id),
             ],
-            'version' => 'required|integer', // Thêm validate cho version
+            'version' => ['required', 'integer', 'min:0'],
             'phone' => ['nullable', 'string', 'max:20'],
             'open_time' => ['required', 'date_format:H:i'],
             'close_time' => ['required', 'date_format:H:i', 'after:open_time'],
@@ -37,13 +38,17 @@ class FacilityRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        // Chuẩn hóa định dạng thời gian về H:i nếu có giây
+        // Chuẩn hóa định dạng thời gian về H:i nếu có giây và mặc định version = 0 khi tạo mới
         $merge = [];
         if ($this->has('open_time') && is_string($this->open_time)) {
             $merge['open_time'] = substr($this->open_time, 0, 5);
         }
         if ($this->has('close_time') && is_string($this->close_time)) {
             $merge['close_time'] = substr($this->close_time, 0, 5);
+        }
+        if (! $this->filled('version')) {
+            $facility = $this->route('facility');
+            $merge['version'] = $facility instanceof \App\Models\Facility ? (int) $facility->version : 0;
         }
         if (! empty($merge)) {
             $this->merge($merge);

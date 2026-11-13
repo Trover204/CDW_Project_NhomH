@@ -14,6 +14,7 @@
 <div class="form-card">
     <form action="{{ route('admin.sport-types.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
+        <input type="hidden" name="version" value="0">
         @include('admin.sport-types.form')
     </form>
 </div>

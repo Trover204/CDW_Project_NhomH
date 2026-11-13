@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\LogsActivity;
 use App\Traits\OptimisticLocking;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,7 @@ use Laravel\Scout\Searchable;
 
 class SportType extends Model
 {
-    use HasFactory, OptimisticLocking, Searchable;
+    use HasFactory, LogsActivity, OptimisticLocking, Searchable;
 
     protected $fillable = ['name', 'image', 'description', 'status', 'version'];
 
@@ -19,6 +20,11 @@ class SportType extends Model
     public function courts(): HasMany
     {
         return $this->hasMany(Court::class);
+    }
+
+    public function priceRules(): HasMany
+    {
+        return $this->hasMany(PriceRule::class);
     }
 
     public function shouldBeSearchable(): bool

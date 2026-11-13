@@ -65,6 +65,17 @@
 </div>
 
 <div class="form-group">
+    <label class="form-label">Trạng thái thanh toán (đồng bộ sang Payment)</label>
+    <select name="payment_status" class="form-control">
+        <option value="">-- Tự động theo trạng thái gói --</option>
+        @foreach (\App\Models\Payment::STATUSES as $stKey => $stText)
+            <option value="{{ $stKey }}" @selected(old('payment_status', $subscription->payment->status ?? '') === $stKey)>{{ $stText }}</option>
+        @endforeach
+    </select>
+    @error('payment_status') <div class="form-error">{{ $message }}</div> @enderror
+</div>
+
+<div class="form-group">
     <label class="form-label">Mã giao dịch (Để trống sẽ tự sinh ở bảng Payment)</label>
     <input type="text" name="transaction_code" value="{{ old('transaction_code', $subscription->payment->transaction_code ?? '') }}" class="form-control">
     @error('transaction_code') <div class="form-error">{{ $message }}</div> @enderror

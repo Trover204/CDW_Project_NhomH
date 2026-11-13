@@ -22,7 +22,11 @@ class PlanController extends Controller
 
     public function store(PlanRequest $request)
     {
-        Plan::create($request->validated());
+        $data = $request->validated();
+        $data['discount_percent'] = (int) ($data['discount_percent'] ?? 0);
+        $data['status'] = $request->has('status') ? $request->boolean('status') : true;
+
+        Plan::create($data);
 
         return redirect()->route('admin.plans.index')->with('success', 'Đã thêm plan.');
     }
@@ -39,7 +43,11 @@ class PlanController extends Controller
 
     public function update(PlanRequest $request, Plan $plan)
     {
-        $plan->update($request->validated());
+        $data = $request->validated();
+        $data['discount_percent'] = (int) ($data['discount_percent'] ?? 0);
+        $data['status'] = $request->has('status') ? $request->boolean('status') : (bool) $plan->status;
+
+        $plan->update($data);
 
         return redirect()->route('admin.plans.index')->with('success', 'Đã cập nhật plan.');
     }

@@ -1,3 +1,13 @@
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul style="margin: 0; padding-left: 20px;">
+            @foreach ($errors->all() as $e)
+                <li>{{ $e }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="form-group">
     <label class="form-label">Tiêu đề *</label>
     <input type="text" name="title" value="{{ old('title', $news->title ?? '') }}" class="form-control" placeholder="Nhập tiêu đề tin tức">

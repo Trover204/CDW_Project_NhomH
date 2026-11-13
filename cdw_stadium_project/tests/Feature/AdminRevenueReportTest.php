@@ -40,7 +40,7 @@ class AdminRevenueReportTest extends TestCase
         ]);
 
         $this->facility = Facility::factory()->create(['name' => 'Cơ sở Thủ Đức']);
-        $this->football = SportType::factory()->create(['name' => 'Bóng đá mini']);
+        $this->football = SportType::factory()->create(['name' => 'Bóng đá']);
         $this->badminton = SportType::factory()->create(['name' => 'Cầu lông']);
 
         $this->footballCourt = Court::factory()->create([

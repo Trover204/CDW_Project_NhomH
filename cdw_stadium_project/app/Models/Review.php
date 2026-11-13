@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,7 @@ use Laravel\Scout\Searchable;
 
 class Review extends Model
 {
-    use HasFactory, Searchable;
+    use HasFactory, LogsActivity, Searchable;
 
     protected $fillable = [
         'user_id',
@@ -19,6 +20,11 @@ class Review extends Model
         'rating',
         'content',
         'status',
+    ];
+
+    protected $casts = [
+        'rating' => 'integer',
+        'status' => 'boolean',
     ];
 
     public function user(): BelongsTo

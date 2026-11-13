@@ -39,8 +39,8 @@ class ProductController extends Controller
     {
         $validated = $request->validated();
 
-        $validated['is_in_stock'] = $request->has('is_in_stock');
-        $validated['is_active'] = $request->has('is_active');
+        $validated['is_in_stock'] = $request->boolean('is_in_stock');
+        $validated['is_active'] = $request->boolean('is_active');
 
         if ($request->hasFile('image')) {
             $validated['image'] = $this->files->store($request->file('image'), self::IMAGE_DIRECTORY);
@@ -49,6 +49,14 @@ class ProductController extends Controller
         Product::create($validated);
 
         return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được tạo thành công.');
+    }
+
+    /**
+     * Redirect show to edit page.
+     */
+    public function show(Product $product)
+    {
+        return redirect()->route('admin.products.edit', $product);
     }
 
     /**
@@ -66,8 +74,8 @@ class ProductController extends Controller
     {
         $validated = $request->validated();
 
-        $validated['is_in_stock'] = $request->has('is_in_stock');
-        $validated['is_active'] = $request->has('is_active');
+        $validated['is_in_stock'] = $request->boolean('is_in_stock');
+        $validated['is_active'] = $request->boolean('is_active');
 
         if ($request->hasFile('image')) {
             $validated['image'] = $this->files->replace($request->file('image'), $product->image, self::IMAGE_DIRECTORY);
@@ -83,9 +91,14 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $this->files->delete($product->image, self::IMAGE_DIRECTORY);
-        $product->delete();
+        try {
+            $imagePath = $product->image;
+            $product->delete();
+            $this->files->delete($imagePath, self::IMAGE_DIRECTORY);
 
-        return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được xóa thành công.');
+            return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được xóa thành công.');
+        } catch (\Throwable $e) {
+            return redirect()->route('admin.products.index')->with('error', 'Không thể xóa sản phẩm này do đang có dữ liệu ràng buộc.');
+        }
     }
 }
