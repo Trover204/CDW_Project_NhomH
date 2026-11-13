@@ -1,6 +1,6 @@
 @extends('web.layouts.app')
 
-@section('title', 'Cửa Hàng Merch - Áo Đấu Bóng Đá Chính Hãng')
+@section('title', __('Cửa Hàng Merch - Áo Đấu Bóng Đá Chính Hãng') . ' - ' . config('app.name', 'Sân Nhóm H'))
 
 @push('styles')
 <style>
@@ -623,13 +623,13 @@
     <div class="merch-hero">
         <div class="merch-hero-content">
             <div class="merch-hero-badge">
-                <i class="ti ti-badge-check"></i> Bộ Sưu Tập Chính Hãng 2024
+                <i class="ti ti-badge-check"></i> {{ __('Bộ Sưu Tập Chính Hãng 2024') }}
             </div>
             <h1 class="merch-hero-title">
-                Sản phẩm chính hãng (Merch)
+                {{ __('Sản phẩm chính hãng (Merch)') }}
             </h1>
             <p class="merch-hero-desc">
-                Cung cấp các mẫu áo đấu bóng đá câu lạc bộ hàng đầu thế giới, đội tuyển quốc gia và phụ kiện thể thao chính hãng, thoáng mát, thấm hút mồ hôi tối ưu.
+                {{ __('Cung cấp các mẫu áo đấu bóng đá câu lạc bộ hàng đầu thế giới, đội tuyển quốc gia và phụ kiện thể thao chính hãng, thoáng mát, thấm hút mồ hôi tối ưu.') }}
             </p>
         </div>
         <div class="merch-hero-bg-icon">
@@ -644,8 +644,8 @@
                 <i class="ti ti-truck-delivery"></i>
             </div>
             <div class="merch-feature-text">
-                <h4>Giao hàng hỏa tốc</h4>
-                <p>Toàn quốc từ 2 - 3 ngày</p>
+                <h4>{{ __('Giao hàng hỏa tốc') }}</h4>
+                <p>{{ __('Toàn quốc từ 2 - 3 ngày') }}</p>
             </div>
         </div>
         <div class="merch-feature-item">
@@ -653,8 +653,8 @@
                 <i class="ti ti-shield-check"></i>
             </div>
             <div class="merch-feature-text">
-                <h4>Cam kết 100%</h4>
-                <p>Chính hãng, đầy đủ tem mác</p>
+                <h4>{{ __('Cam kết 100%') }}</h4>
+                <p>{{ __('Chính hãng, đầy đủ tem mác') }}</p>
             </div>
         </div>
         <div class="merch-feature-item">
@@ -662,8 +662,8 @@
                 <i class="ti ti-rotate-clockwise"></i>
             </div>
             <div class="merch-feature-text">
-                <h4>Đổi size miễn phí</h4>
-                <p>Hỗ trợ đổi trong 7 ngày</p>
+                <h4>{{ __('Đổi size miễn phí') }}</h4>
+                <p>{{ __('Hỗ trợ đổi trong 7 ngày') }}</p>
             </div>
         </div>
         <div class="merch-feature-item">
@@ -671,8 +671,8 @@
                 <i class="ti ti-credit-card"></i>
             </div>
             <div class="merch-feature-text">
-                <h4>Thanh toán an toàn</h4>
-                <p>MoMo, Visa, PayPal linh hoạt</p>
+                <h4>{{ __('Thanh toán an toàn') }}</h4>
+                <p>{{ __('MoMo, Visa, PayPal linh hoạt') }}</p>
             </div>
         </div>
     </div>
@@ -686,13 +686,13 @@
                     <i class="ti ti-search merch-search-icon"></i>
                     <input type="text" name="search" value="{{ request('search', request('q')) }}"
                            class="merch-search-input"
-                           placeholder="Tìm theo tên áo, câu lạc bộ, giải đấu...">
+                           placeholder="{{ __('Tìm theo tên áo, câu lạc bộ, giải đấu...') }}">
                 </div>
 
                 {{-- Team Filter Dropdown --}}
                 <div class="merch-select-wrap">
                     <select name="team" id="merch-filter-team" class="merch-select">
-                        <option value="">-- Tất cả CLB / ĐTQG --</option>
+                        <option value="">-- {{ __('Tất cả CLB / ĐTQG') }} --</option>
                         @if(isset($teams))
                             @foreach($teams as $t)
                                 <option value="{{ $t }}" {{ request('team') === $t ? 'selected' : '' }}>{{ $t }}</option>
@@ -704,21 +704,21 @@
                 {{-- Sort Dropdown --}}
                 <div class="merch-select-wrap">
                     <select name="sort" id="merch-filter-sort" class="merch-select">
-                        <option value="newest" {{ request('sort') === 'newest' ? 'selected' : '' }}>Mới nhất</option>
-                        <option value="price_asc" {{ request('sort') === 'price_asc' ? 'selected' : '' }}>Giá: Thấp đến Cao</option>
-                        <option value="price_desc" {{ request('sort') === 'price_desc' ? 'selected' : '' }}>Giá: Cao đến Thấp</option>
-                        <option value="name_asc" {{ request('sort') === 'name_asc' ? 'selected' : '' }}>Tên: A &rarr; Z</option>
+                        <option value="newest" {{ request('sort') === 'newest' ? 'selected' : '' }}>{{ __('Mới nhất') }}</option>
+                        <option value="price_asc" {{ request('sort') === 'price_asc' ? 'selected' : '' }}>{{ __('Giá: Thấp đến Cao') }}</option>
+                        <option value="price_desc" {{ request('sort') === 'price_desc' ? 'selected' : '' }}>{{ __('Giá: Cao đến Thấp') }}</option>
+                        <option value="name_asc" {{ request('sort') === 'name_asc' ? 'selected' : '' }}>{{ __('Tên: A → Z') }}</option>
                     </select>
                 </div>
 
                 {{-- Buttons --}}
                 <div style="display: flex; gap: 8px;">
                     <button type="submit" class="merch-btn-filter">
-                        <i class="ti ti-filter"></i> Lọc
+                        <i class="ti ti-filter"></i> {{ __('Lọc') }}
                     </button>
                     @if(request('search') || request('q') || request('team') || request('sort'))
                         <a href="{{ route('products.index') }}" class="merch-btn-reset">
-                            <i class="ti ti-x"></i> Xóa lọc
+                            <i class="ti ti-x"></i> {{ __('Xóa lọc') }}
                         </a>
                     @endif
                 </div>
@@ -728,7 +728,7 @@
             <div class="merch-chips-wrap">
                 <a href="{{ route('products.index', array_merge(request()->except('team', 'page'), [])) }}"
                    class="merch-chip {{ !request('team') ? 'active' : '' }}">
-                    Tất cả ({{ $products->total() }})
+                    {{ __('Tất cả') }} ({{ $products->total() }})
                 </a>
                 @php
                     $popularTeams = [
@@ -753,12 +753,12 @@
     {{-- Result stats --}}
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; font-size: 14px; color: var(--ink-soft, #525266);">
         <div>
-            Hiển thị <strong>{{ $products->firstItem() ?? 0 }}-{{ $products->lastItem() ?? 0 }}</strong> trên tổng số <strong>{{ $products->total() }}</strong> sản phẩm
+            {{ __('Hiển thị :first-:last trên tổng số :total sản phẩm', ['first' => $products->firstItem() ?? 0, 'last' => $products->lastItem() ?? 0, 'total' => $products->total()]) }}
             @if(request('team'))
-                &bull; Đội bóng: <span style="color: #EC4899; font-weight: 700;">{{ request('team') }}</span>
+                &bull; {{ __('Đội bóng:') }} <span style="color: #EC4899; font-weight: 700;">{{ request('team') }}</span>
             @endif
             @if(request('search') || request('q'))
-                &bull; Từ khóa: "<span style="color: #EC4899; font-weight: 700;">{{ request('search', request('q')) }}</span>"
+                &bull; {{ __('Từ khóa:') }} "<span style="color: #EC4899; font-weight: 700;">{{ request('search', request('q')) }}</span>"
             @endif
         </div>
     </div>
@@ -776,11 +776,11 @@
 
                     @if($product->is_in_stock && $product->stock_quantity > 0)
                         <span class="merch-badge-stock in-stock">
-                            <i class="ti ti-check" style="font-size: 11px;"></i> Còn {{ $product->stock_quantity }}
+                            <i class="ti ti-check" style="font-size: 11px;"></i> {{ __('Còn :count', ['count' => $product->stock_quantity]) }}
                         </span>
                     @else
                         <span class="merch-badge-stock out-stock">
-                            <i class="ti ti-x" style="font-size: 11px;"></i> Hết hàng
+                            <i class="ti ti-x" style="font-size: 11px;"></i> {{ __('Hết hàng') }}
                         </span>
                     @endif
 
@@ -791,7 +791,7 @@
                     @else
                         <div style="display:flex; flex-direction:column; align-items:center; color:#9CA3AF; gap:6px;">
                             <i class="ti ti-shirt" style="font-size:48px; opacity:0.4;"></i>
-                            <span style="font-size:12px;">Chưa có ảnh</span>
+                            <span style="font-size:12px;">{{ __('Chưa có ảnh') }}</span>
                         </div>
                     @endif
                 </div>
@@ -814,7 +814,7 @@
                         {{ number_format($product->cost_price, 0, ',', '.') }}₫
                     </span>
                     <span class="merch-card-tag">
-                        <i class="ti ti-rosette-discount-check" style="color:#EC4899; font-size:14px;"></i> Chính hãng
+                        <i class="ti ti-rosette-discount-check" style="color:#EC4899; font-size:14px;"></i> {{ __('Chính hãng') }}
                     </span>
                 </div>
 
@@ -823,16 +823,16 @@
                     @auth
                         @if($product->is_in_stock && $product->stock_quantity > 0)
                             <a href="{{ route('products.checkout', $product->id) }}" class="merch-btn-buy">
-                                <i class="ti ti-shopping-cart"></i> Mua ngay
+                                <i class="ti ti-shopping-cart"></i> {{ __('Mua ngay') }}
                             </a>
                         @else
                             <button disabled class="merch-btn-disabled">
-                                <i class="ti ti-ban"></i> Tạm hết hàng
+                                <i class="ti ti-ban"></i> {{ __('Tạm hết hàng') }}
                             </button>
                         @endif
                     @else
                         <a href="{{ route('login') }}" class="merch-btn-login">
-                            <i class="ti ti-login"></i> Đăng nhập để mua
+                            <i class="ti ti-login"></i> {{ __('Đăng nhập để mua') }}
                         </a>
                     @endauth
                 </div>
@@ -842,10 +842,10 @@
                 <div style="width: 72px; height: 72px; border-radius: 50%; background: #F3F4F6; color: #9CA3AF; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 36px;">
                     <i class="ti ti-shopping-bag-x"></i>
                 </div>
-                <h3 style="font-size: 19px; font-weight: 700; color: var(--ink, #11201B); margin: 0 0 8px;">Không tìm thấy sản phẩm phù hợp</h3>
-                <p style="font-size: 14.5px; color: var(--ink-soft, #5E726A); margin: 0 0 20px;">Hãy thử điều chỉnh lại bộ lọc hoặc tìm kiếm với từ khóa khác.</p>
+                <h3 style="font-size: 19px; font-weight: 700; color: var(--ink, #11201B); margin: 0 0 8px;">{{ __('Không tìm thấy sản phẩm phù hợp') }}</h3>
+                <p style="font-size: 14.5px; color: var(--ink-soft, #5E726A); margin: 0 0 20px;">{{ __('Hãy thử điều chỉnh lại bộ lọc hoặc tìm kiếm với từ khóa khác.') }}</p>
                 <a href="{{ route('products.index') }}" class="merch-btn-filter" style="display: inline-flex; text-decoration: none;">
-                    <i class="ti ti-refresh"></i> Khám phá tất cả sản phẩm
+                    <i class="ti ti-refresh"></i> {{ __('Khám phá tất cả sản phẩm') }}
                 </a>
             </div>
         @endforelse

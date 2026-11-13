@@ -1,17 +1,10 @@
 @extends('web.layouts.app')
 
+@section('title', __('Sân yêu thích') . ' - ' . config('app.name', 'Sân Nhóm H'))
 
 @section('content')
-{{-- =====================================================
 
-    ====================================================== --}}
-
-
-    {{-- =====================================================
-         MAIN CONTENT
-    ====================================================== --}}
-
-        <div style="padding: 40px 0; background: #FAF7F9; min-height: 70vh;">
+    <div style="padding: 40px 0; background: #FAF7F9; min-height: 70vh;">
         <div class="wrap">
             <div style="font-family:Arial,Helvetica,sans-serif;border:0.5px solid #F1E4EC;border-radius:12px;overflow:hidden;background:#FFFFFF;max-width:900px;margin:0 auto;">
                 <div style="display:flex;align-items:center;gap:6px;padding:8px 12px;border-bottom:0.5px solid #F1E4EC;background:#FDF2F8;">
@@ -21,8 +14,8 @@
                     <div style="flex:1;margin-left:8px;height:18px;border-radius:6px;background:#FFFFFF;border:0.5px solid #F1E4EC;font-size:11px;color:#525266;display:flex;align-items:center;padding:0 8px;">sannhomh.vn/san-yeu-thich</div>
                 </div>
                 <div style="padding:18px 20px;">
-                    <div style="font-size:15px;font-weight:700;color:#181824;margin-bottom:4px;">Sân yêu thích</div>
-                    <div style="font-size:11.5px;color:#525266;margin-bottom:16px;">Bạn đã lưu {{ $courts->total() }} sân — đặt lại nhanh chỉ với một chạm</div>
+                    <div style="font-size:15px;font-weight:700;color:#181824;margin-bottom:4px;">{{ __('Sân yêu thích') }}</div>
+                    <div style="font-size:11.5px;color:#525266;margin-bottom:16px;">{{ __('Bạn đã lưu :count sân — đặt lại nhanh chỉ với một chạm', ['count' => $courts->total()]) }}</div>
 
                     @if($courts->count() > 0)
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
@@ -59,9 +52,9 @@
                                     </div>
                                     <div style="padding:8px;">
                                         <div style="font-size:12px;font-weight:600;color:#181824;">{{ $court->name }}</div>
-                                        <div style="font-size:10.5px;color:#525266;margin:3px 0 8px;">{{ $court->facility->name ?? 'Không rõ' }} · {{ number_format($court->price ?? 150000, 0, ',', '.') }}đ/giờ</div>
+                                        <div style="font-size:10.5px;color:#525266;margin:3px 0 8px;">{{ $court->facility->name ?? __('Không rõ') }} · {{ number_format($court->price ?? 150000, 0, ',', '.') }}đ/{{ __('giờ') }}</div>
                                         <a href="{{ route('courts.show', $court->id) }}" style="text-decoration:none;display:block;">
-                                            <div style="height:28px;border-radius:6px;background:linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;">Đặt lại</div>
+                                            <div style="height:28px;border-radius:6px;background:linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;">{{ __('Đặt lại') }}</div>
                                         </a>
                                     </div>
                                 </div>
@@ -73,7 +66,7 @@
                         </div>
                     @else
                         <div style="padding: 30px; text-align: center; color: #6B7A70; background: #F7FAF8; border-radius: 8px;">
-                            Bạn chưa có sân yêu thích nào.
+                            {{ __('Bạn chưa có sân yêu thích nào.') }}
                         </div>
                     @endif
                 </div>
@@ -81,4 +74,3 @@
         </div>
     </div>
 @endsection
-

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <script nonce="{{ $cspNonce ?? '' }}">if(localStorage.getItem("theme")==="dark") document.documentElement.setAttribute("data-theme", "dark");</script>
     <meta charset="utf-8">
@@ -27,23 +27,23 @@
         </div>
 
         <div class="showcase-middle">
-            <span class="showcase-badge"><i class="ti ti-bolt"></i> Nền tảng đặt sân thể thao số 1</span>
-            <h2>Khởi động đam mê, ra sân thi đấu chỉ trong 30 giây</h2>
-            <p>Hơn 500 sân bóng đá cỏ nhân tạo, cầu lông thảm chuẩn quốc tế, pickleball và tennis trên khắp thành phố đang chờ bạn.</p>
+            <span class="showcase-badge"><i class="ti ti-bolt"></i> {{ __('Nền tảng đặt sân thể thao số 1') }}</span>
+            <h2>{{ __('Khởi động đam mê, ra sân thi đấu chỉ trong 30 giây') }}</h2>
+            <p>{{ __('Hơn 500 sân bóng đá cỏ nhân tạo, cầu lông thảm chuẩn quốc tế, pickleball và tennis trên khắp thành phố đang chờ bạn.') }}</p>
 
             <div class="showcase-highlights">
                 <div class="highlight-item">
                     <div class="hl-icon"><i class="ti ti-calendar-check"></i></div>
                     <div class="hl-info">
-                        <strong>Giữ chỗ tức thì 100%</strong>
-                        <span>Không lo trùng lịch hay chờ xác nhận</span>
+                        <strong>{{ __('Giữ chỗ tức thì 100%') }}</strong>
+                        <span>{{ __('Không lo trùng lịch hay chờ xác nhận') }}</span>
                     </div>
                 </div>
                 <div class="highlight-item">
                     <div class="hl-icon"><i class="ti ti-discount-check"></i></div>
                     <div class="hl-info">
-                        <strong>Tích điểm & giảm giá độc quyền</strong>
-                        <span>Ưu đãi tới 20% cho thành viên</span>
+                        <strong>{{ __('Tích điểm & giảm giá độc quyền') }}</strong>
+                        <span>{{ __('Ưu đãi tới 20% cho thành viên') }}</span>
                     </div>
                 </div>
             </div>
@@ -63,22 +63,22 @@
     <div class="auth-right-form-panel">
         <div class="auth-box-inner">
             <div class="auth-header-mobile">
-                <a href="{{ route('home') }}" class="mobile-back-home"><i class="ti ti-arrow-left"></i> Về trang chủ</a>
+                <a href="{{ route('home') }}" class="mobile-back-home"><i class="ti ti-arrow-left"></i> {{ __('Về trang chủ') }}</a>
             </div>
 
             <div class="auth-welcome-text">
-                <h3 id="authFormTitle">{{ old('form_type') == 'register' ? 'Tạo tài khoản mới' : 'Chào mừng trở lại!' }}</h3>
-                <p id="authFormSub">{{ old('form_type') == 'register' ? 'Điền thông tin để tham gia cùng hàng ngàn người chơi thể thao' : 'Đăng nhập vào tài khoản Sân Nhóm H của bạn' }}</p>
+                <h3 id="authFormTitle">{{ old('form_type') == 'register' ? __('Tạo tài khoản mới') : __('Chào mừng trở lại!') }}</h3>
+                <p id="authFormSub">{{ old('form_type') == 'register' ? __('Điền thông tin để tham gia cùng hàng ngàn người chơi thể thao') : __('Đăng nhập vào tài khoản Sân Nhóm H của bạn') }}</p>
             </div>
 
             <div class="tabs-switcher">
                 <button type="button" class="tab-btn {{ old('form_type', 'login') == 'login' ? 'active' : '' }}" data-auth-tab="login">
                     <i class="ti ti-login"></i>
-                    <span>Đăng nhập</span>
+                    <span>{{ __('Đăng nhập') }}</span>
                 </button>
                 <button type="button" class="tab-btn {{ old('form_type') == 'register' ? 'active' : '' }}" data-auth-tab="register">
                     <i class="ti ti-user-plus"></i>
-                    <span>Đăng ký</span>
+                    <span>{{ __('Đăng ký') }}</span>
                 </button>
             </div>
 
@@ -88,7 +88,7 @@
                 <input type="hidden" name="form_type" value="login">
 
                 <div class="form-group-modern">
-                    <label>Địa chỉ Email</label>
+                    <label>{{ __('Địa chỉ Email') }}</label>
                     <div class="input-modern-wrap">
                         <i class="ti ti-mail input-icon"></i>
                         <input type="email" name="email" value="{{ old('form_type', 'login') == 'login' ? old('email') : '' }}" placeholder="name@example.com" required autocomplete="email">
@@ -99,11 +99,11 @@
                 </div>
 
                 <div class="form-group-modern">
-                    <label>Mật khẩu</label>
+                    <label>{{ __('Mật khẩu') }}</label>
                     <div class="input-modern-wrap">
                         <i class="ti ti-lock input-icon"></i>
                         <input type="password" name="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password">
-                        <button type="button" class="toggle-password-btn" data-toggle-target="loginPassword" aria-label="Toggle password visibility">
+                        <button type="button" class="toggle-password-btn" data-toggle-target="loginPassword" aria-label="{{ __('Ẩn/hiện mật khẩu') }}">
                             <i class="ti ti-eye"></i>
                         </button>
                     </div>
@@ -115,13 +115,13 @@
                 <div class="form-helpers-row">
                     <label class="remember-label">
                         <input type="checkbox" name="remember" checked>
-                        <span>Ghi nhớ đăng nhập</span>
+                        <span>{{ __('Ghi nhớ đăng nhập') }}</span>
                     </label>
-                    <a href="{{ route('password.request') }}" class="forgot-link">Quên mật khẩu?</a>
+                    <a href="{{ route('password.request') }}" class="forgot-link">{{ __('Quên mật khẩu?') }}</a>
                 </div>
 
                 <button type="submit" class="btn-submit-modern">
-                    <span>Đăng nhập tài khoản</span>
+                    <span>{{ __('Đăng nhập tài khoản') }}</span>
                     <i class="ti ti-arrow-right"></i>
                 </button>
             </form>
@@ -132,10 +132,10 @@
                 <input type="hidden" name="form_type" value="register">
 
                 <div class="form-group-modern">
-                    <label>Họ và tên</label>
+                    <label>{{ __('Họ và tên') }}</label>
                     <div class="input-modern-wrap">
                         <i class="ti ti-user input-icon"></i>
-                        <input type="text" name="name" value="{{ old('form_type') == 'register' ? old('name') : '' }}" placeholder="Ví dụ: Nguyễn Văn An" required>
+                        <input type="text" name="name" value="{{ old('form_type') == 'register' ? old('name') : '' }}" placeholder="{{ __('Ví dụ: Nguyễn Văn An') }}" required>
                     </div>
                     @if(old('form_type') == 'register')
                         @error('name') <span class="text-error-modern"><i class="ti ti-alert-circle"></i> {{ $message }}</span> @enderror
@@ -143,7 +143,7 @@
                 </div>
 
                 <div class="form-group-modern">
-                    <label>Địa chỉ Email</label>
+                    <label>{{ __('Địa chỉ Email') }}</label>
                     <div class="input-modern-wrap">
                         <i class="ti ti-mail input-icon"></i>
                         <input type="email" name="email" value="{{ old('form_type') == 'register' ? old('email') : '' }}" placeholder="name@example.com" required>
@@ -154,11 +154,11 @@
                 </div>
 
                 <div class="form-group-modern">
-                    <label>Mật khẩu</label>
+                    <label>{{ __('Mật khẩu') }}</label>
                     <div class="input-modern-wrap">
                         <i class="ti ti-lock input-icon"></i>
-                        <input type="password" name="password" id="regPassword" placeholder="Tối thiểu 6 ký tự" required autocomplete="new-password">
-                        <button type="button" class="toggle-password-btn" data-toggle-target="regPassword" aria-label="Toggle password visibility">
+                        <input type="password" name="password" id="regPassword" placeholder="{{ __('Tối thiểu 6 ký tự') }}" required autocomplete="new-password">
+                        <button type="button" class="toggle-password-btn" data-toggle-target="regPassword" aria-label="{{ __('Ẩn/hiện mật khẩu') }}">
                             <i class="ti ti-eye"></i>
                         </button>
                     </div>
@@ -168,27 +168,27 @@
                 </div>
 
                 <div class="form-group-modern">
-                    <label>Xác nhận mật khẩu</label>
+                    <label>{{ __('Xác nhận mật khẩu') }}</label>
                     <div class="input-modern-wrap">
                         <i class="ti ti-shield-lock input-icon"></i>
-                        <input type="password" name="password_confirmation" id="regPasswordConf" placeholder="Nhập lại mật khẩu" required autocomplete="new-password">
+                        <input type="password" name="password_confirmation" id="regPasswordConf" placeholder="{{ __('Nhập lại mật khẩu') }}" required autocomplete="new-password">
                     </div>
                 </div>
 
                 <div class="terms-note-row">
-                    <span>Bằng cách đăng ký, bạn đồng ý với <a href="{{ route('pages.privacy') }}" target="_blank">Điều khoản sử dụng</a> & <a href="{{ route('pages.privacy') }}" target="_blank">Chính sách bảo mật</a> của chúng tôi.</span>
+                    <span>{{ __('Bằng cách đăng ký, bạn đồng ý với') }} <a href="{{ route('pages.privacy') }}" target="_blank">{{ __('Điều khoản sử dụng') }}</a> &amp; <a href="{{ route('pages.privacy') }}" target="_blank">{{ __('Chính sách bảo mật') }}</a> {{ __('của chúng tôi.') }}</span>
                 </div>
 
                 <button type="submit" class="btn-submit-modern btn-reg-submit">
-                    <span>Hoàn tất đăng ký</span>
+                    <span>{{ __('Hoàn tất đăng ký') }}</span>
                     <i class="ti ti-check"></i>
                 </button>
             </form>
 
             <div class="auth-bottom-switch">
-                <span id="bottomSwitchText">{{ old('form_type') == 'register' ? 'Đã có tài khoản?' : 'Chưa có tài khoản?' }}</span>
+                <span id="bottomSwitchText">{{ old('form_type') == 'register' ? __('Đã có tài khoản?') : __('Chưa có tài khoản?') }}</span>
                 <button type="button" id="btnToggleAuthBottom" class="btn-link-switch">
-                    {{ old('form_type') == 'register' ? 'Đăng nhập ngay' : 'Tạo tài khoản mới' }}
+                    {{ old('form_type') == 'register' ? __('Đăng nhập ngay') : __('Tạo tài khoản mới') }}
                 </button>
             </div>
         </div>
@@ -196,6 +196,16 @@
 </div>
 
 <script nonce="{{ $cspNonce ?? '' }}">
+    const authI18n = @json([
+        'welcomeBack' => __('Chào mừng trở lại!'),
+        'loginSub' => __('Đăng nhập vào tài khoản Sân Nhóm H của bạn'),
+        'noAccount' => __('Chưa có tài khoản?'),
+        'createAccount' => __('Tạo tài khoản mới'),
+        'registerSub' => __('Điền thông tin để tham gia cùng hàng ngàn người chơi thể thao'),
+        'haveAccount' => __('Đã có tài khoản?'),
+        'loginNow' => __('Đăng nhập ngay'),
+    ]);
+
     function showForm(type) {
         const titleEl = document.getElementById('authFormTitle');
         const subEl = document.getElementById('authFormSub');
@@ -209,17 +219,17 @@
         if(type === 'login') {
             document.querySelector('[data-auth-tab="login"]').classList.add('active');
             document.getElementById('loginForm').classList.remove('hidden');
-            if (titleEl) titleEl.textContent = 'Chào mừng trở lại!';
-            if (subEl) subEl.textContent = 'Đăng nhập vào tài khoản Sân Nhóm H của bạn';
-            if (switchTextEl) switchTextEl.textContent = 'Chưa có tài khoản?';
-            if (switchBtnEl) switchBtnEl.textContent = 'Tạo tài khoản mới';
+            if (titleEl) titleEl.textContent = authI18n.welcomeBack;
+            if (subEl) subEl.textContent = authI18n.loginSub;
+            if (switchTextEl) switchTextEl.textContent = authI18n.noAccount;
+            if (switchBtnEl) switchBtnEl.textContent = authI18n.createAccount;
         } else {
             document.querySelector('[data-auth-tab="register"]').classList.add('active');
             document.getElementById('registerForm').classList.remove('hidden');
-            if (titleEl) titleEl.textContent = 'Tạo tài khoản mới';
-            if (subEl) subEl.textContent = 'Điền thông tin để tham gia cùng hàng ngàn người chơi thể thao';
-            if (switchTextEl) switchTextEl.textContent = 'Đã có tài khoản?';
-            if (switchBtnEl) switchBtnEl.textContent = 'Đăng nhập ngay';
+            if (titleEl) titleEl.textContent = authI18n.createAccount;
+            if (subEl) subEl.textContent = authI18n.registerSub;
+            if (switchTextEl) switchTextEl.textContent = authI18n.haveAccount;
+            if (switchBtnEl) switchBtnEl.textContent = authI18n.loginNow;
         }
     }
 
