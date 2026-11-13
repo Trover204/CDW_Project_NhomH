@@ -502,9 +502,9 @@
         <div class="breadcrumb">
             <a href="{{ route('home') }}"><i class="ti ti-home" style="font-size: 14px;"></i> Trang chủ</a>
             <i class="ti ti-chevron-right" style="font-size: 12px;"></i>
-            <span>Tài khoản cá nhân</span>
+            <span>{{ __('Tài khoản cá nhân') }}</span>
             <i class="ti ti-chevron-right" style="font-size: 12px;"></i>
-            <span style="color: #11201B; font-weight: 600;">Hồ sơ</span>
+            <span style="color: #11201B; font-weight: 600;">{{ __('Hồ sơ') }}</span>
         </div>
 
         {{-- FLASH ALERTS --}}
@@ -519,7 +519,7 @@
             <div class="alert-box alert-danger">
                 <i class="ti ti-alert-triangle" style="font-size: 18px;"></i>
                 <div>
-                    <strong>Đã có lỗi xảy ra:</strong>
+                    <strong>{{ __('Đã có lỗi xảy ra:') }}</strong>
                     <ul style="margin: 4px 0 0; padding-left: 18px;">
                         @foreach($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -568,11 +568,11 @@
                 <div class="profile-stats-row">
                     <div class="profile-stat-box">
                         <div class="profile-stat-num">{{ $bookingsCount ?? 0 }}</div>
-                        <div class="profile-stat-label">Lượt đặt sân</div>
+                        <div class="profile-stat-label">{{ __('Lượt đặt sân') }}</div>
                     </div>
                     <div class="profile-stat-box">
                         <div class="profile-stat-num">{{ $favoritesCount ?? 0 }}</div>
-                        <div class="profile-stat-label">Sân yêu thích</div>
+                        <div class="profile-stat-label">{{ __('Sân yêu thích') }}</div>
                     </div>
                 </div>
 
@@ -580,27 +580,27 @@
                 <div class="profile-menu">
                     <button type="button" class="menu-item {{ session('active_tab', 'profile') == 'profile' ? 'active' : '' }}" data-profile-tab="profile">
                         <i class="ti ti-user"></i>
-                        <span>Thông tin cá nhân</span>
+                        <span>{{ __('Thông tin cá nhân') }}</span>
                     </button>
 
                     <button type="button" class="menu-item {{ session('active_tab') == 'password' ? 'active' : '' }}" data-profile-tab="password">
                         <i class="ti ti-shield-lock"></i>
-                        <span>Đổi mật khẩu</span>
+                        <span>{{ __('Đổi mật khẩu') }}</span>
                     </button>
 
                     <button type="button" class="menu-item {{ session('active_tab') == 'history' ? 'active' : '' }}" data-profile-tab="history">
                         <i class="ti ti-history"></i>
-                        <span>Lịch sử đặt sân</span>
+                        <span>{{ __('Lịch sử đặt sân') }}</span>
                     </button>
 
                     <button type="button" class="menu-item {{ session('active_tab') == 'purchase_history' ? 'active' : '' }}" data-profile-tab="purchase_history">
                         <i class="ti ti-shopping-cart"></i>
-                        <span>Lịch sử mua hàng</span>
+                        <span>{{ __('Lịch sử mua hàng') }}</span>
                     </button>
 
                     <a href="{{ route('plans.index') }}" class="menu-item">
                         <i class="ti ti-award"></i>
-                        <span>Gói hội viên</span>
+                        <span>{{ __('Gói hội viên') }}</span>
                     </a>
 
                     <div class="menu-divider"></div>
@@ -608,20 +608,20 @@
                     @if(in_array($user->role, ['admin', 'staff']))
                         <a href="{{ route('admin.dashboard') }}" class="menu-item" style="color: #BE185D; font-weight: 600;">
                             <i class="ti ti-layout-dashboard" style="color: #EC4899;"></i>
-                            <span>Dashboard</span>
+                            <span>{{ __('Dashboard') }}</span>
                         </a>
                     @endif
 
                     <a href="{{ route('favorites.index') }}" class="menu-item">
                         <i class="ti ti-heart"></i>
-                        <span>Sân yêu thích</span>
+                        <span>{{ __('Sân yêu thích') }}</span>
                     </a>
 
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <button type="submit" class="menu-item" style="color: #DC2626;">
                             <i class="ti ti-logout" style="color: #DC2626;"></i>
-                            <span>Đăng xuất</span>
+                            <span>{{ __('Đăng xuất') }}</span>
                         </button>
                     </form>
                 </div>
@@ -636,8 +636,8 @@
                 {{-- TAB 1: THÔNG TIN CÁ NHÂN --}}
                 <div id="tab-profile" class="tab-pane {{ session('active_tab', 'profile') == 'profile' ? '' : 'style-none' }}" style="{{ session('active_tab', 'profile') == 'profile' ? '' : 'display:none;' }}">
                     <div class="section-header">
-                        <h2 class="section-title">Thông tin cá nhân</h2>
-                        <p class="section-desc">Cập nhật họ tên, số điện thoại, ngày sinh và ảnh đại diện của bạn.</p>
+                        <h2 class="section-title">{{ __('Thông tin cá nhân') }}</h2>
+                        <p class="section-desc">{{ __('Cập nhật họ tên, số điện thoại, ngày sinh và ảnh đại diện của bạn.') }}</p>
                     </div>
 
                     <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
@@ -659,7 +659,7 @@
                                     <i class="ti ti-upload"></i> Chọn ảnh đại diện mới
                                 </label>
                                 <input type="file" id="avatarInput" name="avatar" accept="image/png, image/jpeg, image/jpg" style="display: none;">
-                                <div class="form-hint" style="margin-top: 6px;">Hỗ trợ ảnh JPG, PNG tối đa 2MB.</div>
+                                <div class="form-hint" style="margin-top: 6px;">{{ __('Hỗ trợ ảnh JPG, PNG tối đa 2MB.') }}</div>
                             </div>
                         </div>
 
@@ -733,8 +733,8 @@
                             {{-- NGÀY SINH --}}
                             <div class="field-group">
                                 <label class="field-label" for="birthday">
-                                    <span>Ngày sinh</span>
-                                    <span class="form-hint">(Tối thiểu 16 tuổi)</span>
+                                    <span>{{ __('Ngày sinh') }}</span>
+                                    <span class="form-hint">({{ __('Tối thiểu 16 tuổi') }})</span>
                                 </label>
                                 <div class="input-wrap">
                                     <i class="ti ti-calendar input-icon"></i>
@@ -754,7 +754,7 @@
 
                             {{-- VAI TRÒ / QUYỀN HẠN --}}
                             <div class="field-group form-group-full">
-                                <label class="field-label">Loại tài khoản</label>
+                                <label class="field-label">{{ __('Loại tài khoản') }}</label>
                                 <div style="display: flex; gap: 12px; align-items: center; justify-content: space-between; padding: 10px 14px; background: #FAF7F9; border-radius: 8px; border: 1px solid #F1E4EC;">
                                     <div style="display: flex; gap: 12px; align-items: center;">
                                         <i class="ti ti-id-badge" style="font-size: 20px; color: #EC4899;"></i>
@@ -788,8 +788,8 @@
                 {{-- TAB 2: ĐỔI MẬT KHẨU --}}
                 <div id="tab-password" class="tab-pane {{ session('active_tab') == 'password' ? '' : 'style-none' }}" style="{{ session('active_tab') == 'password' ? '' : 'display:none;' }}">
                     <div class="section-header">
-                        <h2 class="section-title">Bảo mật & Đổi mật khẩu</h2>
-                        <p class="section-desc">Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu của bạn với người khác.</p>
+                        <h2 class="section-title">{{ __('Bảo mật & Đổi mật khẩu') }}</h2>
+                        <p class="section-desc">{{ __('Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu của bạn với người khác.') }}</p>
                     </div>
 
                     <form action="{{ route('profile.password.update') }}" method="POST">
@@ -835,7 +835,7 @@
                                         required
                                     >
                                 </div>
-                                <div class="form-hint">Mật khẩu cần tối thiểu 8 ký tự và khác với mật khẩu cũ.</div>
+                                <div class="form-hint">{{ __('Mật khẩu cần tối thiểu 8 ký tự và khác với mật khẩu cũ.') }}</div>
                                 @error('password')
                                     <span class="input-error">{{ $message }}</span>
                                 @enderror
@@ -876,26 +876,26 @@
                 {{-- TAB 4: LỊCH SỬ ĐẶT SÂN --}}
                 <div id="tab-history" class="tab-pane {{ session('active_tab') == 'history' ? '' : 'style-none' }}" style="{{ session('active_tab') == 'history' ? '' : 'display:none;' }}">
                     <div class="section-header">
-                        <h2 class="section-title">Lịch sử đặt sân</h2>
-                        <p class="section-desc">Danh sách các sân bạn đã đặt và trạng thái tương ứng.</p>
+                        <h2 class="section-title">{{ __('Lịch sử đặt sân') }}</h2>
+                        <p class="section-desc">{{ __('Danh sách các sân bạn đã đặt và trạng thái tương ứng.') }}</p>
                     </div>
 
                     @if($bookingHistory->isEmpty())
                         <div style="text-align: center; padding: 40px; color: #5E726A;">
                             <i class="ti ti-calendar-cancel" style="font-size: 48px; color: #E1E8E3; margin-bottom: 16px;"></i>
-                            <p>Bạn chưa có lịch sử đặt sân nào.</p>
+                            <p>{{ __('Bạn chưa có lịch sử đặt sân nào.') }}</p>
                         </div>
                     @else
                         <div class="table-responsive" style="overflow-x: auto;">
                             <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
                                 <thead>
                                     <tr style="border-bottom: 1px solid #F1E4EC;">
-                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">Mã ĐS</th>
-                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">Sân</th>
-                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">Ngày</th>
-                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">Thời gian</th>
-                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">Tổng tiền</th>
-                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">Trạng thái</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">{{ __('Mã ĐS') }}</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">{{ __('Sân') }}</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">{{ __('Ngày') }}</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">{{ __('Thời gian') }}</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">{{ __('Tổng tiền') }}</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">{{ __('Trạng thái') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -908,11 +908,11 @@
                                             <td style="padding: 12px 8px; font-weight: 600;">{{ number_format($booking->total_price, 0, ',', '.') }}đ</td>
                                             <td style="padding: 12px 8px;">
                                                 @if($booking->status === 'completed' || $booking->status === 'checked_in')
-                                                    <span style="background: #E8F5E9; color: #2E7D32; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Đã hoàn thành</span>
+                                                    <span style="background: #E8F5E9; color: #2E7D32; padding: 4px 8px; border-radius: 4px; font-size: 12px;">{{ __('Đã hoàn thành') }}</span>
                                                 @elseif($booking->status === 'pending')
-                                                    <span style="background: #FFF3E0; color: #EF6C00; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Chờ xử lý</span>
+                                                    <span style="background: #FFF3E0; color: #EF6C00; padding: 4px 8px; border-radius: 4px; font-size: 12px;">{{ __('Chờ xử lý') }}</span>
                                                 @elseif($booking->status === 'cancelled' || $booking->status === 'rejected')
-                                                    <span style="background: #FFEBEE; color: #C62828; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Đã hủy</span>
+                                                    <span style="background: #FFEBEE; color: #C62828; padding: 4px 8px; border-radius: 4px; font-size: 12px;">{{ __('Đã hủy') }}</span>
                                                 @else
                                                     <span style="background: #F5F5F5; color: #616161; padding: 4px 8px; border-radius: 4px; font-size: 12px;">{{ ucfirst($booking->status) }}</span>
                                                 @endif
@@ -932,25 +932,25 @@
                 {{-- TAB 5: LỊCH SỬ MUA HÀNG --}}
                 <div id="tab-purchase_history" class="tab-pane {{ session('active_tab') == 'purchase_history' ? '' : 'style-none' }}" style="{{ session('active_tab') == 'purchase_history' ? '' : 'display:none;' }}">
                     <div class="section-header">
-                        <h2 class="section-title">Lịch sử mua hàng</h2>
-                        <p class="section-desc">Danh sách các sản phẩm bạn đã mua và trạng thái tương ứng.</p>
+                        <h2 class="section-title">{{ __('Lịch sử mua hàng') }}</h2>
+                        <p class="section-desc">{{ __('Danh sách các sản phẩm bạn đã mua và trạng thái tương ứng.') }}</p>
                     </div>
 
                     @if(isset($purchaseHistory) && $purchaseHistory->isEmpty())
                         <div style="text-align: center; padding: 40px; color: #5E726A;">
                             <i class="ti ti-shopping-cart-x" style="font-size: 48px; color: #E1E8E3; margin-bottom: 16px;"></i>
-                            <p>Bạn chưa có lịch sử mua hàng nào.</p>
+                            <p>{{ __('Bạn chưa có lịch sử mua hàng nào.') }}</p>
                         </div>
                     @elseif(isset($purchaseHistory))
                         <div class="table-responsive" style="overflow-x: auto;">
                             <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
                                 <thead>
                                     <tr style="border-bottom: 1px solid #F1E4EC;">
-                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">Mã ĐH</th>
-                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">Sản phẩm</th>
-                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">Ngày mua</th>
-                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">Số lượng</th>
-                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">Tổng tiền</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">{{ __('Mã ĐH') }}</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">{{ __('Sản phẩm') }}</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">{{ __('Ngày mua') }}</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">{{ __('Số lượng') }}</th>
+                                        <th style="padding: 12px 8px; font-weight: 600; color: #DB2777;">{{ __('Tổng tiền') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -976,8 +976,8 @@
                 {{-- TAB 3: GÓI HỘI VIÊN --}}
                 <div id="tab-subscription" class="tab-pane {{ session('active_tab') == 'subscription' ? '' : 'style-none' }}" style="{{ session('active_tab') == 'subscription' ? '' : 'display:none;' }}">
                     <div class="section-header">
-                        <h2 class="section-title">Gói hội viên & Quyền lợi</h2>
-                        <p class="section-desc">Xem trạng thái gói hội viên bạn đang tham gia cùng các ưu đãi đặt sân đặc quyền.</p>
+                        <h2 class="section-title">{{ __('Gói hội viên & Quyền lợi') }}</h2>
+                        <p class="section-desc">{{ __('Xem trạng thái gói hội viên bạn đang tham gia cùng các ưu đãi đặt sân đặc quyền.') }}</p>
                     </div>
 
                     @if($activeSubscription && $activeSubscription->plan)
@@ -994,7 +994,7 @@
                                     </div>
                                 </div>
                                 <div style="text-align: right;">
-                                    <span style="font-size: 11.5px; color: #6B6B80;">Giảm giá đặt sân</span>
+                                    <span style="font-size: 11.5px; color: #6B6B80;">{{ __('Giảm giá đặt sân') }}</span>
                                     <div style="font-size: 24px; font-weight: 800; color: #EC4899;">-{{ $activeSubscription->plan->discount_percent }}%</div>
                                 </div>
                             </div>
@@ -1006,11 +1006,11 @@
                                 </div>
                                 <div class="plan-benefit-item">
                                     <i class="ti ti-check"></i>
-                                    <span>Được ưu tiên giữ chỗ và hủy miễn phí trước khung giờ theo chính sách hội viên.</span>
+                                    <span>{{ __('Được ưu tiên giữ chỗ và hủy miễn phí trước khung giờ theo chính sách hội viên.') }}</span>
                                 </div>
                                 <div class="plan-benefit-item">
                                     <i class="ti ti-check"></i>
-                                    <span>Hỗ trợ xác nhận đặt sân nhanh qua hệ thống chăm sóc khách hàng ưu tiên.</span>
+                                    <span>{{ __('Hỗ trợ xác nhận đặt sân nhanh qua hệ thống chăm sóc khách hàng ưu tiên.') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -1019,7 +1019,7 @@
                             <div style="width: 56px; height: 56px; border-radius: 50%; background: #FDF2F8; color: #EC4899; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 26px;">
                                 <i class="ti ti-sparkles"></i>
                             </div>
-                            <h3 style="font-size: 17px; font-weight: 700; color: #181824; margin-bottom: 6px;">Bạn đang là Thành viên tiêu chuẩn</h3>
+                            <h3 style="font-size: 17px; font-weight: 700; color: #181824; margin-bottom: 6px;">{{ __('Bạn đang là Thành viên tiêu chuẩn') }}</h3>
                             <p style="font-size: 13px; color: #525266; max-width: 480px; margin: 0 auto 18px;">
                                 Nâng cấp lên các gói thành viên VIP, Tiêu chuẩn để nhận ưu đãi giảm đến 25% mỗi lượt đặt sân và giữ khung giờ vàng mỗi tuần!
                             </p>

@@ -1,6 +1,6 @@
 @extends('web.layouts.app')
 
-@section('title', 'Thanh toán đơn hàng - ' . $product->name)
+@section('title', __('Thanh toán đơn hàng') . ' - ' . $product->name . ' - ' . config('app.name', 'Sân Nhóm H'))
 
 @push('styles')
 <style>
@@ -427,7 +427,7 @@
             <i class="ti ti-arrow-left"></i> Cửa hàng Merch
         </a>
         <span>/</span>
-        <span style="color: var(--ink, #181824); font-weight: 500;">Quy trình đặt mua & Thanh toán</span>
+        <span style="color: var(--ink, #181824); font-weight: 500;">{{ __('Quy trình đặt mua & Thanh toán') }}</span>
     </div>
 
     @if(session('error'))
@@ -440,15 +440,15 @@
     <div class="checkout-stepper">
         <div class="step-item active" id="step-nav-1">
             <div class="step-number" id="step-num-1">1</div>
-            <div class="step-label">1. Chọn thanh toán</div>
+            <div class="step-label">1. {{ __('Chọn thanh toán') }}</div>
         </div>
         <div class="step-item" id="step-nav-2">
             <div class="step-number" id="step-num-2">2</div>
-            <div class="step-label">2. Thông tin khách</div>
+            <div class="step-label">2. {{ __('Thông tin khách') }}</div>
         </div>
         <div class="step-item" id="step-nav-3">
             <div class="step-number" id="step-num-3">3</div>
-            <div class="step-label">3. Quét mã QR</div>
+            <div class="step-label">3. {{ __('Quét mã QR') }}</div>
         </div>
     </div>
 
@@ -491,13 +491,13 @@
             ======================================================== --}}
             <div id="step-section-1">
                 <h3 style="font-size: 18px; font-weight: 700; color: var(--ink, #181824); margin: 0 0 18px; display: flex; align-items: center; gap: 8px;">
-                    <i class="ti ti-credit-card" style="color: #EC4899;"></i> Bước 1: Chọn số lượng & Phương thức thanh toán
+                    <i class="ti ti-credit-card" style="color: #EC4899;"></i> {{ __('Bước 1: Chọn số lượng & Phương thức thanh toán') }}
                 </h3>
 
                 {{-- Quantity Selector --}}
                 <div class="form-group-custom" style="background: var(--bg-page, #FAF7F9); padding: 16px 20px; border-radius: 14px; border: 1px solid var(--line, #F1E4EC); margin-bottom: 24px;">
                     <label class="form-label-custom">
-                        Số lượng áo đặt mua <span class="req">*</span>
+                        {{ __('Số lượng áo đặt mua') }} <span class="req">*</span>
                     </label>
                     <div style="display: flex; align-items: center; gap: 14px;">
                         <button type="button" id="btn-qty-minus" class="qty-btn" aria-label="Giảm số lượng">-</button>
@@ -521,10 +521,10 @@
                         <input type="radio" name="payment_method" value="qr" checked>
                         <div style="flex-grow: 1;">
                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                                <span style="background: #EC4899; color: #fff; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700;">KHUYÊN DÙNG</span>
-                                <span style="font-weight: 700; font-size: 15px; color: var(--ink, #181824);">Quét mã QR Ngân Hàng (VietQR / Chuyển khoản 24/7)</span>
+                                <span style="background: #EC4899; color: #fff; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700;">{{ __('KHUYÊN DÙNG') }}</span>
+                                <span style="font-weight: 700; font-size: 15px; color: var(--ink, #181824);">{{ __('Quét mã QR Ngân Hàng (VietQR / Chuyển khoản 24/7)') }}</span>
                             </div>
-                            <div style="font-size: 13px; color: var(--ink-soft, #6B7280);">Quét mã chuyển tiền tức thì từ MB Bank, Vietcombank, Techcombank, BIDV... hoặc MoMo</div>
+                            <div style="font-size: 13px; color: var(--ink-soft, #6B7280);">{{ __('Quét mã chuyển tiền tức thì từ MB Bank, Vietcombank, Techcombank, BIDV... hoặc MoMo') }}</div>
                         </div>
                         <i class="ti ti-qrcode" style="font-size: 28px; color: #EC4899;"></i>
                     </label>
@@ -533,8 +533,8 @@
                     <label class="payment-option-card" id="opt-momo">
                         <input type="radio" name="payment_method" value="momo">
                         <div style="flex-grow: 1;">
-                            <div style="font-weight: 700; font-size: 15px; color: var(--ink, #111827); margin-bottom: 4px;">Ví điện tử MoMo</div>
-                            <div style="font-size: 13px; color: var(--ink-soft, #6B7280);">Thanh toán qua ví điện tử MoMo hoặc quét mã QR MoMo</div>
+                            <div style="font-weight: 700; font-size: 15px; color: var(--ink, #111827); margin-bottom: 4px;">{{ __('Ví điện tử MoMo') }}</div>
+                            <div style="font-size: 13px; color: var(--ink-soft, #6B7280);">{{ __('Thanh toán qua ví điện tử MoMo hoặc quét mã QR MoMo') }}</div>
                         </div>
                         <span style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 8px; background: #A50064; color: #fff; font-weight: 700; font-size: 11px;">MoMo</span>
                     </label>
@@ -543,8 +543,8 @@
                     <label class="payment-option-card" id="opt-visa">
                         <input type="radio" name="payment_method" value="visa">
                         <div style="flex-grow: 1;">
-                            <div style="font-weight: 700; font-size: 15px; color: var(--ink, #111827); margin-bottom: 4px;">Thẻ Quốc tế (Visa / MasterCard / JCB)</div>
-                            <div style="font-size: 13px; color: var(--ink-soft, #6B7280);">Thanh toán bằng thẻ ghi nợ hoặc thẻ tín dụng quốc tế an toàn 3D Secure</div>
+                            <div style="font-weight: 700; font-size: 15px; color: var(--ink, #111827); margin-bottom: 4px;">{{ __('Thẻ Quốc tế (Visa / MasterCard / JCB)') }}</div>
+                            <div style="font-size: 13px; color: var(--ink-soft, #6B7280);">{{ __('Thanh toán bằng thẻ ghi nợ hoặc thẻ tín dụng quốc tế an toàn 3D Secure') }}</div>
                         </div>
                         <i class="ti ti-credit-card" style="font-size: 26px; color: #1E3A8A;"></i>
                     </label>
@@ -553,8 +553,8 @@
                     <label class="payment-option-card" id="opt-paypal">
                         <input type="radio" name="payment_method" value="paypal">
                         <div style="flex-grow: 1;">
-                            <div style="font-weight: 700; font-size: 15px; color: var(--ink, #111827); margin-bottom: 4px;">Cổng thanh toán PayPal</div>
-                            <div style="font-size: 13px; color: var(--ink-soft, #6B7280);">Thanh toán quốc tế qua tài khoản PayPal bảo mật</div>
+                            <div style="font-weight: 700; font-size: 15px; color: var(--ink, #111827); margin-bottom: 4px;">{{ __('Cổng thanh toán PayPal') }}</div>
+                            <div style="font-size: 13px; color: var(--ink-soft, #6B7280);">{{ __('Thanh toán quốc tế qua tài khoản PayPal bảo mật') }}</div>
                         </div>
                         <i class="ti ti-brand-paypal" style="font-size: 26px; color: #003087;"></i>
                     </label>
@@ -563,8 +563,8 @@
                     <label class="payment-option-card" id="opt-cod">
                         <input type="radio" name="payment_method" value="cod">
                         <div style="flex-grow: 1;">
-                            <div style="font-weight: 700; font-size: 15px; color: var(--ink, #111827); margin-bottom: 4px;">Thanh toán khi nhận hàng (COD)</div>
-                            <div style="font-size: 13px; color: var(--ink-soft, #6B7280);">Kiểm tra hàng trước khi thanh toán tiền mặt cho nhân viên giao hàng</div>
+                            <div style="font-weight: 700; font-size: 15px; color: var(--ink, #111827); margin-bottom: 4px;">{{ __('Thanh toán khi nhận hàng (COD)') }}</div>
+                            <div style="font-size: 13px; color: var(--ink-soft, #6B7280);">{{ __('Kiểm tra hàng trước khi thanh toán tiền mặt cho nhân viên giao hàng') }}</div>
                         </div>
                         <i class="ti ti-truck" style="font-size: 26px; color: #D97706;"></i>
                     </label>
@@ -574,7 +574,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; background: #FDF2F8; border-radius: 14px; border: 1.5px solid #FBCFE8; margin-bottom: 24px;">
                     <div>
                         <span style="display: block; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; color: #BE185D;">Tổng tiền tạm tính</span>
-                        <span style="font-size: 12px; color: #DB2777;">Miễn phí giao hàng toàn quốc</span>
+                        <span style="font-size: 12px; color: #DB2777;">{{ __('Miễn phí') }} giao hàng toàn quốc</span>
                     </div>
                     <span style="font-weight: 800; font-size: 26px; color: #EC4899; font-family: 'Oswald', sans-serif;" class="total-display-tag">
                         {{ number_format($product->cost_price, 0, ',', '.') }}₫
@@ -597,12 +597,12 @@
                 {{-- Customer Name --}}
                 <div class="form-group-custom">
                     <label class="form-label-custom">
-                        Họ và tên người nhận <span class="req">*</span>
+                        {{ __('Họ và tên người nhận') }} <span class="req">*</span>
                     </label>
                     <input type="text" name="customer_name" id="customer_name"
                            value="{{ old('customer_name', auth()->user()->name ?? '') }}"
                            class="form-input-custom" placeholder="Ví dụ: Nguyễn Văn A" required>
-                    <div id="err-name" style="color: #DC2626; font-size: 13px; margin-top: 5px; display: none;">Vui lòng nhập họ và tên người nhận.</div>
+                    <div id="err-name" style="color: #DC2626; font-size: 13px; margin-top: 5px; display: none;">{{ __('Vui lòng nhập họ và tên người nhận.') }}</div>
                 </div>
 
                 {{-- Customer Phone --}}
@@ -613,17 +613,17 @@
                     <input type="tel" name="customer_phone" id="customer_phone"
                            value="{{ old('customer_phone', auth()->user()->phone ?? '') }}"
                            class="form-input-custom" placeholder="Ví dụ: 0987654321" required>
-                    <div id="err-phone" style="color: #DC2626; font-size: 13px; margin-top: 5px; display: none;">Vui lòng nhập số điện thoại hợp lệ (tối thiểu 9 số).</div>
+                    <div id="err-phone" style="color: #DC2626; font-size: 13px; margin-top: 5px; display: none;">{{ __('Vui lòng nhập số điện thoại hợp lệ (tối thiểu 9 số).') }}</div>
                 </div>
 
                 {{-- Shipping Address --}}
                 <div class="form-group-custom">
                     <label class="form-label-custom">
-                        Địa chỉ nhận hàng chi tiết <span class="req">*</span>
+                        {{ __('Địa chỉ nhận hàng chi tiết') }} <span class="req">*</span>
                     </label>
                     <input type="text" name="shipping_address" id="shipping_address"
                            class="form-input-custom" placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố..." required>
-                    <div id="err-address" style="color: #DC2626; font-size: 13px; margin-top: 5px; display: none;">Vui lòng nhập địa chỉ nhận hàng chi tiết.</div>
+                    <div id="err-address" style="color: #DC2626; font-size: 13px; margin-top: 5px; display: none;">{{ __('Vui lòng nhập địa chỉ nhận hàng chi tiết.') }}</div>
                 </div>
 
                 {{-- Size Selection --}}
@@ -674,16 +674,16 @@
                     {{-- Switch Pills between Bank and MoMo --}}
                     <div class="qr-switch-pills">
                         <button type="button" id="pill-bank" class="qr-switch-pill active-bank">
-                            <i class="ti ti-building-bank"></i> QR Ngân Hàng (TPBank)
+                            <i class="ti ti-building-bank"></i> {{ __('QR Ngân Hàng (TPBank)') }}
                         </button>
                         <button type="button" id="pill-momo" class="qr-switch-pill">
-                            <span class="momo-mini-badge">MoMo</span> QR Ví MoMo
+                            <span class="momo-mini-badge">MoMo</span> {{ __('QR Ví MoMo') }}
                         </button>
                     </div>
 
                     {{-- Countdown Timer (Shared for both) --}}
                     <div style="font-size: 13px; color: #DC2626; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 6px;">
-                        <i class="ti ti-clock"></i> Mã QR có hiệu lực trong: <span id="countdown-timer">14:59</span>
+                        <i class="ti ti-clock"></i> {{ __('Mã QR có hiệu lực trong:') }} <span id="countdown-timer">14:59</span>
                     </div>
 
                     {{-- =========================================
@@ -695,7 +695,7 @@
                                 VIETQR CHUẨN QUỐC GIA
                             </span>
                             <span style="font-size: 13px; color: #475569; font-weight: 600;">
-                                Hỗ trợ tất cả App Ngân Hàng & MoMo
+                                {{ __('Hỗ trợ tất cả App Ngân Hàng & MoMo') }}
                             </span>
                         </div>
 
@@ -704,7 +704,7 @@
                             <img id="vietqr-image" src="{{ asset('img qr/qr_card_clean.jpg') }}" alt="Mã QR TPBank - NGUYEN CHI HAI" style="max-width: 270px; width: 100%; height: auto; border-radius: 12px; display: block;">
                             <div style="margin-top: 12px;">
                                 <a href="{{ asset('img qr/qr_card_clean.jpg') }}" download="QR_ThanhToan_TPBank.jpg" class="btn-copy" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; font-size: 13px; font-weight: 600;">
-                                    <i class="ti ti-download"></i> Tải mã QR về máy
+                                    <i class="ti ti-download"></i> {{ __('Tải mã QR') }} về máy
                                 </a>
                             </div>
                         </div>
@@ -712,44 +712,44 @@
                         {{-- Transfer Info Table with One-Click Copy --}}
                         <table class="bank-info-table">
                             <tr>
-                                <td>Ngân hàng:</td>
+                                <td>{{ __('Ngân hàng:') }}</td>
                                 <td>
                                     <strong>TPBank (Ngân hàng Tiên Phong)</strong>
                                     <span style="font-size: 11px; color: #DB2777; margin-left: 8px;">24/7 Tức thì</span>
                                 </td>
                             </tr>
                             <tr>
-                                <td>Số tài khoản:</td>
+                                <td>{{ __('Số tài khoản:') }}</td>
                                 <td>
                                     <span id="bank-acc-num" style="font-weight: 700; font-size: 16px; letter-spacing: 0.5px;">1000 6118 170</span>
-                                    <button type="button" class="btn-copy" id="btn-copy-acc">Sao chép</button>
+                                    <button type="button" class="btn-copy" id="btn-copy-acc">{{ __('Sao chép') }}</button>
                                 </td>
                             </tr>
                             <tr>
-                                <td>Chủ tài khoản:</td>
+                                <td>{{ __('Chủ tài khoản:') }}</td>
                                 <td>
                                     <strong style="text-transform: uppercase;">NGUYEN CHI HAI</strong>
                                 </td>
                             </tr>
                             <tr>
-                                <td>Số tiền cần chuyển:</td>
+                                <td>{{ __('Số tiền cần chuyển:') }}</td>
                                 <td>
                                     <span id="bank-amount" style="color: #EC4899; font-weight: 800; font-size: 16px;"></span>
-                                    <button type="button" class="btn-copy" id="btn-copy-amount">Sao chép</button>
+                                    <button type="button" class="btn-copy" id="btn-copy-amount">{{ __('Sao chép') }}</button>
                                 </td>
                             </tr>
                             <tr>
-                                <td>Nội dung chuyển khoản:</td>
+                                <td>{{ __('Nội dung chuyển khoản:') }}</td>
                                 <td>
                                     <span id="bank-memo" style="color: #DB2777; font-weight: 700; font-family: monospace; font-size: 15px;"></span>
-                                    <button type="button" class="btn-copy" id="btn-copy-memo">Sao chép</button>
+                                    <button type="button" class="btn-copy" id="btn-copy-memo">{{ __('Sao chép') }}</button>
                                 </td>
                             </tr>
                         </table>
 
                         <div style="background: rgba(236,72,153,0.08); border-radius: 10px; padding: 12px; font-size: 13px; color: #9D174D; line-height: 1.5; max-width: 480px; margin: 0 auto; text-align: left;">
                             <i class="ti ti-info-circle" style="margin-right: 4px;"></i>
-                            <strong>Hướng dẫn:</strong> Quý khách mở App Ngân hàng (TPBank, MB, VCB, BIDV, Techcombank...) hoặc MoMo, chọn <strong>Quét mã QR</strong> để quét mã trên. Vui lòng giữ nguyên nội dung chuyển khoản để đơn hàng được xác nhận nhanh chóng.
+                            <strong>{{ __('Hướng dẫn:') }}</strong> Quý khách mở App Ngân hàng (TPBank, MB, VCB, BIDV, Techcombank...) hoặc MoMo, chọn <strong>Quét mã QR</strong> để quét mã trên. Vui lòng giữ nguyên nội dung chuyển khoản để đơn hàng được xác nhận nhanh chóng.
                         </div>
                     </div>
 
@@ -768,10 +768,10 @@
 
                         {{-- MoMo QR Image --}}
                         <div class="qr-img-wrapper" style="display: inline-flex; flex-direction: column; align-items: center; padding: 16px; background: #ffffff; border-radius: 18px; box-shadow: 0 8px 24px rgba(165,0,100,0.12); border: 2px solid #FBCFE8; margin-bottom: 16px;">
-                            <img id="momo-qr-image" src="{{ asset('img qr/momo_card_clean.jpg') }}" alt="Mã QR Ví MoMo - NGUYEN CHI HAI" style="max-width: 270px; width: 100%; height: auto; border-radius: 12px; display: block;">
+                            <img id="momo-qr-image" src="{{ asset('img qr/momo_card_clean.jpg') }}" alt="Mã {{ __('QR Ví MoMo') }} - NGUYEN CHI HAI" style="max-width: 270px; width: 100%; height: auto; border-radius: 12px; display: block;">
                             <div style="margin-top: 12px;">
                                 <a href="{{ asset('img qr/momo_card_clean.jpg') }}" download="QR_ThanhToan_MoMo.jpg" class="btn-copy" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; font-size: 13px; font-weight: 600; background: #A50064; color: #fff; border-color: #A50064;">
-                                    <i class="ti ti-download"></i> Tải mã QR MoMo về máy
+                                    <i class="ti ti-download"></i> {{ __('Tải mã QR') }} MoMo về máy
                                 </a>
                             </div>
                         </div>
@@ -781,7 +781,7 @@
                             <tr>
                                 <td>Cổng thanh toán:</td>
                                 <td>
-                                    <strong style="color: #A50064;">Ví điện tử MoMo</strong>
+                                    <strong style="color: #A50064;">{{ __('Ví điện tử MoMo') }}</strong>
                                     <span style="font-size: 11px; color: #A50064; margin-left: 8px; background: #FDF2F8; padding: 2px 6px; border-radius: 4px; font-weight: 700;">Napas 247</span>
                                 </td>
                             </tr>
@@ -789,27 +789,27 @@
                                 <td>Số tài khoản MoMo:</td>
                                 <td>
                                     <span id="momo-acc-num" style="font-weight: 700; font-size: 15px; letter-spacing: 0.5px; color: #111827;">PSP2615713900000057</span>
-                                    <button type="button" class="btn-copy" id="btn-copy-momo-acc">Sao chép</button>
+                                    <button type="button" class="btn-copy" id="btn-copy-momo-acc">{{ __('Sao chép') }}</button>
                                 </td>
                             </tr>
                             <tr>
-                                <td>Chủ tài khoản:</td>
+                                <td>{{ __('Chủ tài khoản:') }}</td>
                                 <td>
                                     <strong style="text-transform: uppercase;">NGUYEN CHI HAI</strong>
                                 </td>
                             </tr>
                             <tr>
-                                <td>Số tiền cần chuyển:</td>
+                                <td>{{ __('Số tiền cần chuyển:') }}</td>
                                 <td>
                                     <span id="momo-amount" style="color: #A50064; font-weight: 800; font-size: 16px;"></span>
-                                    <button type="button" class="btn-copy" id="btn-copy-momo-amount">Sao chép</button>
+                                    <button type="button" class="btn-copy" id="btn-copy-momo-amount">{{ __('Sao chép') }}</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Nội dung chuyển tiền:</td>
                                 <td>
                                     <span id="momo-memo" style="color: #A50064; font-weight: 700; font-family: monospace; font-size: 15px;"></span>
-                                    <button type="button" class="btn-copy" id="btn-copy-momo-memo">Sao chép</button>
+                                    <button type="button" class="btn-copy" id="btn-copy-momo-memo">{{ __('Sao chép') }}</button>
                                 </td>
                             </tr>
                         </table>
