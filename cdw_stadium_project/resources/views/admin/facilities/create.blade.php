@@ -14,6 +14,7 @@
 <div class="form-card">
     <form action="{{ route('admin.facilities.store') }}" method="POST">
         @csrf
+        <input type="hidden" name="version" value="0">
         @include('admin.facilities.form')
     </form>
 </div>

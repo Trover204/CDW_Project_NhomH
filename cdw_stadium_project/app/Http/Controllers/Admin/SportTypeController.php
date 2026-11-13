@@ -29,6 +29,7 @@ class SportTypeController extends Controller
     {
         $data = $request->validated();
         $data['status'] = $request->boolean('status');
+        $data['version'] = 0;
 
         if ($request->hasFile('image')) {
             $data['image'] = $this->files->store($request->file('image'), self::IMAGE_DIRECTORY);
@@ -40,6 +41,11 @@ class SportTypeController extends Controller
             ->with('success', 'Thêm loại môn thành công.');
     }
 
+    public function show(SportType $sportType)
+    {
+        return redirect()->route('admin.sport-types.edit', $sportType);
+    }
+
     public function edit(SportType $sportType)
     {
         return view('admin.sport-types.edit', compact('sportType'));
@@ -48,6 +54,7 @@ class SportTypeController extends Controller
     public function update(SportTypeRequest $request, SportType $sportType)
     {
         $validated = $request->validated();
+        $validated['status'] = $request->boolean('status');
 
         $oldImage = $sportType->image;
         $newImage = null;
@@ -71,16 +78,29 @@ class SportTypeController extends Controller
             $this->files->delete($oldImage, self::IMAGE_DIRECTORY);
         }
 
-        return redirect()->route('admin.facilities.index')->with('success', 'Đã cập nhật loại sân.');
+        $sportType->shouldBeSearchable() ? $sportType->searchable() : $sportType->unsearchable();
+        $sportType->courts()->get()->each(fn ($court) => $court->shouldBeSearchable() ? $court->searchable() : $court->unsearchable());
+
+        return redirect()->route('admin.sport-types.index')->with('success', 'Đã cập nhật loại môn thể thao.');
     }
 
     public function destroy(SportType $sportType)
     {
-        $this->files->delete($sportType->image, self::IMAGE_DIRECTORY);
+        if ($sportType->courts()->exists() || $sportType->priceRules()->exists()) {
+            return redirect()->route('admin.sport-types.index')
+                ->with('error', 'Không thể xóa loại môn này vì đang có sân hoặc bảng giá liên kết.');
+        }
 
-        $sportType->delete();
+        try {
+            $imagePath = $sportType->image;
+            $sportType->delete();
+            $this->files->delete($imagePath, self::IMAGE_DIRECTORY);
 
-        return redirect()->route('admin.sport-types.index')
-            ->with('success', 'Đã xóa loại môn.');
+            return redirect()->route('admin.sport-types.index')
+                ->with('success', 'Đã xóa loại môn.');
+        } catch (\Throwable $e) {
+            return redirect()->route('admin.sport-types.index')
+                ->with('error', 'Không thể xóa loại môn này do có dữ liệu ràng buộc.');
+        }
     }
 }

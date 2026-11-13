@@ -58,7 +58,9 @@ class SaleController extends Controller
     public function edit(Sale $sale)
     {
         $sale->load('payment');
-        $products = Product::where('is_active', true)->get();
+        $products = Product::where('is_active', true)
+            ->orWhere('id', $sale->product_id)
+            ->get();
         $users = User::all();
 
         return view('admin.sales.edit', compact('sale', 'products', 'users'));

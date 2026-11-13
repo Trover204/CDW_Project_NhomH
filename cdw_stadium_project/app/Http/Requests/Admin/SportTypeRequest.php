@@ -12,16 +12,27 @@ class SportTypeRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        if (! $this->filled('version')) {
+            $sportType = $this->route('sport_type');
+            $this->merge([
+                'version' => $sportType instanceof \App\Models\SportType ? (int) $sportType->version : 0,
+            ]);
+        }
+    }
+
     public function rules(): array
     {
-        $id = $this->route('sport_type')?->id;
+        $sportType = $this->route('sport_type');
+        $id = $sportType instanceof \App\Models\SportType ? $sportType->id : $sportType;
 
         return [
             'name' => ['required', 'string', 'max:191', Rule::unique('sport_types', 'name')->ignore($id)],
             'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'description' => ['nullable', 'string', 'max:1000'],
             'status' => ['nullable', 'boolean'],
-            'version' => 'required|integer', // Thêm validate cho version
+            'version' => ['required', 'integer', 'min:0'],
         ];
     }
 

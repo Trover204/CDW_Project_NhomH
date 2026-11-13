@@ -7,13 +7,14 @@ $menu = [
 ['Sản phẩm', 'ti-shopping-cart', 'admin.products.index', 'admin.products.*'],
 ['Đơn bán hàng', 'ti-receipt', 'admin.sales.index', 'admin.sales.*'],
 ['Đơn đặt sân', 'ti-calendar-event', 'admin.bookings.index', 'admin.bookings.*'],
-['Gói thành viên', 'ti-crown', 'admin.subscriptions.index', 'admin.subscriptions.*'],
+['Gói thành viên', 'ti-crown', 'admin.subscriptions.index', ['admin.subscriptions.*', 'admin.plans.*']],
 ['Thanh toán', 'ti-credit-card', 'admin.payments.index', 'admin.payments.*'],
-['Bình luận', 'ti-message-circle', 'admin.comments.index', 'admin.comments.*'],
+['Bình luận', 'ti-message-circle', 'admin.comments.index', ['admin.comments.*', 'admin.reviews.*']],
 ['Người dùng', 'ti-users', 'admin.users.index', 'admin.users.*'],
 ['Tin tức', 'ti-news', 'admin.news.index', 'admin.news.*'],
 ['Quảng cáo', 'ti-photo', 'admin.ads.index', 'admin.ads.*'],
 ['Báo cáo', 'ti-report', 'admin.reports.revenue', 'admin.reports.*'],
+['Lịch sử hoạt động', 'ti-history', 'admin.activity-logs.index', 'admin.activity-logs.*'],
 ];
 @endphp
 
@@ -21,7 +22,7 @@ $menu = [
     <div class="brand">Sân Nhóm H<br><small>Admin</small></div>
     <nav>
         @foreach ($menu as [$label, $icon, $route, $pattern])
-        <a href="{{ route($route) }}" class="{{ request()->routeIs($pattern) ? 'active' : '' }}">
+        <a href="{{ route($route) }}" class="{{ request()->routeIs(...(array) $pattern) ? 'active' : '' }}">
             <i class="ti {{ $icon }}"></i>{{ $label }}
         </a>
         @endforeach

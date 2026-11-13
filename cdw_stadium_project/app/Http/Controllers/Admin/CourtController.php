@@ -27,10 +27,18 @@ class CourtController extends Controller
 
     public function store(CourtRequest $request)
     {
-        Court::create($request->validated());
+        $data = $request->validated();
+        $data['version'] = 0;
+
+        Court::create($data);
 
         return redirect()->route('admin.courts.index')
             ->with('success', 'Thêm sân thành công.');
+    }
+
+    public function show(Court $court)
+    {
+        return redirect()->route('admin.courts.edit', $court);
     }
 
     public function edit(Court $court)
@@ -52,7 +60,6 @@ class CourtController extends Controller
             return redirect()->back()->with('error', 'Dữ liệu này vừa được một quản trị viên khác cập nhật. Vui lòng tải lại trang để xem dữ liệu mới nhất.');
         }
 
-        $court->refresh();
         $court->shouldBeSearchable() ? $court->searchable() : $court->unsearchable();
 
         return redirect()->route('admin.courts.index')->with('success', 'Đã cập nhật sân.');

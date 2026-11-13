@@ -67,7 +67,7 @@
 <div class="form-grid-3">
     <div class="form-group">
         <label class="form-label">Ngày đặt <span style="color: var(--danger);">*</span></label>
-        <input type="date" name="booking_date" class="form-control" value="{{ old('booking_date', $booking->booking_date ?? '') }}">
+        <input type="date" name="booking_date" class="form-control" value="{{ old('booking_date', isset($booking->booking_date) ? $booking->booking_date->format('Y-m-d') : '') }}">
         @error('booking_date') <div class="form-error">{{ $message }}</div> @enderror
     </div>
 
@@ -87,19 +87,19 @@
 <div class="form-grid-3">
     <div class="form-group">
         <label class="form-label">Tạm tính <span style="color: var(--danger);">*</span></label>
-        <input type="number" name="subtotal" class="form-control" value="{{ old('subtotal', $booking->subtotal ?? 0) }}">
+        <input type="number" name="subtotal" class="form-control" value="{{ old('subtotal', isset($booking) ? (int) $booking->subtotal : 0) }}">
         @error('subtotal') <div class="form-error">{{ $message }}</div> @enderror
     </div>
 
     <div class="form-group">
         <label class="form-label">Giảm giá <span style="color: var(--danger);">*</span></label>
-        <input type="number" name="discount_amount" class="form-control" value="{{ old('discount_amount', $booking->discount_amount ?? 0) }}">
+        <input type="number" name="discount_amount" class="form-control" value="{{ old('discount_amount', isset($booking) ? (int) $booking->discount_amount : 0) }}">
         @error('discount_amount') <div class="form-error">{{ $message }}</div> @enderror
     </div>
 
     <div class="form-group">
         <label class="form-label">Tổng tiền <span style="color: var(--danger);">*</span></label>
-        <input type="number" name="total_price" class="form-control" value="{{ old('total_price', $booking->total_price ?? 0) }}">
+        <input type="number" name="total_price" class="form-control" value="{{ old('total_price', isset($booking) ? (int) $booking->total_price : 0) }}">
         @error('total_price') <div class="form-error">{{ $message }}</div> @enderror
     </div>
 </div>
@@ -110,14 +110,37 @@
     @error('note') <div class="form-error">{{ $message }}</div> @enderror
 </div>
 
-<div class="form-group">
-    <label class="form-label">Trạng thái <span style="color: var(--danger);">*</span></label>
-    <select name="status" class="form-control">
-        @foreach (['pending'=>'Chờ xử lý', 'confirmed'=>'Đã xác nhận', 'checked_in'=>'Đã check-in', 'completed'=>'Hoàn thành', 'cancelled'=>'Đã hủy', 'rejected'=>'Bị từ chối'] as $val => $text)
-            <option value="{{ $val }}" @selected(old('status', $booking->status ?? 'pending') === $val)>{{ $text }}</option>
-        @endforeach
-    </select>
-    @error('status') <div class="form-error">{{ $message }}</div> @enderror
+<div class="form-grid-3">
+    <div class="form-group">
+        <label class="form-label">Trạng thái đơn <span style="color: var(--danger);">*</span></label>
+        <select name="status" class="form-control">
+            @foreach (['pending'=>'Chờ xử lý', 'confirmed'=>'Đã xác nhận', 'checked_in'=>'Đã check-in', 'completed'=>'Hoàn thành', 'cancelled'=>'Đã hủy', 'rejected'=>'Bị từ chối'] as $val => $text)
+                <option value="{{ $val }}" @selected(old('status', $booking->status ?? 'pending') === $val)>{{ $text }}</option>
+            @endforeach
+        </select>
+        @error('status') <div class="form-error">{{ $message }}</div> @enderror
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Phương thức TT (đồng bộ Payment)</label>
+        <select name="payment_method" class="form-control">
+            @foreach (\App\Models\Payment::METHODS as $mKey => $mText)
+                <option value="{{ $mKey }}" @selected(old('payment_method', $booking->payment->payment_method ?? 'cod') === $mKey)>{{ $mText }}</option>
+            @endforeach
+        </select>
+        @error('payment_method') <div class="form-error">{{ $message }}</div> @enderror
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Trạng thái TT</label>
+        <select name="payment_status" class="form-control">
+            <option value="">-- Tự động theo trạng thái đơn --</option>
+            @foreach (\App\Models\Payment::STATUSES as $stKey => $stText)
+                <option value="{{ $stKey }}" @selected(old('payment_status', $booking->payment->status ?? '') === $stKey)>{{ $stText }}</option>
+            @endforeach
+        </select>
+        @error('payment_status') <div class="form-error">{{ $message }}</div> @enderror
+    </div>
 </div>
 
 <div class="form-actions">

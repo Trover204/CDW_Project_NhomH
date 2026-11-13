@@ -116,19 +116,10 @@ class CommentController extends Controller
     public function update(CommentRequest $request, Comment $comment)
     {
         $validated = $request->validated();
-        $currentVersion = isset($validated['version']) ? (int) $validated['version'] : (int) ($comment->version ?? 0);
-
-        if (isset($validated['version'])) {
-            unset($validated['version']);
-        }
-
+        $validated['version'] = isset($validated['version']) ? (int) $validated['version'] : (int) ($comment->version ?? 0);
         $validated['rating'] = $validated['rating'] ?? ($comment->rating ?? 5);
 
-        $affectedRows = Comment::where('id', $comment->id)
-            ->where('version', $currentVersion)
-            ->update(array_merge($validated, [
-                'version' => $currentVersion + 1,
-            ]));
+        $affectedRows = $comment->updateWithOptimisticLock($validated);
 
         if ($affectedRows === 0) {
             return redirect()->back()->with('error', 'Dữ liệu này vừa được một quản trị viên khác cập nhật. Vui lòng tải lại trang để xem dữ liệu mới nhất.');

@@ -38,7 +38,7 @@ class AdController extends Controller
     {
         $validated = $request->validated();
 
-        $validated['is_active'] = $request->has('is_active');
+        $validated['is_active'] = $request->boolean('is_active');
 
         if ($request->hasFile('image')) {
             $validated['image'] = $this->files->store($request->file('image'), self::IMAGE_DIRECTORY);
@@ -47,6 +47,11 @@ class AdController extends Controller
         Ad::create($validated);
 
         return redirect()->route('admin.ads.index')->with('success', 'Thêm quảng cáo thành công.');
+    }
+
+    public function show(Ad $ad)
+    {
+        return redirect()->route('admin.ads.edit', $ad);
     }
 
     /**
@@ -64,7 +69,7 @@ class AdController extends Controller
     {
         $validated = $request->validated();
 
-        $validated['is_active'] = $request->has('is_active');
+        $validated['is_active'] = $request->boolean('is_active');
 
         if ($request->hasFile('image')) {
             $validated['image'] = $this->files->replace($request->file('image'), $ad->image, self::IMAGE_DIRECTORY);
@@ -80,9 +85,9 @@ class AdController extends Controller
      */
     public function destroy(Ad $ad)
     {
-        $this->files->delete($ad->image, self::IMAGE_DIRECTORY);
-
+        $imagePath = $ad->image;
         $ad->delete();
+        $this->files->delete($imagePath, self::IMAGE_DIRECTORY);
 
         return redirect()->route('admin.ads.index')->with('success', 'Đã xóa quảng cáo.');
     }

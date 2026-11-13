@@ -9,7 +9,10 @@
             Kiểm duyệt bình luận bài viết tin tức và đánh giá sân thể thao từ người dùng
         </p>
     </div>
-    <div class="right">
+    <div class="right" style="display: flex; gap: 10px;">
+        <a href="{{ route('admin.reviews.create') }}" class="btn btn-secondary">
+            <i class="ti ti-star"></i> Thêm đánh giá sân
+        </a>
         <a href="{{ route('admin.comments.create', request('news_id') ? ['news_id' => request('news_id')] : []) }}" class="btn btn-primary">
             <i class="ti ti-plus"></i> Thêm bình luận tin tức
         </a>
@@ -151,6 +154,7 @@
                         {{ $r->created_at ? $r->created_at->format('d/m/Y') : '—' }}
                     </td>
                     <td style="text-align: right; white-space: nowrap;">
+                        <a href="{{ route('admin.reviews.edit', $r) }}" class="action-link">Sửa</a>
                         <form method="POST" action="{{ route('admin.reviews.destroy', $r) }}"
                               style="display:inline" data-confirm="Xóa đánh giá sân này?">
                             @csrf @method('DELETE')

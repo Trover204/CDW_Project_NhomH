@@ -29,7 +29,7 @@
             <tr>
                 <td style="font-weight: 600; color: var(--text);">{{ $b->customer_name }} <br><small>{{ $b->customer_phone }}</small></td>
                 <td>{{ $b->court->name ?? '—' }}</td>
-                <td>{{ $b->booking_date }} <br><small>{{ $b->start_time }} - {{ $b->end_time }}</small></td>
+                <td>{{ $b->booking_date ? $b->booking_date->format('d/m/Y') : '—' }} <br><small>{{ substr((string) $b->start_time, 0, 5) }} - {{ substr((string) $b->end_time, 0, 5) }}</small></td>
                 <td>{{ number_format($b->total_price) }} đ</td>
                 <td>
                     @if ($b->payment)

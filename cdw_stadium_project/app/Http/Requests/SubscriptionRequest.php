@@ -15,7 +15,9 @@ class SubscriptionRequest extends FormRequest
     public function rules(): array
     {
         $subscription = $this->route('subscription');
-        $paymentId = $subscription?->payment?->id;
+        $paymentId = $subscription instanceof \App\Models\Subscription
+            ? $subscription->payment?->id
+            : null;
 
         return [
             'user_id' => 'required|exists:users,id',

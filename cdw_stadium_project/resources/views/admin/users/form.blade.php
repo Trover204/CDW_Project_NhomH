@@ -36,7 +36,7 @@
 
 <div class="form-group">
     <label class="form-label">Ngày sinh</label>
-    <input type="date" name="birthday" value="{{ old('birthday', $user->birthday ?? '') }}" class="form-control">
+    <input type="date" name="birthday" value="{{ old('birthday', isset($user->birthday) ? $user->birthday->format('Y-m-d') : '') }}" class="form-control">
     <small class="form-text text-muted">Người dùng phải từ 16 tuổi trở lên.</small>
     @error('birthday') <div class="form-error">{{ $message }}</div> @enderror
 </div>

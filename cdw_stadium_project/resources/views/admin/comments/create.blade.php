@@ -13,6 +13,7 @@
 
 <div class="form-card">
     <form method="POST" action="{{ route('admin.comments.store') }}">
+        <input type="hidden" name="version" value="0">
         @include('admin.comments.form')
     </form>
 </div>

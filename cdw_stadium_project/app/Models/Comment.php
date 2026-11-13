@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\LogsActivity;
 use App\Traits\OptimisticLocking;
 use Database\Factories\CommentFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Comment extends Model
 {
     /** @use HasFactory<CommentFactory> */
-    use HasFactory, OptimisticLocking;
+    use HasFactory, LogsActivity, OptimisticLocking;
 
     protected $fillable = [
         'user_id',
@@ -40,10 +41,6 @@ class Comment extends Model
     {
         return $this->belongsTo(News::class);
     }
-
-    public function court(): BelongsTo
-    {
-        return $this->belongsTo(Court::class);
-    }
 }
+
 

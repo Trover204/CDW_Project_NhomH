@@ -80,10 +80,25 @@ class UserController extends Controller
     // D - Xóa
     public function destroy(User $user)
     {
-        $this->files->delete($user->avatar, self::AVATAR_DIRECTORY);
+        if (auth()->id() === $user->id) {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'Bạn không thể tự xóa tài khoản quản trị đang đăng nhập.');
+        }
 
-        $user->delete();
+        if ($user->bookings()->exists() || $user->subscriptions()->exists()) {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'Không thể xóa người dùng này vì đang có đơn đặt sân hoặc gói thành viên liên kết.');
+        }
 
-        return redirect()->route('admin.users.index')->with('success', 'Đã xóa người dùng.');
+        try {
+            $avatarPath = $user->avatar;
+            $user->delete();
+            $this->files->delete($avatarPath, self::AVATAR_DIRECTORY);
+
+            return redirect()->route('admin.users.index')->with('success', 'Đã xóa người dùng.');
+        } catch (\Throwable $e) {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'Không thể xóa người dùng này do có dữ liệu ràng buộc trong hệ thống.');
+        }
     }
 }
