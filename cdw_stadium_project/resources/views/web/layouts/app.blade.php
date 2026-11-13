@@ -401,6 +401,22 @@
     </style>
 
     @stack('scripts')
+    <script nonce="{{ $cspNonce ?? '' }}">
+        document.addEventListener('DOMContentLoaded', function () {
+            // Clickable cards with data-href (respecting interactive children)
+            document.querySelectorAll('[data-href]').forEach(function (card) {
+                card.addEventListener('click', function (e) {
+                    if (e.target.closest('a, button, form, input, [data-stop-propagation]')) {
+                        return;
+                    }
+                    var url = card.getAttribute('data-href');
+                    if (url) {
+                        window.location.href = url;
+                    }
+                });
+            });
+        });
+    </script>
     <script src="{{ asset('js/theme-toggle.js') }}?v={{ filemtime(public_path('js/theme-toggle.js')) }}"></script>
 </body>
 

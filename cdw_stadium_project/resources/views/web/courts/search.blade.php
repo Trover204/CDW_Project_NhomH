@@ -111,12 +111,12 @@
                                         @endphp
                                         <form action="{{ route('favorites.toggle', $court->id) }}" method="POST" class="fav-form-tag">
                                             @csrf
-                                            <button type="submit" class="btn-favorite {{ $isFavorited ? 'is-favorited' : '' }}" title="{{ $isFavorited ? __('Bỏ thích') : __('Yêu thích') }}" data-stop-propagation>
+                                            <button type="submit" class="btn-favorite-heart {{ $isFavorited ? 'is-favorited' : '' }}" title="{{ $isFavorited ? __('Bỏ thích') : __('Yêu thích') }}" data-stop-propagation>
                                                 <i class="ti {{ $isFavorited ? 'ti-heart-filled' : 'ti-heart' }}"></i>
                                             </button>
                                         </form>
                                     @else
-                                        <a href="{{ route('login') }}" class="btn-favorite" title="{{ __('Đăng nhập để lưu yêu thích') }}" data-stop-propagation>
+                                        <a href="{{ route('login') }}" class="btn-favorite-heart" title="{{ __('Đăng nhập để lưu yêu thích') }}" data-stop-propagation>
                                             <i class="ti ti-heart"></i>
                                         </a>
                                     @endauth

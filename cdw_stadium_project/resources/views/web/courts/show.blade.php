@@ -26,7 +26,26 @@
             {{-- Left Column: Images, Info, Description, Reviews --}}
             <div class="court-info-col">
                 {{-- Court Header Title & Rating --}}
-                <div class="detail-title-card">
+                <div class="detail-title-card" style="position: relative;">
+                    {{-- Top Right Favorite Button in Court Detail --}}
+                    <div style="position: absolute; top: 24px; right: 24px; z-index: 5;">
+                        @auth
+                            @php
+                                $isFavorited = auth()->user()->favoriteCourts->contains($court->id);
+                            @endphp
+                            <form action="{{ route('favorites.toggle', $court->id) }}" method="POST" style="margin:0;">
+                                @csrf
+                                <button type="submit" class="btn-favorite-heart {{ $isFavorited ? 'is-favorited' : '' }}" title="{{ $isFavorited ? __('Bỏ thích') : __('Thêm vào yêu thích') }}">
+                                    <i class="ti {{ $isFavorited ? 'ti-heart-filled' : 'ti-heart' }}"></i>
+                                </button>
+                            </form>
+                        @else
+                            <a href="{{ route('login') }}" class="btn-favorite-heart" title="{{ __('Đăng nhập để lưu yêu thích') }}">
+                                <i class="ti ti-heart"></i>
+                            </a>
+                        @endauth
+                    </div>
+
                     <div class="title-meta-row">
                         <span class="sport-badge-pill">
                             <i class="ti ti-activity"></i> {{ $court->sportType->name ?? __('Thể thao') }}

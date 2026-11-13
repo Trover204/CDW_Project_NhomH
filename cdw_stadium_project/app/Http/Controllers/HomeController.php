@@ -12,8 +12,9 @@ class HomeController extends Controller
     public function index()
     {
         $courts = Court::with(['facility', 'sportType', 'images'])
-            ->orderBy('sport_type_id', 'asc')
-            ->take(4)
+            ->where('status', '!=', 'inactive')
+            ->inRandomOrder()
+            ->take(6)
             ->get();
         $sportTypes = SportType::where('status', 1)->take(3)->get();
         $locations = Facility::where('status', 1)
