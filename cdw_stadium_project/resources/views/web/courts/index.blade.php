@@ -12,23 +12,50 @@
                 <h1>{{ __('Đặt sân thể thao nhanh chóng & tiện lợi') }}</h1>
                 <p>{{ __('Chọn môn thể thao bạn yêu thích, tìm sân gần nhất và đặt chỗ ngay chỉ với vài thao tác đơn giản.') }}</p>
                 
-                {{-- Search Bar Inside Hero --}}
-                <form action="{{ route('courts.index') }}" method="GET" class="courts-search-box">
-                    @foreach(request('sport_types', []) as $st)
-                        <input type="hidden" name="sport_types[]" value="{{ $st }}">
-                    @endforeach
-                    <div class="search-input-wrap">
-                        <i class="ti ti-search search-icon"></i>
-                        <input type="text" name="q" value="{{ $keyword ?? request('q') }}" placeholder="{{ __('Tìm theo tên sân, địa điểm, môn thể thao...') }}" autocomplete="off">
-                        @if($keyword ?? request('q'))
-                            <a href="{{ route('courts.index') }}" class="clear-search-btn" title="{{ __('Xóa tìm kiếm') }}"><i class="ti ti-x"></i></a>
+    {{-- Filter & Search Toolbar (Synchronized with Merch style) --}}
+    <div class="wrap" style="margin-top: 24px;">
+        <div class="merch-filter-card">
+            <form action="{{ route('courts.index') }}" method="GET">
+                @foreach(request('sport_types', []) as $st)
+                    <input type="hidden" name="sport_types[]" value="{{ $st }}">
+                @endforeach
+                <div class="merch-filter-row">
+                    {{-- Search Box --}}
+                    <div class="merch-search-wrap">
+                        <i class="ti ti-search merch-search-icon"></i>
+                        <input type="text" name="q" value="{{ $keyword ?? request('q') }}"
+                               class="merch-search-input"
+                               placeholder="{{ __('Tìm theo tên sân, địa điểm, môn thể thao...') }}"
+                               autocomplete="off">
+                    </div>
+
+                    {{-- Sport Type Filter Dropdown --}}
+                    <div class="merch-select-wrap">
+                        <select name="sport_types[]" class="merch-select" onchange="this.form.submit()">
+                            <option value="">-- {{ __('Tất cả môn thể thao') }} --</option>
+                            @foreach($sportTypes as $type)
+                                <option value="{{ $type->id }}" {{ in_array($type->id, request('sport_types', [])) ? 'selected' : '' }}>
+                                    {{ $type->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Action Buttons --}}
+                    <div style="display: flex; gap: 8px;">
+                        <button type="submit" class="merch-btn-filter">
+                            <i class="ti ti-search"></i> {{ __('Tìm kiếm') }}
+                        </button>
+                        @if(!empty(request('q')) || !empty(request('sport_types')))
+                            <a href="{{ route('courts.index') }}" class="merch-btn-reset">
+                                <i class="ti ti-x"></i> {{ __('Xóa lọc') }}
+                            </a>
                         @endif
                     </div>
-                    <button type="submit" class="btn-search-submit">
-                        <i class="ti ti-search"></i>
-                        <span>{{ __('Tìm kiếm') }}</span>
-                    </button>
-                </form>
+                </div>
+            </form>
+        </div>
+    </div>
             </div>
         </div>
     </div>
@@ -255,6 +282,108 @@
     margin: 0 auto 30px;
     max-width: 640px;
 }
+/* Synchronized Merch-style Toolbar */
+.merch-filter-card {
+    background: var(--bg-white, #FFFFFF);
+    border: 1px solid var(--line, #F1E4EC);
+    border-radius: 20px;
+    padding: 22px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+.merch-filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+}
+.merch-search-wrap {
+    flex: 1 1 280px;
+    position: relative;
+}
+.merch-search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #8E8EA0;
+    font-size: 18px;
+}
+.merch-search-input {
+    width: 100%;
+    height: 46px;
+    padding: 0 16px 0 46px;
+    border: 1.5px solid var(--line, #F1E4EC);
+    border-radius: 12px;
+    font-size: 14.5px;
+    background: var(--bg-white, #FFFFFF);
+    color: var(--ink, #181824);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.merch-search-input:focus {
+    border-color: #EC4899;
+    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.14);
+}
+.merch-select-wrap {
+    flex: 0 1 220px;
+}
+.merch-select {
+    width: 100%;
+    height: 46px;
+    padding: 0 14px;
+    border: 1.5px solid var(--line, #F1E4EC);
+    border-radius: 12px;
+    font-size: 14px;
+    background: var(--bg-white, #FFFFFF);
+    color: var(--ink, #181824);
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+.merch-select:focus {
+    border-color: #EC4899;
+}
+.merch-btn-filter {
+    height: 46px;
+    padding: 0 22px;
+    background: linear-gradient(135deg, #FF2E93 0%, #DB2777 100%);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 12px;
+    font-size: 14.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+.merch-btn-filter:hover {
+    background: linear-gradient(135deg, #DB2777 0%, #BE185D 100%);
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+}
+.merch-btn-reset {
+    height: 46px;
+    padding: 0 18px;
+    background: var(--bg-page, #FAF7F9);
+    color: var(--ink-soft, #525266);
+    border: 1.5px solid var(--line, #F1E4EC);
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+.merch-btn-reset:hover {
+    background: var(--line, #F1E4EC);
+    color: var(--ink, #181824);
+}
+
 .courts-search-box {
     display: flex;
     align-items: center;
@@ -437,8 +566,8 @@
     gap: 5px;
 }
 .sidebar-help-box {
-    background: linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 100%);
-    border: 1px solid #F9A8D4;
+    background: linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 100%) !important;
+    border: 1px solid #F9A8D4 !important;
     border-radius: 20px;
     padding: 22px;
     text-align: center;
@@ -459,11 +588,14 @@
 .sidebar-help-box h4 {
     margin: 0 0 6px;
     font-size: 16px;
-    color: var(--turf-dark, #181824);
+    color: #181824 !important;
+    -webkit-text-fill-color: #181824 !important;
+    font-weight: 700;
 }
 .sidebar-help-box p {
     font-size: 13px;
-    color: var(--ink-soft, #5A5A72);
+    color: #4B5563 !important;
+    -webkit-text-fill-color: #4B5563 !important;
     margin: 0 0 14px;
     line-height: 1.5;
 }
@@ -473,11 +605,11 @@
     gap: 6px;
     font-size: 14px;
     font-weight: 700;
-    color: var(--turf-teal, #EC4899);
-    background: #fff;
+    color: #EC4899 !important;
+    background: #fff !important;
     padding: 8px 18px;
     border-radius: 999px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 .courts-content {
     flex: 1;

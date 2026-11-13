@@ -71,14 +71,77 @@
 }
 
 [data-theme="dark"] .field {
-    background: #1a1a1a;
-    color: #ffffff;
+    background: #FFFFFF !important;
+    border-color: #FCE7F3 !important;
+    color: #181824 !important;
 }
 [data-theme="dark"] .field select,
 [data-theme="dark"] .field input[type="date"],
 [data-theme="dark"] .field input[type="text"],
-[data-theme="dark"] .field input[type="search"] {
-    color: #ffffff;
+[data-theme="dark"] .field input[type="search"],
+[data-theme="dark"] .merch-search-input,
+[data-theme="dark"] .courts-search-input,
+[data-theme="dark"] .news-search-input,
+[data-theme="dark"] .search-card input,
+[data-theme="dark"] .search-page-form input,
+[data-theme="dark"] .search-input-field input,
+[data-theme="dark"] .courts-search-box input,
+[data-theme="dark"] .news-search-bar input,
+[data-theme="dark"] input[type="text"][name="q"],
+[data-theme="dark"] input[type="text"][name="search"],
+[data-theme="dark"] input[type="search"] {
+    color: #000000 !important;
+    background-color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .merch-search-wrap,
+[data-theme="dark"] .courts-search-wrap,
+[data-theme="dark"] .news-search-wrap {
+    background-color: #FFFFFF !important;
+    border-radius: 12px;
+}
+
+[data-theme="dark"] input[type="text"][name="q"]::placeholder,
+[data-theme="dark"] input[type="text"][name="search"]::placeholder,
+[data-theme="dark"] input[type="search"]::placeholder,
+[data-theme="dark"] .merch-search-input::placeholder,
+[data-theme="dark"] .courts-search-input::placeholder,
+[data-theme="dark"] .news-search-input::placeholder {
+    color: #6B7280 !important;
+    -webkit-text-fill-color: #6B7280 !important;
+}
+
+[data-theme="dark"] input[type="text"][name="q"],
+[data-theme="dark"] input[type="text"][name="search"],
+[data-theme="dark"] input[type="search"],
+[data-theme="dark"] .merch-search-input,
+[data-theme="dark"] .courts-search-input,
+[data-theme="dark"] .news-search-input {
+    -webkit-text-fill-color: #000000 !important;
+}
+
+/* Light support box on courts page - prevent text from turning white in dark theme */
+.sidebar-help-box,
+[data-theme="dark"] .sidebar-help-box {
+    background: linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 100%) !important;
+    border: 1px solid #F9A8D4 !important;
+}
+.sidebar-help-box h4,
+[data-theme="dark"] .sidebar-help-box h4 {
+    color: #181824 !important;
+    -webkit-text-fill-color: #181824 !important;
+    font-weight: 700 !important;
+}
+.sidebar-help-box p,
+[data-theme="dark"] .sidebar-help-box p {
+    color: #4B5563 !important;
+    -webkit-text-fill-color: #4B5563 !important;
+}
+.sidebar-help-box .help-phone-btn,
+[data-theme="dark"] .sidebar-help-box .help-phone-btn {
+    color: #EC4899 !important;
+    background: #FFFFFF !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
 }
 
 /* =====================================================
